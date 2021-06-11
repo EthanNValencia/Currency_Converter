@@ -15,11 +15,6 @@ import java.util.Scanner;
  */
 public class WebReader implements CONSTANTS {
 
-    public static void main(String[] args){
-        String content = getPage(colombianPeso);
-        System.out.println(content);
-    }
-
     /***
      * Method used to scan the specified HTML source page and conduct basic text filtering. Filters text based on individual line contents.
      */

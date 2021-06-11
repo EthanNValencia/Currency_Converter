@@ -13,10 +13,13 @@ import javafx.scene.control.Label;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/***
+ * Controller class for the GUI.
+ */
 public class Controller implements Initializable, CONSTANTS {
 
     String colombianPesos = WebReader.getPage(colombianPeso);
-    double convertCOPtoUSD = 1/Double.parseDouble(colombianPesos);
+    String convertCOPtoUSD = String.format("%.5f", 1/Double.parseDouble(colombianPesos));
 
     @FXML
     private Label USDtoCOP, COPtoUSD;
@@ -24,7 +27,7 @@ public class Controller implements Initializable, CONSTANTS {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         USDtoCOP.setText("1 USD = " + colombianPesos + " COP");
-        COPtoUSD.setText("Test " + convertCOPtoUSD);
+        COPtoUSD.setText("1 COP = " + convertCOPtoUSD + " USD");
     }
 
 }
