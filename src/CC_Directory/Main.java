@@ -1,3 +1,9 @@
+/*
+Ethan J. Nephew
+June 11, 2021
+Currency converter and presentation application.
+*/
+
 package CC_Directory;
 
 import javafx.application.Application;
@@ -6,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 // --module-path "C:\Program Files\JavaFX\javafx-sdk-16\lib" --add-modules javafx.controls,javafx.fxml
+
 public class Main extends Application {
 
     @Override

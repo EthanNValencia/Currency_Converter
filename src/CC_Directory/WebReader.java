@@ -1,3 +1,9 @@
+/*
+Ethan J. Nephew
+June 11, 2021
+Currency converter and presentation application.
+*/
+
 package CC_Directory;
 
 import java.io.IOException;
@@ -5,7 +11,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 /***
- *
+ * WebReader class that pulls simple data from websites.
  */
 public class WebReader implements CONSTANTS {
 

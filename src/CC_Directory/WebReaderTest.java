@@ -1,3 +1,9 @@
+/*
+Ethan J. Nephew
+June 11, 2021
+Currency converter and presentation application.
+*/
+
 package CC_Directory;
 
 import org.junit.jupiter.api.Test;
