@@ -18,19 +18,19 @@ public class WebReader implements CONSTANTS {
     /***
      * Method used to scan the specified HTML source page and conduct basic text filtering. Filters text based on individual line contents.
      */
-    public static String getPage(String websiteURL) {
+    public static double getPage(String websiteURL) {
         try {
             URL url = new URL(websiteURL);
             Scanner scan = new Scanner(url.openStream());
             String content = "";
             content = readText(scan);
-            content = editString(content);
-            return content;
+            double rate = editString(content);
+            return rate;
         }
         catch(IOException ex) {
             ex.printStackTrace();
         }
-        return "An error occurred.";
+        return -0;
     }
 
     /***
@@ -67,10 +67,11 @@ public class WebReader implements CONSTANTS {
      * @param content Takes the String that should be edited.
      * @return Returns the edited String.
      */
-    public static String editString(String content){
+    public static Double editString(String content){
         content = content.replaceAll("ctl00_M_lblToAmount", ""); // The double zeros should be removed now.
         content = content.replaceAll("[^\\d.]", "");
-        return content;
+        double dbl = Double.parseDouble(content);
+        return dbl;
     }
 
 }
