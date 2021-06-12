@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /***
  * Unit tests for WebReader.java
  */
-class WebReaderTest {
+class UnitTests {
 
     /***
      * Tests that the WebReader.editString() is functioning properly.

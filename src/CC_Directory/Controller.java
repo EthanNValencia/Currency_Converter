@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 
 /***
- * Controller class for the GUI.
+ * Controller class for the GUI. It contains some basic filtering logics for calculating currency conversions.
  */
 public class Controller implements Initializable, CONSTANTS {
 
@@ -29,7 +29,9 @@ public class Controller implements Initializable, CONSTANTS {
     @FXML
     private ComboBox<String> comboBox1, comboBox2;
 
-
+    /***
+     * This is a simple method that generates the currency objects and stores them into an ArrayList.
+     */
     public void generateArrayList(){
         arrayList.add(new Currency("USD", "1"));
         arrayList.add(new Currency("COP", WebReader.getPage(CONSTANTS.COP)));
@@ -37,6 +39,11 @@ public class Controller implements Initializable, CONSTANTS {
         arrayList.add(new Currency("MXN", WebReader.getPage(CONSTANTS.MXN)));
     }
 
+    /***
+     * Method that determines what the currency rate is and displays the rate to the GUI.
+     * @param currency1 The first currency object that is selected from the first combobox.
+     * @param currency2 The second currency object that is selected from the second combobox
+     */
     public void getRate(Currency currency1, Currency currency2){
 
         if (currency1.getName().equals("USD") || currency1.getName().equals("USD") && currency2.getName().equals("USD")){
@@ -55,9 +62,9 @@ public class Controller implements Initializable, CONSTANTS {
     }
 
     /***
-     *
-     * @param comboBox1
-     * @param comboBox2
+     * This method correlates the ComboBox names to stored currency objects.
+     * @param comboBox1 This is the the string parameter from the first combobox.
+     * @param comboBox2 This is the the string parameter from the second combobox.
      */
     public void getString(String comboBox1, String comboBox2){
         Currency comboBox1Currency = null;
@@ -71,10 +78,19 @@ public class Controller implements Initializable, CONSTANTS {
                 comboBox2Currency = new Currency(arrayList.get(i).getName(), arrayList.get(i).getRate());
             }
         }
-        getRate(comboBox1Currency, comboBox2Currency);
-        //System.out.println(comboBox1Currency + " " + comboBox2Currency);
+
+        try {
+            getRate(comboBox1Currency, comboBox2Currency);
+        } catch (NullPointerException npe){
+            System.out.println("A NullPointerException occurred. There was likely a problem pulling necessary data from the internet.");
+        }
     }
 
+    /***
+     * Overridden initialize method for the GUI.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         generateArrayList();
