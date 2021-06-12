@@ -15,7 +15,7 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <Pane prefHeight="400.0" prefWidth="400.0">
+      <Pane prefHeight="100.0" prefWidth="400.0">
          <children>
             <Label fx:id="output" layoutX="14.0" layoutY="54.0" text="output" />
             <ComboBox fx:id="comboBox1" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="85.0" />

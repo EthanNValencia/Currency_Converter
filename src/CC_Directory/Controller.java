@@ -27,26 +27,24 @@ public class Controller implements Initializable, CONSTANTS {
     private Label output;
 
     @FXML
-    private ComboBox comboBox1, comboBox2;
+    private ComboBox<String> comboBox1, comboBox2;
 
 
     public void generateArrayList(){
         arrayList.add(new Currency("USD", "1"));
-        arrayList.add(new Currency("COP", WebReader.getPage(CONSTANTS.colombianPeso)));
-        arrayList.add(new Currency("EUR", WebReader.getPage(CONSTANTS.euro)));
-        System.out.println(arrayList);
+        arrayList.add(new Currency("COP", WebReader.getPage(CONSTANTS.COP)));
+        arrayList.add(new Currency("EUR", WebReader.getPage(CONSTANTS.EUR)));
+        arrayList.add(new Currency("MXN", WebReader.getPage(CONSTANTS.MXN)));
     }
 
     public void getRate(Currency currency1, Currency currency2){
 
         if (currency1.getName().equals("USD") || currency1.getName().equals("USD") && currency2.getName().equals("USD")){
-            System.out.println(currency1.getRate() + " " + currency1.getName() + " = " + currency2.getRate() + " " + currency2.getName());
             output.setText(currency1.getRate() + " " + currency1.getName() + " = " + currency2.getRate() + " " + currency2.getName());
         } else if(!(currency1.getName().equals("USD") || currency1.getName().equals("USD") && currency2.getName().equals("USD")) && !(currency1.getName().equals(currency2.getName()))){
             double rate = (double) 1 / Double.parseDouble(currency1.getRate());
             rate = rate * Double.parseDouble(currency2.getRate());
             String formatRate = String.format("%.5f", rate);
-            System.out.println("1 " + currency1.getName() + " = " + formatRate + " " + currency2.getName());
             output.setText("1 " + currency1.getName() + " = " + formatRate + " " + currency2.getName());
         } else if (currency1.getName().equals(currency2.getName())){
             output.setText("1 " + currency1.getName() + " = " + "1 " + currency2.getName());
@@ -80,10 +78,10 @@ public class Controller implements Initializable, CONSTANTS {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         generateArrayList();
-        System.out.println(WebReader.getPage(CONSTANTS.colombianPeso));
-        System.out.println(WebReader.getPage(CONSTANTS.euro));
-        comboBox1.getItems().addAll("COP", "EUR", "USD");
-        comboBox2.getItems().addAll("COP", "EUR", "USD");
+        for (int i = 0; i < CURRENCYNAMES.length; i++){
+            comboBox1.getItems().add(CURRENCYNAMES[i]);
+            comboBox2.getItems().add(CURRENCYNAMES[i]);
+        }
         comboBox1.getSelectionModel().selectFirst();
         comboBox2.getSelectionModel().selectFirst();
         comboBox1.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
