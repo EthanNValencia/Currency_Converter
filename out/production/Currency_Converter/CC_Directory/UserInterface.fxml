@@ -17,11 +17,9 @@
    <children>
       <Pane prefHeight="400.0" prefWidth="400.0">
          <children>
-            <Label fx:id="USDtoCOP" layoutX="14.0" layoutY="14.0" text="USDtoCOP" />
-            <Label fx:id="COPtoUSD" layoutX="14.0" layoutY="40.0" text="COPtoUSD" />
-            <Label fx:id="USDtoEuro" layoutX="14.0" layoutY="66.0" text="USDtoEuro" />
-            <ComboBox fx:id="comboBox1" layoutX="14.0" layoutY="128.0" prefHeight="25.0" prefWidth="85.0" />
-            <ComboBox fx:id="comboBox2" layoutX="137.0" layoutY="128.0" prefHeight="25.0" prefWidth="85.0" />
+            <Label fx:id="output" layoutX="14.0" layoutY="54.0" text="output" />
+            <ComboBox fx:id="comboBox1" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="85.0" />
+            <ComboBox fx:id="comboBox2" layoutX="142.0" layoutY="14.0" prefHeight="25.0" prefWidth="85.0" />
          </children>
       </Pane>
    </children>

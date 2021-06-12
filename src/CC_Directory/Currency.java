@@ -6,16 +6,23 @@ public class Currency {
         return name;
     }
 
-    public double getRate() {
+    public String getRate() {
         return rate;
     }
 
     private String name;
-    private double rate;
+    private String rate;
 
-    public Currency(String nm, double rt){
+    public Currency(String nm, String rt){
         this.name = nm;
         this.rate = rt;
     }
 
+    @Override
+    public String toString() {
+        return "Currency{" +
+                "name='" + name + '\'' +
+                ", rate=" + rate +
+                '}';
+    }
 }
