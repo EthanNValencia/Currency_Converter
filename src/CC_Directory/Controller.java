@@ -13,7 +13,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -61,6 +63,7 @@ public class Controller implements Initializable, CONSTANTS {
         if (currency1.getName().equals("USD") || currency1.getName().equals("USD") && currency2.getName().equals("USD")){
             outputRate.setText(currency1.getRate() + " " + currency1.getName() + " = " + currency2.getRate() + " " + currency2.getName());
             conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
+            rate = Double.parseDouble(currency2.getRate());
         } else if(!(currency1.getName().equals("USD") || currency1.getName().equals("USD") && currency2.getName().equals("USD")) && !(currency1.getName().equals(currency2.getName()))){
             rate = (double) 1 / Double.parseDouble(currency1.getRate());
             rate = rate * Double.parseDouble(currency2.getRate());
@@ -70,6 +73,7 @@ public class Controller implements Initializable, CONSTANTS {
         } else if (currency1.getName().equals(currency2.getName())){
             outputRate.setText("1 " + currency1.getName() + " = " + "1 " + currency2.getName());
             conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
+            rate = 1;
         }
 
         //String Z = String.format("%.5f", Double.parseDouble(currency1.getRate())/Double.parseDouble(currency2.getRate()));
@@ -99,6 +103,26 @@ public class Controller implements Initializable, CONSTANTS {
         }
     }
 
+    public void submit() {
+        String input = inputArea.getText();
+        String formatInput;
+        double amount;
+        try {
+            amount = Double.parseDouble(input);
+            NumberFormat nf = NumberFormat.getInstance();
+            formatInput = nf.format(amount*rate);
+            System.out.println(formatInput);
+            if (comboBox1Currency == null && comboBox2Currency == null) {
+                conversionIndicator.setText("Please select your currencies.");
+            } else if (!(comboBox1Currency == null) && !(comboBox2Currency == null)) {
+                currencyExchange.setText(amount + " " + comboBox1Currency.getName() + " = " + formatInput + " " + comboBox2Currency.getName());
+            }
+        } catch (RuntimeException re) {
+            conversionIndicator.setText("Please enter a numeric.");
+            currencyExchange.setText("Your input must be a simple number. EX: 500");
+        }
+    }
+
     /***
      * Overridden initialize method for the GUI.
      * @param url
@@ -106,6 +130,9 @@ public class Controller implements Initializable, CONSTANTS {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        outputRate.setText("");
+        conversionIndicator.setText("");
+        currencyExchange.setText("");
         generateArrayList();
         for (int i = 0; i < CURRENCYNAMES.length; i++){
             comboBox1.getItems().add(CURRENCYNAMES[i]);
@@ -117,14 +144,4 @@ public class Controller implements Initializable, CONSTANTS {
         comboBox2.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
     }
 
-    public void submit() {
-
-        String input = inputArea.getText();
-
-        if(comboBox1Currency == null && comboBox2Currency == null){
-            conversionIndicator.setText("Please select your currencies.");
-        } else if (!(comboBox1Currency == null) && !(comboBox2Currency == null)){
-            currencyExchange.setText("");
-        }
-    }
 }
