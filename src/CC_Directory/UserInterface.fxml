@@ -19,11 +19,13 @@
    <children>
       <Pane prefHeight="150.0" prefWidth="400.0">
          <children>
-            <Label fx:id="output" layoutX="14.0" layoutY="54.0" text="Rate output area" />
+            <Label fx:id="outputRate" layoutX="14.0" layoutY="54.0" text="Rate output area" />
             <ComboBox fx:id="comboBox1" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="85.0" />
             <ComboBox fx:id="comboBox2" layoutX="142.0" layoutY="14.0" prefHeight="25.0" prefWidth="85.0" />
-            <TextField layoutX="14.0" layoutY="111.0" promptText="Enter conversion amount" />
-            <Button layoutX="334.0" layoutY="111.0" mnemonicParsing="false" text="Submit" />
+            <TextField fx:id="inputArea" layoutX="14.0" layoutY="111.0" promptText="Enter conversion amount" />
+            <Button fx:id="submit" layoutX="334.0" layoutY="111.0" mnemonicParsing="false" onAction="#submit" text="Submit" />
+            <Label fx:id="conversionIndicator" layoutX="241.0" layoutY="18.0" text="Conversion indicator" />
+            <Label fx:id="currencyExchange" layoutX="14.0" layoutY="75.0" text="Label" />
          </children>
       </Pane>
    </children>

@@ -8,6 +8,7 @@ package CC_Directory;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -21,16 +22,24 @@ import java.util.ResourceBundle;
  */
 public class Controller implements Initializable, CONSTANTS {
 
-    ArrayList<Currency> arrayList = new ArrayList();
+    private ArrayList<Currency> arrayList = new ArrayList();
+    private Currency comboBox1Currency = null;
+    private Currency comboBox2Currency = null;
+    private String formatRate;
+    private double rate;
+
 
     @FXML
-    private Label output;
+    private Label outputRate, conversionIndicator, currencyExchange;
 
     @FXML
     private ComboBox<String> comboBox1, comboBox2;
 
     @FXML
     private TextField inputArea;
+
+    @FXML
+    private Button submit;
 
     /***
      * This is a simple method that generates the currency objects and stores them into an ArrayList.
@@ -50,14 +59,17 @@ public class Controller implements Initializable, CONSTANTS {
     public void getRate(Currency currency1, Currency currency2){
 
         if (currency1.getName().equals("USD") || currency1.getName().equals("USD") && currency2.getName().equals("USD")){
-            output.setText(currency1.getRate() + " " + currency1.getName() + " = " + currency2.getRate() + " " + currency2.getName());
+            outputRate.setText(currency1.getRate() + " " + currency1.getName() + " = " + currency2.getRate() + " " + currency2.getName());
+            conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
         } else if(!(currency1.getName().equals("USD") || currency1.getName().equals("USD") && currency2.getName().equals("USD")) && !(currency1.getName().equals(currency2.getName()))){
-            double rate = (double) 1 / Double.parseDouble(currency1.getRate());
+            rate = (double) 1 / Double.parseDouble(currency1.getRate());
             rate = rate * Double.parseDouble(currency2.getRate());
-            String formatRate = String.format("%.5f", rate);
-            output.setText("1 " + currency1.getName() + " = " + formatRate + " " + currency2.getName());
+            formatRate = String.format("%.5f", rate);
+            outputRate.setText("1 " + currency1.getName() + " = " + formatRate + " " + currency2.getName());
+            conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
         } else if (currency1.getName().equals(currency2.getName())){
-            output.setText("1 " + currency1.getName() + " = " + "1 " + currency2.getName());
+            outputRate.setText("1 " + currency1.getName() + " = " + "1 " + currency2.getName());
+            conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
         }
 
         //String Z = String.format("%.5f", Double.parseDouble(currency1.getRate())/Double.parseDouble(currency2.getRate()));
@@ -70,8 +82,6 @@ public class Controller implements Initializable, CONSTANTS {
      * @param comboBox2 This is the the string parameter from the second combobox.
      */
     public void getString(String comboBox1, String comboBox2){
-        Currency comboBox1Currency = null;
-        Currency comboBox2Currency = null;
 
         for(int i = 0; i < arrayList.size(); i++){
             if(arrayList.get(i).getName().equals(comboBox1)){
@@ -105,5 +115,16 @@ public class Controller implements Initializable, CONSTANTS {
         comboBox2.getSelectionModel().selectFirst();
         comboBox1.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
         comboBox2.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
+    }
+
+    public void submit() {
+
+        String input = inputArea.getText();
+
+        if(comboBox1Currency == null && comboBox2Currency == null){
+            conversionIndicator.setText("Please select your currencies.");
+        } else if (!(comboBox1Currency == null) && !(comboBox2Currency == null)){
+            currencyExchange.setText("");
+        }
     }
 }
