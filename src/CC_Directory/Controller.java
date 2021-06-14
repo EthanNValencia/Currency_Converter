@@ -10,10 +10,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.ResourceBundle;
 
 /***
@@ -28,6 +28,9 @@ public class Controller implements Initializable, CONSTANTS {
 
     @FXML
     private ComboBox<String> comboBox1, comboBox2;
+
+    @FXML
+    private TextField inputArea;
 
     /***
      * This is a simple method that generates the currency objects and stores them into an ArrayList.
