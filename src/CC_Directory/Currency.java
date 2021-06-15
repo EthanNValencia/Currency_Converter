@@ -40,6 +40,8 @@ public class Currency {
         this.rate = rate;
     }
 
+
+
     /***
      * Overridden toString method. Doesn't have direct application use, but it is useful for testing purposes.
      * @return It returns the toString.

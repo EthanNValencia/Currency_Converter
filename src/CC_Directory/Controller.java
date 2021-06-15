@@ -12,8 +12,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -76,8 +74,6 @@ public class Controller implements Initializable, CONSTANTS {
             rate = 1;
         }
 
-        //String Z = String.format("%.5f", Double.parseDouble(currency1.getRate())/Double.parseDouble(currency2.getRate()));
-        //return Z;
     }
 
     /***
