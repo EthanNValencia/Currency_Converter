@@ -13,7 +13,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import java.net.URL;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -59,18 +58,28 @@ public class Controller implements Initializable, CONSTANTS {
      */
     public void getRate(Currency currency1, Currency currency2){
 
+        currencyExchange.setText("");
+        calculateObj = new Calculation(currency1, currency2);
+        outputRate.setText(currency1.getRate() + " " + currency1.getName() + " = " + currency2.getRate() + " " + currency2.getName());
+        conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
+
+        /*
+        currencyExchange.setText("");
         if (currency1.getName().equals("USD") || currency1.getName().equals("USD") && currency2.getName().equals("USD")){
             outputRate.setText(currency1.getRate() + " " + currency1.getName() + " = " + currency2.getRate() + " " + currency2.getName());
             conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
-            calculateObj = new Calculation(currency1, currency2);
         } else if(!(currency1.getName().equals("USD") || currency1.getName().equals("USD") && currency2.getName().equals("USD")) && !(currency1.getName().equals(currency2.getName()))){
             outputRate.setText("1 " + currency1.getName() + " = " + calculateObj.getFormatRate() + " " + currency2.getName());
             conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
+            double rate = (double) 1 / Double.parseDouble(currency1.getRate());
+            rate = rate * Double.parseDouble(currency2.getRate());
+            formatRate = String.format("%.5f", rate);
         } else if (currency1.getName().equals(currency2.getName())){
             outputRate.setText("1 " + currency1.getName() + " = " + "1 " + currency2.getName());
             conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
-            // rate = 1;
+            rate = 1;
         }
+        */
 
     }
 
