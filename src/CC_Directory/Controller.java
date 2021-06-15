@@ -25,9 +25,7 @@ public class Controller implements Initializable, CONSTANTS {
     private ArrayList<Currency> arrayList = new ArrayList();
     private Currency comboBox1Currency = null;
     private Currency comboBox2Currency = null;
-    private String formatRate;
-    private double rate;
-
+    private Calculation calculateObj;
 
     @FXML
     private Label outputRate, conversionIndicator, currencyExchange;
@@ -40,6 +38,9 @@ public class Controller implements Initializable, CONSTANTS {
 
     @FXML
     private Button submit;
+
+    public Controller() {
+    }
 
     /***
      * This is a simple method that generates the currency objects and stores them into an ArrayList.
@@ -61,17 +62,14 @@ public class Controller implements Initializable, CONSTANTS {
         if (currency1.getName().equals("USD") || currency1.getName().equals("USD") && currency2.getName().equals("USD")){
             outputRate.setText(currency1.getRate() + " " + currency1.getName() + " = " + currency2.getRate() + " " + currency2.getName());
             conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
-            rate = Double.parseDouble(currency2.getRate());
+            calculateObj = new Calculation(currency1, currency2);
         } else if(!(currency1.getName().equals("USD") || currency1.getName().equals("USD") && currency2.getName().equals("USD")) && !(currency1.getName().equals(currency2.getName()))){
-            rate = (double) 1 / Double.parseDouble(currency1.getRate());
-            rate = rate * Double.parseDouble(currency2.getRate());
-            formatRate = String.format("%.5f", rate);
-            outputRate.setText("1 " + currency1.getName() + " = " + formatRate + " " + currency2.getName());
+            outputRate.setText("1 " + currency1.getName() + " = " + calculateObj.getFormatRate() + " " + currency2.getName());
             conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
         } else if (currency1.getName().equals(currency2.getName())){
             outputRate.setText("1 " + currency1.getName() + " = " + "1 " + currency2.getName());
             conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
-            rate = 1;
+            // rate = 1;
         }
 
     }
@@ -101,17 +99,15 @@ public class Controller implements Initializable, CONSTANTS {
 
     public void submit() {
         String input = inputArea.getText();
-        String formatInput;
         double amount;
         try {
             amount = Double.parseDouble(input);
-            NumberFormat nf = NumberFormat.getInstance();
-            formatInput = nf.format(amount*rate);
-            System.out.println(formatInput);
+            calculateObj.convertCurrency(amount);
+            System.out.println(calculateObj.getInputConversion());
             if (comboBox1Currency == null && comboBox2Currency == null) {
                 conversionIndicator.setText("Please select your currencies.");
             } else if (!(comboBox1Currency == null) && !(comboBox2Currency == null)) {
-                currencyExchange.setText(amount + " " + comboBox1Currency.getName() + " = " + formatInput + " " + comboBox2Currency.getName());
+                currencyExchange.setText(amount + " " + comboBox1Currency.getName() + " = " + calculateObj.getInputConversion() + " " + comboBox2Currency.getName());
             }
         } catch (RuntimeException re) {
             conversionIndicator.setText("Please enter a numeric.");

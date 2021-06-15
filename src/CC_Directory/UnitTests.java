@@ -53,4 +53,10 @@ class UnitTests {
         assertEquals(cur, cur);
     }
 
+    @Test
+    public void testCalculateRate(){
+        Currency USD = new Currency("USD", "1");
+        Currency COP = new Currency("COP", "3000");
+    }
+
 }
