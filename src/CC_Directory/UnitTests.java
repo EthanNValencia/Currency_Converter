@@ -7,8 +7,6 @@ Currency converter and presentation application.
 package CC_Directory;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /***
@@ -53,10 +51,35 @@ class UnitTests {
         assertEquals(cur, cur);
     }
 
+    /***
+     * Verifies that the Calculation.calculateRate() is working properly.
+     */
     @Test
     public void testCalculateRate(){
         Currency USD = new Currency("USD", "1");
         Currency COP = new Currency("COP", "3000");
+        Calculation cur = new Calculation(USD, COP);
+        assertEquals("3000.00000", cur.getFormatRate());
     }
 
+    /***
+     *
+     */
+    @Test
+    public void testGetInputConversion_NULL(){
+        Currency USD = new Currency("USD", "1");
+        Currency COP = new Currency("COP", "3000");
+        Calculation cur = new Calculation(USD, COP); // The input conversion has not been calculated.
+        assertEquals(null, cur.getInputConversion());
+    }
+
+    /***
+     *
+     */
+    public void testGetInputConversion(){
+        Currency USD = new Currency("USD", "1");
+        Currency COP = new Currency("COP", "3000");
+        Calculation cur = new Calculation(USD, COP);
+
+    }
 }
