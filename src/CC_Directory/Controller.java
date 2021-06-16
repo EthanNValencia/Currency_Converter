@@ -8,7 +8,6 @@ package CC_Directory;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -58,6 +57,7 @@ public class Controller implements Initializable, CONSTANTS {
         conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
 
         /*
+        // This is a block of untestable code that highlights the superiority of using object oriented embedded logic.
         currencyExchange.setText("");
         if (currency1.getName().equals("USD") || currency1.getName().equals("USD") && currency2.getName().equals("USD")){
             outputRate.setText(currency1.getRate() + " " + currency1.getName() + " = " + currency2.getRate() + " " + currency2.getName());
