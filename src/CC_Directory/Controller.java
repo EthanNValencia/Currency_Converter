@@ -35,12 +35,6 @@ public class Controller implements Initializable, CONSTANTS {
     @FXML
     private TextField inputArea;
 
-    @FXML
-    private Button submit;
-
-    public Controller() {
-    }
-
     /***
      * This is a simple method that generates the currency objects and stores them into an ArrayList.
      */
@@ -106,13 +100,15 @@ public class Controller implements Initializable, CONSTANTS {
         }
     }
 
+    /***
+     * This method is used with the submit button. It pulls text from the text area and calculates the currency conversion.
+     */
     public void submit() {
         String input = inputArea.getText();
         double amount;
         try {
             amount = Double.parseDouble(input);
             calculateObj.convertCurrency(amount);
-            // System.out.println(calculateObj.getInputConversion());
             if (comboBox1Currency == null && comboBox2Currency == null) {
                 conversionIndicator.setText("Please select your currencies.");
             } else if (!(comboBox1Currency == null) && !(comboBox2Currency == null)) {

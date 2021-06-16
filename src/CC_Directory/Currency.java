@@ -51,4 +51,5 @@ public class Currency {
                 ", rate=" + rate +
                 '}';
     }
+
 }

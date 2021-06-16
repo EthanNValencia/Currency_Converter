@@ -8,6 +8,7 @@ package CC_Directory;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /***
  * Unit tests
@@ -63,7 +64,7 @@ class UnitTests {
     }
 
     /***
-     *
+     * Verifies that calculation object instantiation and inputConversion are not unified events.
      */
     @Test
     public void testGetInputConversion_NULL(){
@@ -74,12 +75,32 @@ class UnitTests {
     }
 
     /***
-     *
+     * Verifies that the Calculation.inputConversion is functioning as anticipated.
      */
+    @Test
     public void testGetInputConversion(){
         Currency USD = new Currency("USD", "1");
         Currency COP = new Currency("COP", "3000");
         Calculation cur = new Calculation(USD, COP);
-        //assertEquals();
+        cur.convertCurrency(4);
+        assertEquals("12,000", cur.getInputConversion());
+    }
+
+    /***
+     * Verifies that the WebReader.checkLineContent() method is detecting characters of interest.
+     */
+    @Test
+    public void testCheckLineContent(){
+        String text = "Fet ctl00_M_lblToAmount Five Eight ASD";
+        assertTrue(WebReader.checkLineContent(text));
+    }
+
+    /***
+     * Verifies that the WebReader.editString() is removing and retaining the desired characters.
+     */
+    @Test
+    public void testEditString(){
+        String text = "Fet ctl00_M_lblToAmount Five Eight ASD 5000";
+        assertEquals("5000", WebReader.editString(text));
     }
 }
