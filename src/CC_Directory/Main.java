@@ -2,6 +2,10 @@
 Ethan J. Nephew
 June 11, 2021
 Currency converter and presentation application.
+
+Note to future self.
+This project took several days longer than anticipated,
+because Grandpa had several accidents. 
 */
 
 package CC_Directory;
