@@ -35,12 +35,10 @@ public class Currency {
      * @param name Requires the name of the currency (EX: USD, COP)
      * @param rate Requires the currency exchange rate as compared to USD.
      */
-    public Currency(String name, String rate){
+    public Currency(String name, String rate) {
         this.name = name;
         this.rate = rate;
     }
-
-
 
     /***
      * Overridden toString method. Doesn't have direct application use, but it is useful for testing purposes.

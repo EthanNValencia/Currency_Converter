@@ -112,7 +112,7 @@ public class Controller implements Initializable, CONSTANTS {
         try {
             amount = Double.parseDouble(input);
             calculateObj.convertCurrency(amount);
-            System.out.println(calculateObj.getInputConversion());
+            // System.out.println(calculateObj.getInputConversion());
             if (comboBox1Currency == null && comboBox2Currency == null) {
                 conversionIndicator.setText("Please select your currencies.");
             } else if (!(comboBox1Currency == null) && !(comboBox2Currency == null)) {

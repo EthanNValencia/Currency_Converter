@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /***
- * Unit tests for WebReader.java
+ * Unit tests
  */
 class UnitTests {
 
@@ -80,6 +80,6 @@ class UnitTests {
         Currency USD = new Currency("USD", "1");
         Currency COP = new Currency("COP", "3000");
         Calculation cur = new Calculation(USD, COP);
-
+        //assertEquals();
     }
 }
