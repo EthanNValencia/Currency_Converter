@@ -11,9 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import java.net.URL;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
