@@ -21,7 +21,7 @@ class UnitTests {
     @Test
     public void testEditString_1(){
         String test = "FOO1234foo";
-        CC_Directory.WebReader wr = new CC_Directory.WebReader();
+        WebReader wr = new WebReader();
         assertEquals("1234", wr.editString(test));
     }
 

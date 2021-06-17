@@ -38,6 +38,7 @@ public class Controller implements Initializable, CONSTANTS {
      * This is a simple method that generates the currency objects and stores them into an ArrayList.
      */
     public void generateArrayList(){
+
         arrayList.add(new Currency("USD", "1"));
         arrayList.add(new Currency("COP", WebReader.getPage(CONSTANTS.COP)));
         arrayList.add(new Currency("EUR", WebReader.getPage(CONSTANTS.EUR)));
@@ -47,6 +48,7 @@ public class Controller implements Initializable, CONSTANTS {
         arrayList.add(new Currency("GBP", WebReader.getPage(CONSTANTS.GBP)));
         arrayList.add(new Currency("PHP", WebReader.getPage(CONSTANTS.PHP)));
         arrayList.add(new Currency("RUB", WebReader.getPage(CONSTANTS.RUB)));
+
     }
 
     /***
@@ -60,25 +62,6 @@ public class Controller implements Initializable, CONSTANTS {
         calculateObj = new Calculation(currency1, currency2);
         outputRate.setText(currency1.getRate() + " " + currency1.getName() + " = " + currency2.getRate() + " " + currency2.getName());
         conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
-
-        /*
-        // This is a block of untestable code that highlights the superiority of using object oriented embedded logic.
-        currencyExchange.setText("");
-        if (currency1.getName().equals("USD") || currency1.getName().equals("USD") && currency2.getName().equals("USD")){
-            outputRate.setText(currency1.getRate() + " " + currency1.getName() + " = " + currency2.getRate() + " " + currency2.getName());
-            conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
-        } else if(!(currency1.getName().equals("USD") || currency1.getName().equals("USD") && currency2.getName().equals("USD")) && !(currency1.getName().equals(currency2.getName()))){
-            outputRate.setText("1 " + currency1.getName() + " = " + calculateObj.getFormatRate() + " " + currency2.getName());
-            conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
-            double rate = (double) 1 / Double.parseDouble(currency1.getRate());
-            rate = rate * Double.parseDouble(currency2.getRate());
-            formatRate = String.format("%.5f", rate);
-        } else if (currency1.getName().equals(currency2.getName())){
-            outputRate.setText("1 " + currency1.getName() + " = " + "1 " + currency2.getName());
-            conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
-            rate = 1;
-        }
-        */
 
     }
 
@@ -103,12 +86,14 @@ public class Controller implements Initializable, CONSTANTS {
         } catch (NullPointerException npe){
             System.out.println("A NullPointerException occurred. There was likely a problem pulling necessary data from the internet.");
         }
+
     }
 
     /***
      * This method is used with the submit button. It pulls text from the text area and calculates the currency conversion.
      */
     public void submit() {
+
         String input = inputArea.getText();
         double amount;
         try {
@@ -123,6 +108,7 @@ public class Controller implements Initializable, CONSTANTS {
             conversionIndicator.setText("Please enter a numeric.");
             currencyExchange.setText("Your input must be a simple number. EX: 500");
         }
+
     }
 
     /***
@@ -132,18 +118,21 @@ public class Controller implements Initializable, CONSTANTS {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         outputRate.setText("");
         conversionIndicator.setText("");
         currencyExchange.setText("");
         generateArrayList();
-        for (int i = 0; i < CURRENCYNAMES.length; i++){
-            comboBox1.getItems().add(CURRENCYNAMES[i]);
-            comboBox2.getItems().add(CURRENCYNAMES[i]);
+
+        for (int i = 0; i < CONSTANTS.CURRENCYNAMES.length; i++){
+            comboBox1.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
+            comboBox2.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
         }
         comboBox1.getSelectionModel().selectFirst();
         comboBox2.getSelectionModel().selectFirst();
         comboBox1.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
         comboBox2.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
+
     }
 
 }
