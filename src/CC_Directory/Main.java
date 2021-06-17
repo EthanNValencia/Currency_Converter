@@ -17,17 +17,29 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 // --module-path "C:\Program Files\JavaFX\javafx-sdk-16\lib" --add-modules javafx.controls,javafx.fxml
 
+/***
+ * Main method for the application.
+ */
 public class Main extends Application {
 
+    /***
+     * Overridden start method for the JavaFX application.
+     * @param primaryStage Primary stage of the GUI.
+     * @throws Exception It can throw a number of exceptions.
+     */
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("UserInterface.fxml"));
         primaryStage.setTitle("Currency Converter");
-        primaryStage.setScene(new Scene(root, 400, 200));
+        primaryStage.setScene(new Scene(root, 400, 150));
         primaryStage.show();
     }
 
 
+    /***
+     * Main method with the launch() method.
+     * @param args Passes the args to the launch() method.
+     */
     public static void main(String[] args) {
         launch(args);
     }

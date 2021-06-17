@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -113,6 +114,7 @@ public class Controller implements Initializable, CONSTANTS {
         double amount;
 
         try {
+            conversionIndicator.setText("Converting " + comboBox1Currency.getName() + " to " + comboBox2Currency.getName());
             amount = Double.parseDouble(input);
             calculateObj.convertCurrency(amount);
             if (comboBox1Currency == null && comboBox2Currency == null) {
