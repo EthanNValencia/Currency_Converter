@@ -7,7 +7,6 @@ Note to future self.
 This project took several days longer than anticipated,
 because Grandpa had several accidents.
 
-
 Objectives
 I want to add a client-server architecture
 The server side will include a database

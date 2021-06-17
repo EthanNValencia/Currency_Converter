@@ -7,7 +7,7 @@ Currency converter and presentation application.
 package CC_Directory;
 
 /***
- * Constants for the program. The constants are the website URLs and the currency symbols.
+ * Constants for the program. The constants are the website URLs and the currency names.
  */
 public interface CONSTANTS {
     String COP = "https://www.exchange-rates.org/converter/USD/COP/1"; // Colombia
