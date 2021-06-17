@@ -42,6 +42,11 @@ public class Controller implements Initializable, CONSTANTS {
         arrayList.add(new Currency("COP", WebReader.getPage(CONSTANTS.COP)));
         arrayList.add(new Currency("EUR", WebReader.getPage(CONSTANTS.EUR)));
         arrayList.add(new Currency("MXN", WebReader.getPage(CONSTANTS.MXN)));
+        arrayList.add(new Currency("JPY", WebReader.getPage(CONSTANTS.JPY)));
+        arrayList.add(new Currency("VES", WebReader.getPage(CONSTANTS.VES)));
+        arrayList.add(new Currency("GBP", WebReader.getPage(CONSTANTS.GBP)));
+        arrayList.add(new Currency("PHP", WebReader.getPage(CONSTANTS.PHP)));
+        arrayList.add(new Currency("RUB", WebReader.getPage(CONSTANTS.RUB)));
     }
 
     /***
