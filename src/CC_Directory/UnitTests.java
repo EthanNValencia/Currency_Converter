@@ -103,4 +103,5 @@ class UnitTests {
         String text = "Fet ctl00_M_lblToAmount Five Eight ASD 5000";
         assertEquals("5000", WebReader.editString(text));
     }
+
 }

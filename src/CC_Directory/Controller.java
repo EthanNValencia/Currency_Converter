@@ -60,7 +60,7 @@ public class Controller implements Initializable, CONSTANTS {
 
         currencyExchange.setText("");
         calculateObj = new Calculation(currency1, currency2);
-        outputRate.setText(currency1.getRate() + " " + currency1.getName() + " = " + currency2.getRate() + " " + currency2.getName());
+        outputRate.setText(calculateObj.getDisplayRate1() + " " + currency1.getName() + " = " + calculateObj.getDisplayRate2() + " " + currency2.getName());
         conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
 
     }
@@ -96,6 +96,7 @@ public class Controller implements Initializable, CONSTANTS {
 
         String input = inputArea.getText();
         double amount;
+
         try {
             amount = Double.parseDouble(input);
             calculateObj.convertCurrency(amount);

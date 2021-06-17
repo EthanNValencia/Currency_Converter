@@ -15,6 +15,23 @@ public class Calculation {
 
     private String formatRate;
     private String inputConversion;
+    private String displayRate1, displayRate2;
+
+    /***
+     * Standard getter method for the rate 1 variable.
+     * @return Returns what is stored in rate 1.
+     */
+    public String getDisplayRate1() {
+        return displayRate1;
+    }
+
+    /***
+     * Standard getter method for the rate 2 variable.
+     * @return Returns what is stored in rate 2.
+     */
+    public String getDisplayRate2() {
+        return displayRate2;
+    }
 
     /***
      * Standard getter method that returns the converted currency of the inputted numerics.
@@ -41,6 +58,8 @@ public class Calculation {
         double rate = (double) 1 / Double.parseDouble(currency1.getRate());
         rate = rate * Double.parseDouble(currency2.getRate());
         formatRate = String.format("%.5f", rate);
+        displayRate1 = "1";
+        displayRate2 = formatRate;
     }
 
     /***
