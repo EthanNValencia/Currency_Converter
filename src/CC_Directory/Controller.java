@@ -8,9 +8,11 @@ package CC_Directory;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.util.Callback;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -120,13 +122,47 @@ public class Controller implements Initializable, CONSTANTS {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        /*
+        // I found this online? Not sure if it works. Will need to do some testing and studying. 
+        comboBox1.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> p) {
+                return new ListCell<String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(item);
+                        if (item == null || empty) {
+                            setGraphic(null);
+                        } else {
+                            Image icon;
+                            try {
+                                int iconNumber = this.getIndex() + 1;
+                                String iconPath = "Currency_Converter/src/CC_Images/Chinese_Flag.png";
+                                icon = new Image(getClass().getClassLoader().getResourceAsStream(iconPath));
+                            } catch(NullPointerException ex) {
+                                // in case the above image doesn't exist, use a default one
+                                String iconPath = "MyProject/resources/images/icon_na.png";
+                                icon = new Image(getClass().getClassLoader().getResourceAsStream(iconPath));
+                            }
+                            ImageView iconImageView = new ImageView(icon);
+                            iconImageView.setFitHeight(30);
+                            iconImageView.setPreserveRatio(true);
+                            setGraphic(iconImageView);
+                        }
+                    }
+                };
+            }
+        });
+        */
+
         outputRate.setText("");
         conversionIndicator.setText("");
         currencyExchange.setText("");
         generateArrayList();
 
         for (int i = 0; i < CONSTANTS.CURRENCYNAMES.length; i++){
-            comboBox1.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
+            //comboBox1.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
             comboBox2.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
         }
         comboBox1.getSelectionModel().selectFirst();
