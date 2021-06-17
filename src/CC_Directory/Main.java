@@ -5,7 +5,16 @@ Currency converter and presentation application.
 
 Note to future self.
 This project took several days longer than anticipated,
-because Grandpa had several accidents. 
+because Grandpa had several accidents.
+
+
+Objectives
+I want to add a client-server architecture
+The server side will include a database
+The server side will store rates
+The server side will store rates with the time the rate was collected
+The client side will have the ability to display the historical rates
+in a useful way
 */
 
 package CC_Directory;
