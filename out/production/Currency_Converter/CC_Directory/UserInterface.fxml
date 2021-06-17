@@ -4,12 +4,13 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane alignment="center" hgap="10" vgap="10" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CC_Directory.Controller">
+<GridPane alignment="center" hgap="10" style="-fx-background-color: grey;" vgap="10" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CC_Directory.Controller">
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>
@@ -17,15 +18,17 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <Pane prefHeight="150.0" prefWidth="400.0">
+      <Pane prefHeight="200.0" prefWidth="400.0">
          <children>
-            <Label fx:id="outputRate" layoutX="14.0" layoutY="54.0" text="Rate output area" />
-            <ComboBox fx:id="comboBox1" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="85.0" />
-            <ComboBox fx:id="comboBox2" layoutX="142.0" layoutY="14.0" prefHeight="25.0" prefWidth="85.0" />
-            <TextField fx:id="inputArea" layoutX="14.0" layoutY="111.0" promptText="Enter conversion amount" />
-            <Button fx:id="submit" layoutX="334.0" layoutY="111.0" mnemonicParsing="false" onAction="#submit" text="Submit" />
-            <Label fx:id="conversionIndicator" layoutX="241.0" layoutY="18.0" text="Conversion indicator" />
-            <Label fx:id="currencyExchange" layoutX="14.0" layoutY="75.0" text="Label" />
+            <Label fx:id="outputRate" layoutX="11.0" layoutY="115.0" text="Rate output area" />
+            <ComboBox fx:id="comboBox1" layoutX="47.0" layoutY="45.0" prefHeight="25.0" prefWidth="85.0" />
+            <ComboBox fx:id="comboBox2" layoutX="181.0" layoutY="45.0" prefHeight="25.0" prefWidth="85.0" />
+            <TextField fx:id="inputArea" layoutX="10.0" layoutY="165.0" promptText="Enter conversion amount" />
+            <Button fx:id="submit" layoutX="336.0" layoutY="165.0" mnemonicParsing="false" onAction="#submit" text="Submit" />
+            <Label fx:id="conversionIndicator" layoutX="11.0" layoutY="92.0" text="Conversion indicator" />
+            <Label fx:id="currencyExchange" layoutX="11.0" layoutY="137.0" text="Label" />
+            <ImageView fx:id="cur1_Image" fitHeight="25.0" fitWidth="25.0" layoutX="12.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="cur2_Image" fitHeight="25.0" fitWidth="25.0" layoutX="146.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </Pane>
    </children>

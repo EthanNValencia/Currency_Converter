@@ -11,7 +11,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,6 +25,9 @@ public class Controller implements Initializable, CONSTANTS {
     private Currency comboBox1Currency = null;
     private Currency comboBox2Currency = null;
     private Calculation calculateObj;
+
+    @FXML
+    private ImageView cur1_Image, cur2_Image;
 
     @FXML
     private Label outputRate, conversionIndicator, currencyExchange;
@@ -50,6 +52,8 @@ public class Controller implements Initializable, CONSTANTS {
         arrayList.add(new Currency("GBP", WebReader.getPage(CONSTANTS.GBP)));
         arrayList.add(new Currency("PHP", WebReader.getPage(CONSTANTS.PHP)));
         arrayList.add(new Currency("RUB", WebReader.getPage(CONSTANTS.RUB)));
+        arrayList.add(new Currency("CNY", WebReader.getPage(CONSTANTS.CNY)));
+        arrayList.add(new Currency("INR", WebReader.getPage(CONSTANTS.INR)));
 
     }
 
@@ -89,6 +93,15 @@ public class Controller implements Initializable, CONSTANTS {
             System.out.println("A NullPointerException occurred. There was likely a problem pulling necessary data from the internet.");
         }
 
+        try {
+            Image image1 = new Image("CC_Images/" + comboBox1Currency.getName() + ".png");
+            Image image2 = new Image("CC_Images/" + comboBox2Currency.getName() + ".png");
+            cur1_Image.setImage(image1);
+            cur2_Image.setImage(image2);
+        } catch (IllegalArgumentException iae){
+            System.out.println("Image not found.");
+        }
+
     }
 
     /***
@@ -122,39 +135,13 @@ public class Controller implements Initializable, CONSTANTS {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        /*
-        // I found this online? Not sure if it works. Will need to do some testing and studying. 
-        comboBox1.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-            @Override
-            public ListCell<String> call(ListView<String> p) {
-                return new ListCell<String>() {
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        setText(item);
-                        if (item == null || empty) {
-                            setGraphic(null);
-                        } else {
-                            Image icon;
-                            try {
-                                int iconNumber = this.getIndex() + 1;
-                                String iconPath = "Currency_Converter/src/CC_Images/Chinese_Flag.png";
-                                icon = new Image(getClass().getClassLoader().getResourceAsStream(iconPath));
-                            } catch(NullPointerException ex) {
-                                // in case the above image doesn't exist, use a default one
-                                String iconPath = "MyProject/resources/images/icon_na.png";
-                                icon = new Image(getClass().getClassLoader().getResourceAsStream(iconPath));
-                            }
-                            ImageView iconImageView = new ImageView(icon);
-                            iconImageView.setFitHeight(30);
-                            iconImageView.setPreserveRatio(true);
-                            setGraphic(iconImageView);
-                        }
-                    }
-                };
-            }
-        });
-        */
+        try {
+            Image image = new Image("CC_Images/COP.png"); // default setting
+            cur1_Image.setImage(image);
+            cur2_Image.setImage(image);
+        } catch (IllegalArgumentException iae){
+            System.out.println("Image not found.");
+        }
 
         outputRate.setText("");
         conversionIndicator.setText("");
@@ -162,11 +149,13 @@ public class Controller implements Initializable, CONSTANTS {
         generateArrayList();
 
         for (int i = 0; i < CONSTANTS.CURRENCYNAMES.length; i++){
-            //comboBox1.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
+            comboBox1.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
             comboBox2.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
         }
+
         comboBox1.getSelectionModel().selectFirst();
         comboBox2.getSelectionModel().selectFirst();
+
         comboBox1.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
         comboBox2.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
 
