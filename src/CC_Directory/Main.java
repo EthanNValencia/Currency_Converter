@@ -49,6 +49,8 @@ public class Main extends Application {
      * @param args Passes the args to the launch() method.
      */
     public static void main(String[] args) {
+        Thread music_Thread = new Thread(new PlayMusic());
+        music_Thread.start();
         launch(args);
     }
 }
