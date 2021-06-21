@@ -11,6 +11,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -24,18 +29,23 @@ public class Controller implements Initializable, CONSTANTS {
     private Currency comboBox1Currency = null;
     private Currency comboBox2Currency = null;
     private Calculation calculateObj;
+    private DataOutputStream toServer = null;
+    private DataInputStream fromServer = null;
 
     @FXML
     private ImageView cur1_Image, cur2_Image;
 
     @FXML
-    private Label outputRate, conversionIndicator, currencyExchange;
+    private Label outputRate, conversionIndicator, currencyExchange, serverOutputLabel;
 
     @FXML
     private ComboBox<String> comboBox1, comboBox2;
 
     @FXML
     private TextField inputArea;
+
+    @FXML
+    private Button serverButton;
 
     /***
      * This is a simple method that generates the currency objects and stores them into an ArrayList.
@@ -159,6 +169,42 @@ public class Controller implements Initializable, CONSTANTS {
         comboBox1.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
         comboBox2.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
 
-    }
+        try {
+            // Create a socket to connect to the server
+            Socket socket = new Socket("localhost", 8000);
+            // Socket socket = new Socket("192.168.0.95", 8000); // this is where this program connects to the server
 
+            // Create an input stream to receive data from the server
+            fromServer = new DataInputStream(socket.getInputStream());
+
+            // Create an output stream to send data to the server
+            toServer = new DataOutputStream(socket.getOutputStream());
+            System.out.println("Server connection was successful.");
+            serverOutputLabel.setText("Connection established.");
+        }
+        catch (IOException ex) {
+            System.out.println("An IO exception occurred on the client side.");
+        }
+
+        serverButton.setOnAction(e -> {
+            try {
+                // Get the radius from the text field
+                double sendNumber = Double.parseDouble(inputArea.getText().trim());
+                inputArea.setText("");
+                // Send the radius to the server
+                toServer.writeDouble(sendNumber);
+                toServer.flush();
+
+                // Get area from the server
+                //double outNumber = fromServer.readDouble();
+                boolean outCheck = fromServer.readBoolean();
+
+                // Display to the text area
+                System.out.println("The number sent is " + sendNumber + "\n");
+                System.out.println("The number is prime: " + outCheck + "\n");
+            } catch (IOException ex) {
+                System.err.println(ex);
+            }
+        });
+    }
 }

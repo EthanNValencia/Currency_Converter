@@ -29,6 +29,8 @@
             <Label fx:id="currencyExchange" layoutX="11.0" layoutY="94.0" text="Label" />
             <ImageView fx:id="cur1_Image" fitHeight="25.0" fitWidth="25.0" layoutX="12.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="cur2_Image" fitHeight="25.0" fitWidth="25.0" layoutX="146.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+            <Button fx:id="serverButton" layoutX="341.0" layoutY="10.0" mnemonicParsing="false" text="Server" />
+            <Label fx:id="serverOutputLabel" layoutX="266.0" layoutY="46.0" text="serverOutputLabel" />
          </children>
       </Pane>
    </children>

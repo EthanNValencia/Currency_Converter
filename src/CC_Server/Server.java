@@ -34,8 +34,6 @@ public class Server extends Application {
         try {
             ip = InetAddress.getLocalHost();
             hostname = ip.getHostName();
-            //System.out.println("IP: " + ip);
-            //System.out.println("Hostname: " + hostname);
 
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -44,51 +42,28 @@ public class Server extends Application {
 
         new Thread( () -> {
             try {
-
-                // Create a server socket
                 ServerSocket serverSocket = new ServerSocket(8000);
-                Platform.runLater(() ->
-                        ta.appendText("Server started at " + new Date() + '\n'));
-
-                // Listen for a connection request
-                Socket socket = serverSocket.accept(); // it waits here for a client message
-
-                // Create data input and output streams
-                DataInputStream inputFromClient = new DataInputStream(socket.getInputStream());
-                DataOutputStream outputToClient = new DataOutputStream(socket.getOutputStream());
+                Platform.runLater(() -> ta.appendText("Server started at " + new Date() + '\n'));
 
                 while (true) {
-                    // Receive radius from the client
-                    double number = inputFromClient.readDouble();
+                    Platform.runLater(() -> ta.appendText("Waiting for client connection... \n"));
+                    Socket socket = serverSocket.accept(); // it waits here for a client message
+                    Platform.runLater(() -> ta.appendText("A client connection has been established from " + socket + "\n"));
 
-                    // Compute area
-                    boolean check = Server.checkPrime(number);
+                    OutputStream outputStream = socket.getOutputStream();
+                    DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+                    Platform.runLater(() -> ta.appendText("Preparing to send list to client... \n"));
 
-                    // Send area back to the client
-                    //outputToClient.writeDouble(number);
-                    outputToClient.writeBoolean(check);
-
-                    Platform.runLater(() -> {
-                        ta.appendText("Number recieved from client: "
-                                + number + '\n');
-                        ta.appendText("The number is a prime number: " + check + '\n');
-                    });
+                    Platform.runLater(() -> ta.appendText("Sent list to client... \n"));
+                    dataOutputStream.flush();
+                    dataOutputStream.close();
+                    Platform.runLater(() -> ta.appendText("Connection has been closed. \n"));
                 }
             }
             catch(IOException ex) {
                 ex.printStackTrace();
             }
         }).start();
-    }
-
-    public static boolean checkPrime(double n){
-        if (n <= 1)
-            return false;
-        for (int i = 2; i < n; i++) {
-            if (n % i == 0)
-                return false;
-        }
-        return true;
     }
 
     /**
