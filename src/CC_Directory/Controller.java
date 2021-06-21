@@ -46,6 +46,9 @@ public class Controller implements Initializable, CONSTANTS {
     @FXML
     private Button serverButton;
 
+    @FXML
+    private Button submitBtn;
+
     /***
      * This is a simple method that generates the currency objects and stores them into an ArrayList.
      */
@@ -76,6 +79,7 @@ public class Controller implements Initializable, CONSTANTS {
         calculateObj = new Calculation(currency1, currency2);
         outputRate.setText(calculateObj.getDisplayRate1() + " " + currency1.getName() + " = " + calculateObj.getDisplayRate2() + " " + currency2.getName());
         conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
+        submitBtn.setVisible(true); inputArea.setVisible(true);
 
     }
 
@@ -131,7 +135,7 @@ public class Controller implements Initializable, CONSTANTS {
             }
         } catch (RuntimeException re) {
             conversionIndicator.setText("Please enter a numeric.");
-            currencyExchange.setText("Your input must be a simple number. EX: 500");
+            currencyExchange.setText("Your input must be a simple number. Ex: 500");
         }
 
     }
@@ -161,6 +165,8 @@ public class Controller implements Initializable, CONSTANTS {
             comboBox1.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
             comboBox2.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
         }
+        inputArea.setVisible(false);
+        submitBtn.setVisible(false);
 
         comboBox1.getSelectionModel().selectFirst();
         comboBox2.getSelectionModel().selectFirst();
@@ -200,7 +206,10 @@ public class Controller implements Initializable, CONSTANTS {
                 // Display to the label area
                 serverOutputLabel.setText("SN: " + sendNumber + " Received: " + returnedNumber);
             } catch (IOException ex) {
-                System.out.println("The client failed to connect to the server.");
+                System.out.println("The client threw an io exception.");
+                System.out.println("The server may not be running.");
+            } catch (NullPointerException npe){
+                System.out.println("A null pointer exception was thrown on the client side.");
                 System.out.println("The server may not be running.");
             }
         });
