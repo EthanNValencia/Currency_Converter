@@ -137,8 +137,8 @@ public class Controller implements Initializable, CONSTANTS {
                 textArea.appendText(amount + " " + comboBox1Currency.getName() + " = " + calculateObj.getInputConversion() + " " + comboBox2Currency.getName() + "\n");
             }
         } catch (RuntimeException re) {
-            conversionIndicator.setText("Please enter a numeric.");
-            currencyExchange.setText("Your input must be a simple number. Ex: 500");
+            textArea.appendText("Please enter a numeric. ");
+            textArea.appendText("Your input must be a simple number. Ex: 500\n");
         }
 
     }
