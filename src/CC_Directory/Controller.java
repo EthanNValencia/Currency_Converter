@@ -169,24 +169,25 @@ public class Controller implements Initializable, CONSTANTS {
         comboBox1.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
         comboBox2.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
 
-        try {
-            // Create a socket to connect to the server
-            Socket socket = new Socket("localhost", 8000);
-            // Socket socket = new Socket("192.168.0.95", 8000); // this is where this program connects to the server
-
-            // Create an input stream to receive data from the server
-            fromServer = new DataInputStream(socket.getInputStream());
-
-            // Create an output stream to send data to the server
-            toServer = new DataOutputStream(socket.getOutputStream());
-            System.out.println("Server connection was successful.");
-            serverOutputLabel.setText("Connection established.");
-        }
-        catch (IOException ex) {
-            System.out.println("An IO exception occurred on the client side.");
-        }
-
         serverButton.setOnAction(e -> {
+            
+            try {
+                // Create a socket to connect to the server
+                Socket socket = new Socket("localhost", 8000);
+                // Socket socket = new Socket("192.168.0.95", 8000); // this is where this program connects to the server
+
+                // Create an input stream to receive data from the server
+                fromServer = new DataInputStream(socket.getInputStream());
+
+                // Create an output stream to send data to the server
+                toServer = new DataOutputStream(socket.getOutputStream());
+                System.out.println("Server connection was successful.");
+                serverOutputLabel.setText("Connection established.");
+            }
+            catch (IOException ex) {
+                System.out.println("An IO exception occurred on the client side.");
+            }
+
             try {
                 // Get the radius from the text field
                 double sendNumber = Double.parseDouble(inputArea.getText().trim());
@@ -197,11 +198,11 @@ public class Controller implements Initializable, CONSTANTS {
 
                 // Get area from the server
                 //double outNumber = fromServer.readDouble();
-                boolean outCheck = fromServer.readBoolean();
+                double returnedNumber = fromServer.readDouble();
 
                 // Display to the text area
                 System.out.println("The number sent is " + sendNumber + "\n");
-                System.out.println("The number is prime: " + outCheck + "\n");
+                System.out.println("The number returned is " + returnedNumber + "\n");
             } catch (IOException ex) {
                 System.err.println(ex);
             }

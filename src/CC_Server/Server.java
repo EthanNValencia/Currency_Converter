@@ -44,19 +44,23 @@ public class Server extends Application {
             try {
                 ServerSocket serverSocket = new ServerSocket(8000);
                 Platform.runLater(() -> ta.appendText("Server started at " + new Date() + '\n'));
+                Platform.runLater(() -> ta.appendText("Waiting for client connection... \n"));
 
                 while (true) {
-                    Platform.runLater(() -> ta.appendText("Waiting for client connection... \n"));
                     Socket socket = serverSocket.accept(); // it waits here for a client message
+                    // Create data input and output streams
+                    DataInputStream inputFromClient = new DataInputStream(
+                            socket.getInputStream());
+                    DataOutputStream outputToClient = new DataOutputStream(
+                            socket.getOutputStream());
+
+                    double number = inputFromClient.readDouble();
+                    outputToClient.writeDouble(number);
+
                     Platform.runLater(() -> ta.appendText("A client connection has been established from " + socket + "\n"));
 
-                    OutputStream outputStream = socket.getOutputStream();
-                    DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-                    Platform.runLater(() -> ta.appendText("Preparing to send list to client... \n"));
-
-                    Platform.runLater(() -> ta.appendText("Sent list to client... \n"));
-                    dataOutputStream.flush();
-                    dataOutputStream.close();
+                    outputToClient.flush();
+                    outputToClient.close();
                     Platform.runLater(() -> ta.appendText("Connection has been closed. \n"));
                 }
             }
