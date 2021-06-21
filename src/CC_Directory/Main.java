@@ -14,6 +14,9 @@ The server side will store rates
 The server side will store rates with the time the rate was collected
 The client side will have the ability to display the historical rates
 in a useful way
+
+Another idea
+What about adding in the unique currency symbols? $, £, etc
 */
 
 package CC_Directory;
