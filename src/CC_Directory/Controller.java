@@ -11,7 +11,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -170,7 +169,7 @@ public class Controller implements Initializable, CONSTANTS {
         comboBox2.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
 
         serverButton.setOnAction(e -> {
-            
+
             try {
                 // Create a socket to connect to the server
                 Socket socket = new Socket("localhost", 8000);
@@ -181,7 +180,7 @@ public class Controller implements Initializable, CONSTANTS {
 
                 // Create an output stream to send data to the server
                 toServer = new DataOutputStream(socket.getOutputStream());
-                System.out.println("Server connection was successful.");
+                // System.out.println("Server connection was successful.");
                 serverOutputLabel.setText("Connection established.");
             }
             catch (IOException ex) {
@@ -195,16 +194,14 @@ public class Controller implements Initializable, CONSTANTS {
                 // Send the radius to the server
                 toServer.writeDouble(sendNumber);
                 toServer.flush();
-
                 // Get area from the server
-                //double outNumber = fromServer.readDouble();
                 double returnedNumber = fromServer.readDouble();
 
-                // Display to the text area
-                System.out.println("The number sent is " + sendNumber + "\n");
-                System.out.println("The number returned is " + returnedNumber + "\n");
+                // Display to the label area
+                serverOutputLabel.setText("SN: " + sendNumber + " Received: " + returnedNumber);
             } catch (IOException ex) {
-                System.err.println(ex);
+                System.out.println("The client failed to connect to the server.");
+                System.out.println("The server may not be running.");
             }
         });
     }

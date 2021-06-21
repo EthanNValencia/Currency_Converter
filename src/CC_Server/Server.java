@@ -28,6 +28,11 @@ public class Server extends Application {
         primaryStage.setTitle("Server"); // Set the stage title
         primaryStage.setScene(scene); // Place the scene in the stage
         primaryStage.show(); // Display the stage
+        primaryStage.setOnCloseRequest(e -> {
+            Platform.exit(); // This shuts down all server threads when the window opens.
+            System.exit(0);
+        });
+
 
         InetAddress ip;
         String hostname;
@@ -39,8 +44,8 @@ public class Server extends Application {
             e.printStackTrace();
         }
 
-
         new Thread( () -> {
+
             try {
                 ServerSocket serverSocket = new ServerSocket(8000);
                 Platform.runLater(() -> ta.appendText("Server started at " + new Date() + '\n'));
@@ -49,15 +54,13 @@ public class Server extends Application {
                 while (true) {
                     Socket socket = serverSocket.accept(); // it waits here for a client message
                     // Create data input and output streams
-                    DataInputStream inputFromClient = new DataInputStream(
-                            socket.getInputStream());
-                    DataOutputStream outputToClient = new DataOutputStream(
-                            socket.getOutputStream());
+                    DataInputStream inputFromClient = new DataInputStream(socket.getInputStream());
+                    DataOutputStream outputToClient = new DataOutputStream(socket.getOutputStream());
 
                     double number = inputFromClient.readDouble();
                     outputToClient.writeDouble(number);
 
-                    Platform.runLater(() -> ta.appendText("A client connection has been established from " + socket + "\n"));
+                    Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));
 
                     outputToClient.flush();
                     outputToClient.close();
