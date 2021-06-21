@@ -44,6 +44,9 @@ public class Controller implements Initializable, CONSTANTS {
     private TextField inputArea;
 
     @FXML
+    private TextArea textArea;
+
+    @FXML
     private Button serverButton;
 
     @FXML
@@ -131,7 +134,7 @@ public class Controller implements Initializable, CONSTANTS {
             if (comboBox1Currency == null && comboBox2Currency == null) {
                 conversionIndicator.setText("Please select your currencies.");
             } else if (!(comboBox1Currency == null) && !(comboBox2Currency == null)) {
-                currencyExchange.setText(amount + " " + comboBox1Currency.getName() + " = " + calculateObj.getInputConversion() + " " + comboBox2Currency.getName());
+                textArea.appendText(amount + " " + comboBox1Currency.getName() + " = " + calculateObj.getInputConversion() + " " + comboBox2Currency.getName() + "\n");
             }
         } catch (RuntimeException re) {
             conversionIndicator.setText("Please enter a numeric.");
@@ -167,6 +170,8 @@ public class Controller implements Initializable, CONSTANTS {
         }
         inputArea.setVisible(false);
         submitBtn.setVisible(false);
+        serverButton.setVisible(false);
+        serverOutputLabel.setVisible(false);
 
         comboBox1.getSelectionModel().selectFirst();
         comboBox2.getSelectionModel().selectFirst();

@@ -24,15 +24,15 @@
             <Label fx:id="outputRate" layoutX="11.0" layoutY="70.0" text="Rate output area" />
             <ComboBox fx:id="comboBox1" layoutX="47.0" layoutY="10.0" prefHeight="25.0" prefWidth="85.0" />
             <ComboBox fx:id="comboBox2" layoutX="181.0" layoutY="10.0" prefHeight="25.0" prefWidth="85.0" />
-            <TextField fx:id="inputArea" layoutX="240.0" layoutY="74.0" promptText="Enter conversion amount" />
-            <Button fx:id="submitBtn" layoutX="336.0" layoutY="108.0" mnemonicParsing="false" onAction="#submit" text="Submit" />
+            <TextField fx:id="inputArea" layoutX="242.0" layoutY="47.0" promptText="Enter conversion amount" />
+            <Button fx:id="submitBtn" layoutX="336.0" layoutY="82.0" mnemonicParsing="false" onAction="#submit" text="Submit" />
             <Label fx:id="conversionIndicator" layoutX="11.0" layoutY="46.0" text="Conversion indicator" />
             <Label fx:id="currencyExchange" layoutX="11.0" layoutY="94.0" text="Label" />
             <ImageView fx:id="cur1_Image" fitHeight="25.0" fitWidth="25.0" layoutX="12.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="cur2_Image" fitHeight="25.0" fitWidth="25.0" layoutX="146.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
-            <Button fx:id="serverButton" layoutX="341.0" layoutY="10.0" mnemonicParsing="false" text="Server" />
-            <Label fx:id="serverOutputLabel" layoutX="266.0" layoutY="46.0" text="serverOutputLabel" />
-            <TextArea layoutX="5.0" layoutY="150.0" prefHeight="125.0" prefWidth="390.0" />
+            <Button fx:id="serverButton" layoutX="121.0" layoutY="121.0" mnemonicParsing="false" text="Server" />
+            <Label fx:id="serverOutputLabel" layoutX="17.0" layoutY="125.0" text="serverOutputLabel" />
+            <TextArea fx:id="textArea" layoutX="5.0" layoutY="150.0" prefHeight="125.0" prefWidth="390.0" />
          </children>
       </Pane>
    </children>
