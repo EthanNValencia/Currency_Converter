@@ -57,7 +57,7 @@ public class Main extends Application {
 
         /*
         Thread music_Thread = new Thread(new PlayMusic());
-        music_Thread.start();
+        music_Thread.start(); // I figured out how to do this, but it isn't a necessary component.
         */
 
         launch(args);

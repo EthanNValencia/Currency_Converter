@@ -8,9 +8,19 @@ package CC_Directory;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -51,6 +61,9 @@ public class Controller implements Initializable, CONSTANTS {
 
     @FXML
     private Button submitBtn;
+
+    @FXML
+    private AnchorPane backgroundPane;
 
     /***
      * This is a simple method that generates the currency objects and stores them into an ArrayList.
@@ -150,6 +163,11 @@ public class Controller implements Initializable, CONSTANTS {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        Stop[] stops = new Stop[] { new Stop(0, Color.GRAY), new Stop(1, Color.WHITESMOKE)};
+        LinearGradient lgcolor = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, stops);
+        BackgroundFill bckFill = new BackgroundFill(lgcolor, CornerRadii.EMPTY, Insets.EMPTY);
+        backgroundPane.setBackground(new Background(bckFill));
 
         try {
             Image image = new Image("CC_Images/COP.png"); // default setting
