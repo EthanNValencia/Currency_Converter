@@ -6,18 +6,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
+/***
+ * Connect class for connecting the server application to a database.
+ */
 public class Connect {
 
     /***
      * This is the connection method. It is used to connect to the server.
-     * @return This method returns the connection objection.
+     * @return This method returns the connection object.
      * @throws Exception It can throw an exception.
      */
     public static Connection getConnection() throws Exception {
         String driver = "com.mysql.cj.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/word_occ";
-        String username = "ServerUser";
-        String password = "serverpassword";
+        String url = "jdbc:mysql://localhost:3306/cur_db";
+        String username = "Currency_User";
+        String password = "EFtkgT%gt44De";
         Class.forName(driver);
 
         Connection conn = DriverManager.getConnection(url, username, password);
