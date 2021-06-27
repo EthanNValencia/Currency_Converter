@@ -164,9 +164,9 @@ public class Controller implements Initializable, CONSTANTS {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        Stop[] stops = new Stop[] { new Stop(0, Color.GRAY), new Stop(1, Color.WHITESMOKE)};
-        LinearGradient lgcolor = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, stops);
-        BackgroundFill bckFill = new BackgroundFill(lgcolor, CornerRadii.EMPTY, Insets.EMPTY);
+        Stop[] stop = new Stop[] { new Stop(0, Color.GRAY), new Stop(1, Color.WHITESMOKE)};
+        LinearGradient linGrad = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, stop);
+        BackgroundFill bckFill = new BackgroundFill(linGrad, CornerRadii.EMPTY, Insets.EMPTY);
         backgroundPane.setBackground(new Background(bckFill));
 
         try {
