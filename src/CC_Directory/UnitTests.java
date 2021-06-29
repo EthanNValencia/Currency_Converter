@@ -30,7 +30,7 @@ class UnitTests {
      */
     @Test
     public void testGetName(){
-        Currency cur = new Currency("USD", "1");
+        Currency cur = new Currency("USD", "1", "United States");
         assertEquals("USD", cur.getName());
     }
 
@@ -39,7 +39,7 @@ class UnitTests {
      */
     @Test
     public void testGetRate(){
-        Currency cur = new Currency("USD", "1");
+        Currency cur = new Currency("USD", "1", "United States");
         assertEquals("1", cur.getRate());
     }
 
@@ -48,7 +48,7 @@ class UnitTests {
      */
     @Test
     public void testCurrencyConstructor(){
-        Currency cur = new Currency("USD", "1");
+        Currency cur = new Currency("USD", "1", "United States");
         assertEquals(cur, cur);
     }
 
@@ -57,8 +57,8 @@ class UnitTests {
      */
     @Test
     public void testCalculateRate(){
-        Currency USD = new Currency("USD", "1");
-        Currency COP = new Currency("COP", "3000");
+        Currency USD = new Currency("USD", "1", "United States");
+        Currency COP = new Currency("COP", "3000", "Colombia");
         Calculation cur = new Calculation(USD, COP);
         assertEquals("3000.00000", cur.getFormatRate());
     }
@@ -68,8 +68,8 @@ class UnitTests {
      */
     @Test
     public void testGetInputConversion_NULL(){
-        Currency USD = new Currency("USD", "1");
-        Currency COP = new Currency("COP", "3000");
+        Currency USD = new Currency("USD", "1", "United States");
+        Currency COP = new Currency("COP", "3000", "Colombia");
         Calculation cur = new Calculation(USD, COP); // The input conversion has not been calculated.
         assertEquals(null, cur.getInputConversion());
     }
@@ -79,8 +79,8 @@ class UnitTests {
      */
     @Test
     public void testGetInputConversion(){
-        Currency USD = new Currency("USD", "1");
-        Currency COP = new Currency("COP", "3000");
+        Currency USD = new Currency("USD", "1", "United States");
+        Currency COP = new Currency("COP", "3000", "Colombia");
         Calculation cur = new Calculation(USD, COP);
         cur.convertCurrency(4);
         assertEquals("12,000", cur.getInputConversion());

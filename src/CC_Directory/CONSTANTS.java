@@ -6,6 +6,8 @@ Currency converter and presentation application.
 
 package CC_Directory;
 
+import java.util.HashMap;
+
 /***
  * Constants for the program. The constants are the website URLs and the currency names.
  */
@@ -21,4 +23,22 @@ public interface CONSTANTS {
     String CNY = "https://www.exchange-rates.org/converter/USD/CNY/1/Y"; // China
     String INR = "https://www.exchange-rates.org/converter/USD/INR/1/Y"; // India
     String[] CURRENCYNAMES = {"COP", "EUR", "USD", "MXN", "JPY", "VES", "GBP", "PHP", "RUB", "CNY"};
+
+    // I'm not sure if there is a better way to create this hashmap. I would like it to be more automated, but at some point I would have to type raw data.
+    HashMap<String, Currency> nationHashMap = new HashMap<>(24, 0.5f) {{
+        put("USD", new Currency("USD", "1", "the United States"));
+        put("COP", new Currency("COP", WebReader.getPage(CONSTANTS.COP), "Colombia"));
+        put("EUR", new Currency("EUR", WebReader.getPage(CONSTANTS.EUR), "Europe"));
+        put("MXN", new Currency("MXN", WebReader.getPage(CONSTANTS.MXN), "Mexico"));
+        put("JPY", new Currency("JPY", WebReader.getPage(CONSTANTS.JPY), "Japan"));
+        put("VES", new Currency("VES", WebReader.getPage(CONSTANTS.VES), "Venezuela"));
+        put("GBP", new Currency("GBP", WebReader.getPage(CONSTANTS.GBP), "the United Kingdom"));
+        put("PHP", new Currency("PHP", WebReader.getPage(CONSTANTS.PHP), "the Philippines"));
+        put("RUB", new Currency("RUB", WebReader.getPage(CONSTANTS.RUB), "Russia"));
+        put("CNY", new Currency("CNY", WebReader.getPage(CONSTANTS.CNY), "China"));
+        put("INR", new Currency("INR", WebReader.getPage(CONSTANTS.INR), "India"));
+    }};
+
+
+
 }

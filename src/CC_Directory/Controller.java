@@ -20,13 +20,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 /***
@@ -34,12 +33,13 @@ import java.util.ResourceBundle;
  */
 public class Controller implements Initializable, CONSTANTS {
 
-    private ArrayList<Currency> arrayList = new ArrayList();
     private Currency comboBox1Currency = null;
     private Currency comboBox2Currency = null;
     private Calculation calculateObj;
     private DataOutputStream toServer = null;
     private DataInputStream fromServer = null;
+    private Tooltip toolTip1 = new Tooltip("This is the currency of Colombia");
+    private Tooltip toolTip2 = new Tooltip("This is the currency of Colombia");
 
     @FXML
     private ImageView cur1_Image, cur2_Image;
@@ -66,25 +66,6 @@ public class Controller implements Initializable, CONSTANTS {
     private AnchorPane backgroundPane;
 
     /***
-     * This is a simple method that generates the currency objects and stores them into an ArrayList.
-     */
-    public void generateArrayList(){
-
-        arrayList.add(new Currency("USD", "1"));
-        arrayList.add(new Currency("COP", WebReader.getPage(CONSTANTS.COP)));
-        arrayList.add(new Currency("EUR", WebReader.getPage(CONSTANTS.EUR)));
-        arrayList.add(new Currency("MXN", WebReader.getPage(CONSTANTS.MXN)));
-        arrayList.add(new Currency("JPY", WebReader.getPage(CONSTANTS.JPY)));
-        arrayList.add(new Currency("VES", WebReader.getPage(CONSTANTS.VES)));
-        arrayList.add(new Currency("GBP", WebReader.getPage(CONSTANTS.GBP)));
-        arrayList.add(new Currency("PHP", WebReader.getPage(CONSTANTS.PHP)));
-        arrayList.add(new Currency("RUB", WebReader.getPage(CONSTANTS.RUB)));
-        arrayList.add(new Currency("CNY", WebReader.getPage(CONSTANTS.CNY)));
-        arrayList.add(new Currency("INR", WebReader.getPage(CONSTANTS.INR)));
-
-    }
-
-    /***
      * Method that determines what the currency rate is and displays the rate to the GUI.
      * @param currency1 The first currency object that is selected from the first combobox.
      * @param currency2 The second currency object that is selected from the second combobox
@@ -106,13 +87,12 @@ public class Controller implements Initializable, CONSTANTS {
      */
     public void getString(String comboBox1, String comboBox2){
 
-        for(int i = 0; i < arrayList.size(); i++){
-            if(arrayList.get(i).getName().equals(comboBox1)){
-                comboBox1Currency = new Currency(arrayList.get(i).getName(), arrayList.get(i).getRate());
-            }
-            if(arrayList.get(i).getName().equals(comboBox2)){
-                comboBox2Currency = new Currency(arrayList.get(i).getName(), arrayList.get(i).getRate());
-            }
+        for (HashMap.Entry<String, Currency> entry : CONSTANTS.nationHashMap.entrySet()){
+            if(entry.getKey() == comboBox1)
+                comboBox1Currency = entry.getValue();
+
+            if(entry.getKey() == comboBox2)
+                comboBox2Currency = entry.getValue();
         }
 
         try {
@@ -121,16 +101,23 @@ public class Controller implements Initializable, CONSTANTS {
             System.out.println("A NullPointerException occurred. There was likely a problem pulling necessary data from the internet.");
         }
 
+        changeImages();
+
+    }
+
+    public void changeImages(){
         try {
             Image image1 = new Image("CC_Images/" + comboBox1Currency.getName() + ".png");
             Image image2 = new Image("CC_Images/" + comboBox2Currency.getName() + ".png");
+            toolTip1.setText("This is the currency of " + comboBox1Currency.getNationName());
+            toolTip2.setText("This is the currency of " + comboBox2Currency.getNationName());
             cur1_Image.setImage(image1);
             cur2_Image.setImage(image2);
         } catch (IllegalArgumentException iae){
             System.out.println("Image not found.");
         }
-
     }
+
 
     /***
      * This method is used with the submit button. It pulls text from the text area and calculates the currency conversion.
@@ -168,6 +155,8 @@ public class Controller implements Initializable, CONSTANTS {
         LinearGradient linGrad = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, stop);
         BackgroundFill bckFill = new BackgroundFill(linGrad, CornerRadii.EMPTY, Insets.EMPTY);
         backgroundPane.setBackground(new Background(bckFill));
+        comboBox1.setTooltip(toolTip1);
+        comboBox2.setTooltip(toolTip2);
 
         try {
             Image image = new Image("CC_Images/COP.png"); // default setting
@@ -180,7 +169,6 @@ public class Controller implements Initializable, CONSTANTS {
         outputRate.setText("");
         conversionIndicator.setText("");
         currencyExchange.setText("");
-        generateArrayList();
 
         for (int i = 0; i < CONSTANTS.CURRENCYNAMES.length; i++){
             comboBox1.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
@@ -194,8 +182,8 @@ public class Controller implements Initializable, CONSTANTS {
         comboBox1.getSelectionModel().selectFirst();
         comboBox2.getSelectionModel().selectFirst();
 
-        comboBox1.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
-        comboBox2.setOnAction(e -> getString(comboBox1.getValue().toString(), comboBox2.getValue().toString()));
+        comboBox1.setOnAction(e -> getString(comboBox1.getValue(), comboBox2.getValue()));
+        comboBox2.setOnAction(e -> getString(comboBox1.getValue(), comboBox2.getValue()));
 
         serverButton.setOnAction(e -> {
 
@@ -236,5 +224,6 @@ public class Controller implements Initializable, CONSTANTS {
                 System.out.println("The server may not be running.");
             }
         });
+
     }
 }

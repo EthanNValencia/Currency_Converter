@@ -13,6 +13,11 @@ public class Currency {
 
     private String name;
     private String rate;
+    private String nationName;
+
+    public String getNationName(){
+        return nationName;
+    }
 
     /***
      * Standard getter method for the currency object name variable.
@@ -35,9 +40,10 @@ public class Currency {
      * @param name Requires the name of the currency (EX: USD, COP)
      * @param rate Requires the currency exchange rate as compared to USD.
      */
-    public Currency(String name, String rate) {
+    public Currency(String name, String rate, String nationName) {
         this.name = name;
         this.rate = rate;
+        this.nationName = nationName;
     }
 
     /***

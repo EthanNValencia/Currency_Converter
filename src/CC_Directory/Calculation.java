@@ -13,6 +13,7 @@ import java.text.NumberFormat;
  */
 public class Calculation {
 
+    NumberFormat nf = NumberFormat.getInstance();
     private String formatRate;
     private String inputConversion;
     private String displayRate1, displayRate2;
@@ -55,11 +56,15 @@ public class Calculation {
      * @param currency2 This is the second currency object.
      */
     public Calculation(Currency currency1, Currency currency2){
+
         double rate = (double) 1 / Double.parseDouble(currency1.getRate());
         rate = rate * Double.parseDouble(currency2.getRate());
-        formatRate = String.format("%.5f", rate);
+        formatRate = String.format("%.2f", rate);
+        if(formatRate.equals("0.00"))
+            formatRate = String.format("%.7f", rate);
         displayRate1 = "1";
         displayRate2 = formatRate;
+
     }
 
     /***
@@ -67,8 +72,24 @@ public class Calculation {
      * @param input Requires a numerical value as a parameter.
      */
     public void convertCurrency(double input){
-        NumberFormat nf = NumberFormat.getInstance();
-        this.inputConversion = nf.format(input * Double.parseDouble(formatRate));
+
+        nf.setMinimumFractionDigits(2);
+        System.out.println(Double.parseDouble(formatRate) * input);
+        inputConversion = nf.format(input * Double.parseDouble(formatRate));
+        checkLower(input);
+
     }
 
+    /***
+     * Method that verifies that a 0 isn't be returned as the exchange number. If certain countries experience higher rates of inflation this may need to be adjusted.
+     * @param input Takes the input that is passed into the method stack from the input area in the GUI.
+     */
+    public void checkLower(double input){
+
+        if(inputConversion.equals("0.00")){
+            nf.setMinimumFractionDigits(7);
+            inputConversion = nf.format(input * Double.parseDouble(formatRate));
+        }
+
+    }
 }
