@@ -59,8 +59,8 @@ public class Calculation {
 
         double rate = (double) 1 / Double.parseDouble(currency1.getRate());
         rate = rate * Double.parseDouble(currency2.getRate());
-        formatRate = String.format("%.2f", rate);
-        if(formatRate.equals("0.00"))
+        formatRate = String.format("%.3f", rate);
+        if(formatRate.equals("0.000"))
             formatRate = String.format("%.7f", rate);
         displayRate1 = "1";
         displayRate2 = formatRate;

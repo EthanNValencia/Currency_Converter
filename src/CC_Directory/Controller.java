@@ -40,6 +40,7 @@ public class Controller implements Initializable, CONSTANTS {
     private DataInputStream fromServer = null;
     private Tooltip toolTip1 = new Tooltip("This is the currency of Colombia");
     private Tooltip toolTip2 = new Tooltip("This is the currency of Colombia");
+    private Tooltip submit = new Tooltip();
 
     @FXML
     private ImageView cur1_Image, cur2_Image;
@@ -176,7 +177,7 @@ public class Controller implements Initializable, CONSTANTS {
         }
         inputArea.setVisible(false);
         submitBtn.setVisible(false);
-        serverButton.setVisible(false);
+        serverButton.setVisible(true);
         serverOutputLabel.setVisible(false);
 
         comboBox1.getSelectionModel().selectFirst();
@@ -205,10 +206,10 @@ public class Controller implements Initializable, CONSTANTS {
             }
 
             try {
-                // Get the radius from the text field
+                // Get the number from the server
                 double sendNumber = Double.parseDouble(inputArea.getText().trim());
-                inputArea.setText("");
-                // Send the radius to the server
+                // inputArea.setText("");
+                // Send the number to the server
                 toServer.writeDouble(sendNumber);
                 toServer.flush();
                 // Get area from the server
