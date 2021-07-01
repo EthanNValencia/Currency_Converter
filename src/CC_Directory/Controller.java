@@ -72,13 +72,11 @@ public class Controller implements Initializable, CONSTANTS {
      * @param currency2 The second currency object that is selected from the second combobox
      */
     public void getRate(Currency currency1, Currency currency2){
-
         currencyExchange.setText("");
         calculateObj = new Calculation(currency1, currency2);
         outputRate.setText(calculateObj.getDisplayRate1() + " " + currency1.getName() + " = " + calculateObj.getDisplayRate2() + " " + currency2.getName());
         conversionIndicator.setText("Converting " + currency1.getName() + " to " + currency2.getName());
         submitBtn.setVisible(true); inputArea.setVisible(true);
-
     }
 
     /***
@@ -87,7 +85,6 @@ public class Controller implements Initializable, CONSTANTS {
      * @param comboBox2 This is the the string parameter from the second combobox.
      */
     public void getString(String comboBox1, String comboBox2){
-
         for (HashMap.Entry<String, Currency> entry : CONSTANTS.nationHashMap.entrySet()){
             if(entry.getKey() == comboBox1)
                 comboBox1Currency = entry.getValue();
@@ -103,7 +100,6 @@ public class Controller implements Initializable, CONSTANTS {
         }
 
         changeImages();
-
     }
 
     public void changeImages(){
@@ -124,7 +120,6 @@ public class Controller implements Initializable, CONSTANTS {
      * This method is used with the submit button. It pulls text from the text area and calculates the currency conversion.
      */
     public void submit() {
-
         String input = inputArea.getText();
         double amount;
 
@@ -141,7 +136,6 @@ public class Controller implements Initializable, CONSTANTS {
             textArea.appendText("Please enter a numeric. ");
             textArea.appendText("Your input must be a simple number. Ex: 500\n");
         }
-
     }
 
     /***
@@ -151,7 +145,6 @@ public class Controller implements Initializable, CONSTANTS {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         Stop[] stop = new Stop[] { new Stop(0, Color.GRAY), new Stop(1, Color.WHITESMOKE)};
         LinearGradient linGrad = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, stop);
         BackgroundFill bckFill = new BackgroundFill(linGrad, CornerRadii.EMPTY, Insets.EMPTY);
@@ -225,6 +218,5 @@ public class Controller implements Initializable, CONSTANTS {
                 System.out.println("The server may not be running.");
             }
         });
-
     }
 }

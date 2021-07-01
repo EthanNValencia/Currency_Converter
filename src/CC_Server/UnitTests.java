@@ -1,8 +1,15 @@
 package CC_Server;
 
 import org.junit.jupiter.api.Test;
+import CC_Directory.WebReader;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class UnitTests {
@@ -18,6 +25,20 @@ public class UnitTests {
             fail();
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testWebReader(){
+        WebReader webReader = new WebReader();
+        String content = webReader.getDBPage("https://www.x-rates.com/historical/?from=USD&amount=1&date=2021-06-16");
+
+    }
+
+    // https://www.x-rates.com/historical/?from=USD&amount=1&date=2021-06-16
+    // <td class='rtRates'>
+    @Test
+    public void testingHTTPInteraction(){
+
     }
 
 }

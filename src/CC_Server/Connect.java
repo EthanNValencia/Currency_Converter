@@ -1,6 +1,7 @@
 package CC_Server;
 
 import CC_Directory.Currency;
+import CC_Directory.WebReader;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

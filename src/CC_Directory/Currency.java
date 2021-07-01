@@ -11,8 +11,8 @@ package CC_Directory;
  */
 public class Currency {
 
-    private String name;
-    private String rate;
+    protected String name;
+    protected String rate;
     private String nationName;
 
     public String getNationName(){
