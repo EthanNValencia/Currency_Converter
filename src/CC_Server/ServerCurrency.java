@@ -4,6 +4,8 @@ import CC_Directory.Currency;
 
 public class ServerCurrency extends Currency {
 
+    protected String date;
+
     public String getDate() {
         return date;
     }
@@ -11,8 +13,6 @@ public class ServerCurrency extends Currency {
     public void setDate(String date) {
         this.date = date;
     }
-
-    String date;
 
     public ServerCurrency(String name, String rate, String date) {
         super(name, rate);

@@ -7,8 +7,11 @@ Currency converter and presentation application.
 package CC_Directory;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,6 +23,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.stage.Stage;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -145,7 +152,7 @@ public class Controller implements Initializable, CONSTANTS {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Stop[] stop = new Stop[] { new Stop(0, Color.GRAY), new Stop(1, Color.WHITESMOKE)};
+        Stop[] stop = new Stop[]{new Stop(0, Color.GRAY), new Stop(1, Color.WHITESMOKE)};
         LinearGradient linGrad = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, stop);
         BackgroundFill bckFill = new BackgroundFill(linGrad, CornerRadii.EMPTY, Insets.EMPTY);
         backgroundPane.setBackground(new Background(bckFill));
@@ -156,7 +163,7 @@ public class Controller implements Initializable, CONSTANTS {
             Image image = new Image("CC_Images/COP.png"); // default setting
             cur1_Image.setImage(image);
             cur2_Image.setImage(image);
-        } catch (IllegalArgumentException iae){
+        } catch (IllegalArgumentException iae) {
             System.out.println("Image not found.");
         }
 
@@ -164,7 +171,7 @@ public class Controller implements Initializable, CONSTANTS {
         conversionIndicator.setText("");
         currencyExchange.setText("");
 
-        for (int i = 0; i < CONSTANTS.CURRENCYNAMES.length; i++){
+        for (int i = 0; i < CONSTANTS.CURRENCYNAMES.length; i++) {
             comboBox1.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
             comboBox2.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
         }
@@ -179,9 +186,17 @@ public class Controller implements Initializable, CONSTANTS {
         comboBox1.setOnAction(e -> getString(comboBox1.getValue(), comboBox2.getValue()));
         comboBox2.setOnAction(e -> getString(comboBox1.getValue(), comboBox2.getValue()));
 
-        serverButton.setOnAction(e -> {
+    }
 
+    @FXML
+    void chartServer(ActionEvent event){
             try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Chart.fxml"));
+                Parent root = (Parent) fxmlLoader.load();
+                Stage stage = new Stage();
+                stage.setTitle("Chart");
+                stage.setScene(new Scene(root));
+                stage.show();
                 // Create a socket to connect to the server
                 Socket socket = new Socket("localhost", 8000);
                 // Socket socket = new Socket("192.168.0.95", 8000); // this is where this program connects to the server
@@ -193,8 +208,7 @@ public class Controller implements Initializable, CONSTANTS {
                 toServer = new DataOutputStream(socket.getOutputStream());
                 // System.out.println("Server connection was successful.");
                 serverOutputLabel.setText("Connection established.");
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 System.out.println("An IO exception occurred on the client side.");
             }
 
@@ -217,6 +231,6 @@ public class Controller implements Initializable, CONSTANTS {
                 System.out.println("A null pointer exception was thrown on the client side.");
                 System.out.println("The server may not be running.");
             }
-        });
     }
 }
+
