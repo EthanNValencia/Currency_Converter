@@ -14,9 +14,7 @@ import java.text.NumberFormat;
 public class Calculation {
 
     NumberFormat nf = NumberFormat.getInstance();
-    private String formatRate;
-    private String inputConversion;
-    private String displayRate1, displayRate2;
+    private String formatRate, inputConversion, displayRate1, displayRate2;
 
     /***
      * Standard getter method for the rate 1 variable.
@@ -51,12 +49,11 @@ public class Calculation {
     }
 
     /***
-     * This is the constructor method that uses two currency objects as parameters and uses them to derive conversion rates.
-     * @param currency1 This is the first currency object.
-     * @param currency2 This is the second currency object.
+     * This is the constructor method that uses two currency objects as parameters and uses them to derive conversion rates. Order of insertion matters. The first currency is understood to be the exchange of interest.
+     * @param currency1 This is the first currency object (from this).
+     * @param currency2 This is the second currency object (to this).
      */
     public Calculation(Currency currency1, Currency currency2){
-
         double rate = (double) 1 / Double.parseDouble(currency1.getRate());
         rate = rate * Double.parseDouble(currency2.getRate());
         formatRate = String.format("%.3f", rate);
@@ -64,7 +61,6 @@ public class Calculation {
             formatRate = String.format("%.7f", rate);
         displayRate1 = "1";
         displayRate2 = formatRate;
-
     }
 
     /***
@@ -72,12 +68,9 @@ public class Calculation {
      * @param input Requires a numerical value as a parameter.
      */
     public void convertCurrency(double input){
-
         nf.setMinimumFractionDigits(2);
-        System.out.println(Double.parseDouble(formatRate) * input);
         inputConversion = nf.format(input * Double.parseDouble(formatRate));
         checkLower(input);
-
     }
 
     /***
@@ -85,11 +78,9 @@ public class Calculation {
      * @param input Takes the input that is passed into the method stack from the input area in the GUI.
      */
     public void checkLower(double input){
-
         if(inputConversion.equals("0.00")){
             nf.setMinimumFractionDigits(7);
             inputConversion = nf.format(input * Double.parseDouble(formatRate));
         }
-
     }
 }

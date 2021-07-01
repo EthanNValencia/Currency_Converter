@@ -82,8 +82,7 @@ class UnitTests {
         Currency USD = new Currency("USD", "1", "United States");
         Currency COP = new Currency("COP", "3000", "Colombia");
         Calculation cur = new Calculation(USD, COP);
-        cur.convertCurrency(4);
-        assertEquals("12,000", cur.getInputConversion());
+        assertEquals(null, cur.getInputConversion());
     }
 
     /***
@@ -103,5 +102,63 @@ class UnitTests {
         String text = "Fet ctl00_M_lblToAmount Five Eight ASD 5000";
         assertEquals("5000", WebReader.editString(text));
     }
+
+    /***
+     * Verifies that the Calculation.getDisplayRate1 is functioning correctly.
+     */
+    @Test
+    public void testGetDisplayRate1(){
+        Currency X = new Currency("XXX", "1");
+        Currency Y = new Currency("YYY", "3000");
+        Calculation testCalc = new Calculation(X, Y);
+        assertEquals("1", testCalc.getDisplayRate1());
+    }
+
+    /***
+     * Verifies that the Calculation.getDisplayRate2 is functioning correctly.
+     */
+    @Test
+    public void testGetDisplayRate2(){
+        Currency X = new Currency("XXX", "2");
+        Currency Y = new Currency("YYY", "3000");
+        Calculation testCalc = new Calculation(X, Y);
+        assertEquals("1500.000", testCalc.getDisplayRate2());
+    }
+
+    /***
+     * Tests Calculation.getDisplayRate1 and Calculation.getDisplayRate2 consecutively.
+     */
+    @Test
+    public void testGetDisplayRates(){
+        Currency X = new Currency("XXX", "5");
+        Currency Y = new Currency("YYY", "3000");
+        Calculation testCalc = new Calculation(X, Y);
+        assertEquals("1", testCalc.getDisplayRate1());
+        assertEquals("600.000", testCalc.getDisplayRate2());
+    }
+
+    /***
+     * Tests that the Calculation.getFormatRate() is functioning correctly.
+     */
+    @Test
+    public void testGetFormatRate(){
+        Currency X = new Currency("XXX", "5");
+        Currency Y = new Currency("YYY", "3000");
+        Calculation testCalc = new Calculation(X, Y);
+        assertEquals("600.000", testCalc.getFormatRate());
+    }
+
+    /***
+     * Tests that the Calculation.convertCurrency() is functioning correctly.
+     */
+    @Test
+    public void testConvertCurrency(){
+        Currency X = new Currency("XXX", "1");
+        Currency Y = new Currency("YYY", "3000");
+        Calculation testCalc = new Calculation(X, Y);
+        testCalc.convertCurrency(2);
+        assertEquals("6,000.00", testCalc.getInputConversion());
+    }
+
 
 }

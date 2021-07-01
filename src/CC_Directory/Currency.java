@@ -36,14 +36,25 @@ public class Currency {
     }
 
     /***
-     * Constructor method for the currency object. It requires that the name of the currency and rate.
+     * Constructor method for the currency object. It requires that the name of the currency, rate, and name of nation that is associated with the currency.
      * @param name Requires the name of the currency (EX: USD, COP)
      * @param rate Requires the currency exchange rate as compared to USD.
+     * @param nationName The name of the nation makes understanding the currencies easier.
      */
     public Currency(String name, String rate, String nationName) {
         this.name = name;
         this.rate = rate;
         this.nationName = nationName;
+    }
+
+    /***
+     * 2 parameter constructor method for the currency object. Useful in testing.
+     * @param name Requires the name of the currency (EX: USD, COP)
+     * @param rate Requires the currency exchange rate as compared to USD.
+     */
+    public Currency(String name, String rate) {
+        this.name = name;
+        this.rate = rate;
     }
 
     /***
