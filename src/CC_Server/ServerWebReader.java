@@ -2,9 +2,7 @@ package CC_Server;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ServerWebReader {
 
@@ -40,15 +38,15 @@ public class ServerWebReader {
         return content;
     }
 
-    public List<ServerCurrency> createCurrencyList(String content){
+    public HashSet<ServerCurrency> createCurrencyList(String content){
         Scanner scan = new Scanner(content);
-        List<ServerCurrency> currencyList = new ArrayList<ServerCurrency>();
+        HashSet<ServerCurrency> currencyHashSet = new HashSet<ServerCurrency>();
         String reader = "";
         while (scan.hasNextLine()) {
             reader = scan.nextLine();
-            currencyList.add(new ServerCurrency(findCurrencyName(reader), findCurrencyRate(reader), date));
+            currencyHashSet.add(new ServerCurrency(findCurrencyName(reader).trim(), findCurrencyRate(reader).trim(), date));
         }
-        return currencyList;
+        return currencyHashSet;
     }
 
     public String findCurrencyRate(String reader){
@@ -74,7 +72,9 @@ public class ServerWebReader {
         else
             return false;
     }
-    public String getDBPage(String websiteURL) {
+
+    public HashSet<ServerCurrency> getDBPage(String websiteURL) {
+        HashSet<ServerCurrency> currencyList = null;
         try {
             URL url = new URL(websiteURL);
             Scanner scan = new Scanner(url.openStream());
@@ -82,13 +82,13 @@ public class ServerWebReader {
             content = readDBText(scan);
             // date = getDBDate(content);
             content = removeDBContent(content);
-            List<ServerCurrency> currencyList = createCurrencyList(content);
+            currencyList = createCurrencyList(content);
             System.out.println(currencyList);
-            return content;
+            return currencyList;
         }
         catch(IOException ex) {
             ex.printStackTrace();
         }
-        return "-1";
+        return currencyList;
     }
 }

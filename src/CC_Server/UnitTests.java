@@ -9,7 +9,11 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class UnitTests {
@@ -19,7 +23,6 @@ public class UnitTests {
      */
     @Test
     public void testConnect(){
-
         try {
             Connect.createTable();
         } catch (Exception e) {
@@ -29,17 +32,21 @@ public class UnitTests {
     }
 
     @Test
-    public void testWebReader(){
+    public void testWebReader() throws Exception {
         ServerWebReader webReader = new ServerWebReader();
-        String content = webReader.getDBPage("https://www.x-rates.com/historical/?from=USD&amount=1&date=2021-06-16");
-
+        HashSet<ServerCurrency> currencyList = webReader.getDBPage("https://www.x-rates.com/historical/?from=USD&amount=1&date=2021-06-16");
+        Connect.insertList(currencyList);
     }
 
-    // https://www.x-rates.com/historical/?from=USD&amount=1&date=2021-06-16
-    // <td class='rtRates'>
     @Test
-    public void testingHTTPInteraction(){
-
+    public void testHashSet() {
+        ServerCurrency sc1 = new ServerCurrency("USD", "10", "2000-4-21");
+        ServerCurrency sc2 = new ServerCurrency("USD", "22", "2000-4-21");
+        ServerCurrency sc3 = new ServerCurrency("USD", "2", "2000-4-22");
+        HashSet<ServerCurrency> hs = new HashSet();
+        hs.add(sc1);
+        hs.add(sc2);
+        hs.add(sc3);
+        assertEquals(2, hs.size());
     }
-
 }

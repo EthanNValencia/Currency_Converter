@@ -1,11 +1,10 @@
 package CC_Server;
 
-import CC_Directory.Currency;
-import CC_Directory.WebReader;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /***
  * Connect class for connecting the server application to a database.
@@ -35,7 +34,7 @@ public class Connect {
     public static void createTable() throws Exception {
         Connection con = getConnection();
         assert con != null;
-        PreparedStatement createTable = con.prepareStatement("CREATE TABLE IF NOT EXISTS currency (id int NOT NULL AUTO_INCREMENT, currency_name varchar(25), currency_rate int, currency_date date, PRIMARY KEY(id))");
+        PreparedStatement createTable = con.prepareStatement("CREATE TABLE IF NOT EXISTS cur_db.currency (currency_name varchar(25), currency_rate varchar(25), currency_date date, PRIMARY KEY(currency_name, currency_date));");
         createTable.executeUpdate();
     }
 
@@ -71,6 +70,22 @@ public class Connect {
         String sql = "DROP TABLE currency;";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.executeUpdate();
+    }
+
+    public static void insertList(HashSet<ServerCurrency> currencyHashSet) throws Exception{
+        Connection con = getConnection();
+        String sql = "INSERT INTO currency (currency_name, currency_rate, currency_date) VALUES(?,?,?)";
+        PreparedStatement ps = con.prepareStatement(sql);
+        Iterator<ServerCurrency> iterator = currencyHashSet.iterator();
+
+        while(iterator.hasNext()){
+            ServerCurrency serverCurrency = iterator.next();
+            ps.setString(1, serverCurrency.getName());
+            ps.setString(2, serverCurrency.getRate());
+            ps.setString(3, serverCurrency.getDate());
+            //System.out.println(ps.toString());
+            ps.executeUpdate();
+        }
     }
 
     /***
