@@ -19,6 +19,7 @@ public class UnitTests {
      */
     @Test
     public void testConnect(){
+
         try {
             Connect.createTable();
         } catch (Exception e) {
@@ -29,7 +30,7 @@ public class UnitTests {
 
     @Test
     public void testWebReader(){
-        WebReader webReader = new WebReader();
+        ServerWebReader webReader = new ServerWebReader();
         String content = webReader.getDBPage("https://www.x-rates.com/historical/?from=USD&amount=1&date=2021-06-16");
 
     }

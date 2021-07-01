@@ -35,20 +35,16 @@ public class Connect {
     public static void createTable() throws Exception {
         Connection con = getConnection();
         assert con != null;
-        PreparedStatement createTable = con.prepareStatement("CREATE TABLE IF NOT EXISTS currency (id int NOT NULL AUTO_INCREMENT, currency_name varchar(25), currency_rate int, PRIMARY KEY(id))");
+        PreparedStatement createTable = con.prepareStatement("CREATE TABLE IF NOT EXISTS currency (id int NOT NULL AUTO_INCREMENT, currency_name varchar(25), currency_rate int, currency_date date, PRIMARY KEY(id))");
         createTable.executeUpdate();
     }
 
-    /***
-     * This method is used to insert data fields that are stored in a currency object into the database.
-     * @param currencyName This is the name of the currency object or the short hand for that currency.
-     * @param currencyConversion This is the currency conversion rate as compared to USD.
-     * @throws Exception It can throw an exception.
-     */
-    public static void insertCurrency(String currencyName, double currencyConversion) throws Exception {
-        final String currency_name = currencyName;
-        final double currency_rate = currencyConversion;
-        String sql = "INSERT INTO word (currency_name, currency_rate) VALUES('" + currency_name + "' , '" + currency_rate + "')";
+
+    public static void insertCurrency(ServerCurrency serverCurrency) throws Exception {
+        final String currency_name = serverCurrency.getName();
+        final String currency_rate = serverCurrency.getRate();
+        final String currency_date = serverCurrency.getDate();
+        String sql = "INSERT INTO word (currency_name, currency_rate, currency_date) VALUES('" + currency_name + "' , '" + currency_rate + "' , '" + currency_date + "')";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ps.executeUpdate();
@@ -59,7 +55,7 @@ public class Connect {
      * @throws Exception I doubt it can throw an exception, but the tutorial told me to keep this here.
      */
     public static void deleteAll() throws Exception{
-        String sql = "DELETE FROM ??(put database location here)??;";
+        String sql = "DELETE FROM currency;";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ps.executeUpdate();
@@ -72,7 +68,7 @@ public class Connect {
     public static void dropTable() throws Exception {
         Connection con = getConnection();
         assert con != null;
-        String sql = "DROP TABLE ??(put database location here)??;";
+        String sql = "DROP TABLE currency;";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.executeUpdate();
     }
