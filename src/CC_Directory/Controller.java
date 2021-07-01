@@ -152,7 +152,7 @@ public class Controller implements Initializable, CONSTANTS {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Stop[] stop = new Stop[]{new Stop(0, Color.GRAY), new Stop(1, Color.WHITESMOKE)};
+        Stop[] stop = new Stop[] { new Stop(0, Color.GRAY), new Stop(1, Color.WHITESMOKE)};
         LinearGradient linGrad = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, stop);
         BackgroundFill bckFill = new BackgroundFill(linGrad, CornerRadii.EMPTY, Insets.EMPTY);
         backgroundPane.setBackground(new Background(bckFill));
@@ -163,7 +163,7 @@ public class Controller implements Initializable, CONSTANTS {
             Image image = new Image("CC_Images/COP.png"); // default setting
             cur1_Image.setImage(image);
             cur2_Image.setImage(image);
-        } catch (IllegalArgumentException iae) {
+        } catch (IllegalArgumentException iae){
             System.out.println("Image not found.");
         }
 
@@ -171,7 +171,7 @@ public class Controller implements Initializable, CONSTANTS {
         conversionIndicator.setText("");
         currencyExchange.setText("");
 
-        for (int i = 0; i < CONSTANTS.CURRENCYNAMES.length; i++) {
+        for (int i = 0; i < CONSTANTS.CURRENCYNAMES.length; i++){
             comboBox1.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
             comboBox2.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
         }
@@ -186,10 +186,8 @@ public class Controller implements Initializable, CONSTANTS {
         comboBox1.setOnAction(e -> getString(comboBox1.getValue(), comboBox2.getValue()));
         comboBox2.setOnAction(e -> getString(comboBox1.getValue(), comboBox2.getValue()));
 
-    }
+        serverButton.setOnAction(e -> {
 
-    @FXML
-    void chartServer(ActionEvent event){
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Chart.fxml"));
                 Parent root = (Parent) fxmlLoader.load();
@@ -231,6 +229,11 @@ public class Controller implements Initializable, CONSTANTS {
                 System.out.println("A null pointer exception was thrown on the client side.");
                 System.out.println("The server may not be running.");
             }
+        });
+    }
+
+    @FXML
+    void chartServer(ActionEvent event){
+
     }
 }
-

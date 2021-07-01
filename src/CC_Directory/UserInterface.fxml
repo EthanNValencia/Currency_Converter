@@ -32,7 +32,7 @@
             <Label fx:id="currencyExchange" layoutX="11.0" layoutY="94.0" text="Label" />
             <ImageView fx:id="cur1_Image" fitHeight="25.0" fitWidth="25.0" layoutX="12.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="cur2_Image" fitHeight="25.0" fitWidth="25.0" layoutX="146.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
-            <Button fx:id="serverButton" layoutX="121.0" layoutY="121.0" mnemonicParsing="false" onAction="#chartServer" text="Server" />
+            <Button fx:id="serverButton" layoutX="121.0" layoutY="121.0" mnemonicParsing="false" text="Server" />
             <Label fx:id="serverOutputLabel" layoutX="17.0" layoutY="125.0" text="serverOutputLabel" />
             <TextArea fx:id="textArea" layoutX="5.0" layoutY="150.0" prefHeight="125.0" prefWidth="390.0" />
          </children>
