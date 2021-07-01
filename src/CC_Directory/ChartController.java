@@ -11,6 +11,7 @@ public class ChartController {
     private DataInputStream fromServer = null;
 
     public void connectToServer(){
+        // I PASTED THIS CODE HERE FOR FUTURE USE
         try {
         // Create a socket to connect to the server
         Socket socket = new Socket("localhost", 8000);

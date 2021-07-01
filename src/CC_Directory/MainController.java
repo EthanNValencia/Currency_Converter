@@ -32,7 +32,7 @@ import java.util.ResourceBundle;
 /***
  * Controller class for the GUI. It contains some basic filtering logics for calculating currency conversions.
  */
-public class Controller implements Initializable, CONSTANTS {
+public class MainController implements Initializable, CONSTANTS {
 
     private Currency comboBox1Currency = null;
     private Currency comboBox2Currency = null;
@@ -68,7 +68,7 @@ public class Controller implements Initializable, CONSTANTS {
     @FXML
     void chart(ActionEvent event){
         try {
-            FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource("Chart.fxml"));
+            FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource("ChartUI.fxml"));
             Parent root = (Parent) fxmlLoader1.load();
             Stage stage = new Stage();
             stage.setTitle("Chart");
