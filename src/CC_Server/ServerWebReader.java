@@ -13,7 +13,7 @@ import java.util.*;
 /***
  * The ServerWebReader class is similar to the client-side WebReader class, however, it is not similar enough to make inheritance useful.
  */
-public class ServerWebReader {
+public class ServerWebReader implements CC_Server.CONSTANTS {
 
     private String date;
 
@@ -160,4 +160,18 @@ public class ServerWebReader {
         }
         return currencyList;
     }
+
+    /***
+     * This method pulls the historical currency conversion rate of many different currencies off a website and puts them all into the database.
+     * @throws Exception A lot could go wrong with this method: database problems and website access problems.
+     */
+    public void insertAnnualCurrencyData() throws Exception {
+        ServerWebReader serverWebReader = new ServerWebReader();
+        for (int i = 0; i <= DAYS_IN_YEAR; i++) {
+            HashSet<ServerCurrency> currencyList = serverWebReader.getPage(WEBSITE_URL + DATE_TODAY.minusDays(i));
+            if (!Connect.checkEntries(serverWebReader.getDate())) // If entries with this date already exist, then cancel the insertion.
+                Connect.insertList(currencyList);
+        }
+    }
+
 }

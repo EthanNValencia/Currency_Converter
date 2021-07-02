@@ -222,8 +222,6 @@ public class UnitTests {
         assertFalse(testServerWebReader.containsLineContent(content));
     }
 
-    // 		<input type="text" value="2021-06-16" name="date" id="historicalDate">
-
     /***
      * This verifies that the ServerWebReader.containsDate() is correctly returning true.
      */
@@ -242,5 +240,15 @@ public class UnitTests {
         ServerWebReader testServerWebReader = new ServerWebReader();
         String content = "<input type=\"text\" value=\"2021-06-16\" name=\"date\" id=\"\">";
         assertFalse(testServerWebReader.containsDate(content));
+    }
+
+    @Test
+    public void testServerWebReader_insertAnnualCurrencyData(){
+        ServerWebReader testServerWebReader = new ServerWebReader();
+        try {
+            testServerWebReader.insertAnnualCurrencyData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
