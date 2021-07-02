@@ -59,12 +59,6 @@ public class ServerCurrency extends Currency {
      */
     @Override
     public boolean equals(Object o) {
-        /* // I don't think these comparisons are necessary.
-        if (this.name == o && this.date == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-         */
         ServerCurrency that = (ServerCurrency) o;
         return Objects.equals(hashCode(), that.hashCode());
     }

@@ -30,8 +30,7 @@ public class Connect {
         String password = "EFtkgT%gt44De";
         Class.forName(driver);
 
-        Connection conn = DriverManager.getConnection(url, username, password);
-        return conn;
+        return DriverManager.getConnection(url, username, password);
     }
 
     /***
@@ -41,7 +40,10 @@ public class Connect {
     public static void createTable() throws Exception {
         Connection con = getConnection();
         assert con != null;
-        PreparedStatement createTable = con.prepareStatement("CREATE TABLE IF NOT EXISTS cur_db.currency (currency_name varchar(25), currency_rate varchar(25), currency_date date, PRIMARY KEY(currency_name, currency_date));");
+        PreparedStatement createTable
+                = con.prepareStatement("CREATE TABLE IF NOT EXISTS cur_db.currency " +
+                                           "(currency_name varchar(25), currency_rate varchar(25), " +
+                                           "currency_date date, PRIMARY KEY(currency_name, currency_date));");
         createTable.executeUpdate();
     }
 
@@ -54,7 +56,27 @@ public class Connect {
         final String currency_name = serverCurrency.getName();
         final String currency_rate = serverCurrency.getRate();
         final String currency_date = serverCurrency.getDate();
-        String sql = "INSERT INTO word (currency_name, currency_rate, currency_date) VALUES('" + currency_name + "' , '" + currency_rate + "' , '" + currency_date + "')";
+        String sql = "INSERT INTO cur_db.currency (currency_name, currency_rate, currency_date) " +
+                     "VALUES('" + currency_name + "' , '" + currency_rate + "' , '" + currency_date + "');";
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.executeUpdate();
+    }
+
+
+    /***
+     *
+     * @param serverCurrency
+     * @throws Exception
+     */
+    public static void deleteCurrency(ServerCurrency serverCurrency) throws Exception {
+        final String currency_name = serverCurrency.getName();
+        final String currency_rate = serverCurrency.getRate();
+        final String currency_date = serverCurrency.getDate();
+        String sql = "DELETE FROM cur_db.currency WHERE " +
+                     "currency_name = '" + currency_name +  "' AND " +
+                     "currency_rate = '" + currency_rate +  "' " +
+                     "AND currency_date = '" + currency_date +  "';";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ps.executeUpdate();
@@ -65,7 +87,7 @@ public class Connect {
      * @throws Exception If an exception is thrown, it is likely due to a failure to connect to the database.
      */
     public static void deleteAll() throws Exception{
-        String sql = "DELETE FROM currency;";
+        String sql = "DELETE FROM cur_db.currency;";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ps.executeUpdate();
@@ -78,7 +100,7 @@ public class Connect {
     public static void dropTable() throws Exception {
         Connection con = getConnection();
         assert con != null;
-        String sql = "DROP TABLE currency;";
+        String sql = "DROP TABLE cur_db.currency;";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.executeUpdate();
     }
@@ -90,7 +112,7 @@ public class Connect {
      * @throws Exception An exception is likely caused by a database connection related problem.
      */
     public static boolean checkEntries(String date) throws Exception {
-        String sql = "SELECT * FROM currency WHERE currency_date = '" + date + "';";
+        String sql = "SELECT * FROM cur_db.currency WHERE currency_date = '" + date + "';";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
@@ -107,7 +129,7 @@ public class Connect {
      */
     public static void insertList(HashSet<ServerCurrency> currencyHashSet) throws Exception{
         Connection con = getConnection();
-        String sql = "INSERT INTO currency (currency_name, currency_rate, currency_date) VALUES(?,?,?)";
+        String sql = "INSERT INTO cur_db.currency (currency_name, currency_rate, currency_date) VALUES(?,?,?)";
         PreparedStatement ps = con.prepareStatement(sql);
         Iterator<ServerCurrency> iterator = currencyHashSet.iterator();
 

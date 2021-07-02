@@ -38,16 +38,16 @@ public class ServerWebReader {
      * @param scan It takes a scanner object.
      * @return It returns the processed textual data as a string.
      */
-    public String readDBText(Scanner scan){
+    public String readText(Scanner scan){
         String reader = "";
         String content = "";
         while (scan.hasNextLine()) {
             reader = scan.nextLine() + "\n";
             reader = reader.trim() + "\n";
-            if (containsDBDate(reader)){
+            if (containsDate(reader)){
                 date = formatDate(reader).trim();
             }
-            if (containsDBLineContent(reader))
+            if (containsLineContent(reader))
                 content = content.concat(reader);
         }
         return content;
@@ -69,7 +69,7 @@ public class ServerWebReader {
      * @param content It takes a pre-processed string as a parameter.
      * @return It returns a post-processed string that has had various text filtered and removed.
      */
-    public String removeDBContent(String content){
+    public String removeStringContent(String content){
         content = content.replaceAll("'>", " ");
         content = content.replaceAll("[?/<>']", "");
         content = content.replaceAll("atd", "");
@@ -89,7 +89,7 @@ public class ServerWebReader {
         String reader = "";
         while (scan.hasNextLine()) {
             reader = scan.nextLine();
-            currencyHashSet.add(new ServerCurrency(findCurrencyName(reader).trim(), findCurrencyRate(reader).trim(), date));
+            currencyHashSet.add(new ServerCurrency(findCurrencyName(reader), findCurrencyRate(reader), date));
         }
         return currencyHashSet;
     }
@@ -101,7 +101,7 @@ public class ServerWebReader {
      */
     public String findCurrencyRate(String reader){
         reader = reader.replaceAll("[A-Za-z]", "");
-        return reader;
+        return reader.trim();
     }
 
     /***
@@ -111,7 +111,7 @@ public class ServerWebReader {
      */
     public String findCurrencyName(String reader){
         reader = reader.replaceAll("[0123456789,.]", "");
-        return reader;
+        return reader.trim();
     }
 
     /***
@@ -119,7 +119,7 @@ public class ServerWebReader {
      * @param reader Requires a string of content.
      * @return If the string contains content of specified interest then it will return true.
      */
-    public boolean containsDBLineContent(String reader){
+    public boolean containsLineContent(String reader){
         if (reader.contains("<td class='rtRates'>") && reader.contains("from=USD")) // specifies textual markers
             return true;
         else
@@ -131,7 +131,7 @@ public class ServerWebReader {
      * @param reader Requires a string of content.
      * @return If the string contains content of specified interest then it will return true.
      */
-    public boolean containsDBDate(String reader){
+    public boolean containsDate(String reader){
         if (reader.contains("id=\"historicalDate\">")) // specifies textual markers
             return true;
         else
@@ -143,15 +143,15 @@ public class ServerWebReader {
      * @param websiteURL It requires the URL of the website as a string.
      * @return It returns the HashSet of generated ServerCurrency objects.
      */
-    public HashSet<ServerCurrency> getDBPage(String websiteURL) {
+    public HashSet<ServerCurrency> getPage(String websiteURL) {
         HashSet<ServerCurrency> currencyList = null;
         try {
             URL url = new URL(websiteURL);
             Scanner scan = new Scanner(url.openStream());
             String content = "";
-            content = readDBText(scan);
+            content = readText(scan);
             // date = getDBDate(content);
-            content = removeDBContent(content);
+            content = removeStringContent(content);
             currencyList = createCurrencyList(content);
             return currencyList;
         }
