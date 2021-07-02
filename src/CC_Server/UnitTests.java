@@ -242,13 +242,16 @@ public class UnitTests {
         assertFalse(testServerWebReader.containsDate(content));
     }
 
+    /***
+     * This test checks whether or not a years worth of prior currency rates, for each currency, is contained in the database. If a day is missing then it insert that days currency data.
+     */
     @Test
     public void testServerWebReader_insertAnnualCurrencyData(){
         ServerWebReader testServerWebReader = new ServerWebReader();
         try {
             testServerWebReader.insertAnnualCurrencyData();
         } catch (Exception e) {
-            e.printStackTrace();
+            fail();
         }
     }
 }

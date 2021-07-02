@@ -167,9 +167,12 @@ public class ServerWebReader implements CC_Server.CONSTANTS {
      */
     public void insertAnnualCurrencyData() throws Exception {
         ServerWebReader serverWebReader = new ServerWebReader();
+        HashSet<ServerCurrency> currencyList = null;
+
         for (int i = 0; i <= DAYS_IN_YEAR; i++) {
-            HashSet<ServerCurrency> currencyList = serverWebReader.getPage(WEBSITE_URL + DATE_TODAY.minusDays(i));
-            if (!Connect.checkEntries(serverWebReader.getDate())) // If entries with this date already exist, then cancel the insertion.
+            if (!Connect.checkEntries("" + DATE_TODAY.minusDays(i))) // If entries with this date already exist, then cancel the insertion.
+                currencyList = serverWebReader.getPage(WEBSITE_URL + DATE_TODAY.minusDays(i));
+            if (currencyList != null)
                 Connect.insertList(currencyList);
         }
     }
