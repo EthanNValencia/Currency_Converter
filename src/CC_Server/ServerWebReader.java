@@ -4,9 +4,20 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+/***
+ * The ServerWebReader class is similar to the client-side WebReader class, however, it is not similar enough to make inheritance useful.
+ */
 public class ServerWebReader {
 
     private String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String readDBText(Scanner scan){
         String reader = "";
@@ -83,7 +94,6 @@ public class ServerWebReader {
             // date = getDBDate(content);
             content = removeDBContent(content);
             currencyList = createCurrencyList(content);
-            System.out.println(currencyList);
             return currencyList;
         }
         catch(IOException ex) {

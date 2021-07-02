@@ -1,5 +1,6 @@
 package CC_Server;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import CC_Directory.WebReader;
 
@@ -13,7 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class UnitTests {
@@ -31,15 +32,23 @@ public class UnitTests {
         }
     }
 
+    /***
+     * This test passes as long as an exception is not thrown.
+     * @throws Exception An exception here is likely due to a database connection problem.
+     */
     @Test
     public void testWebReader() throws Exception {
-        ServerWebReader webReader = new ServerWebReader();
-        HashSet<ServerCurrency> currencyList = webReader.getDBPage("https://www.x-rates.com/historical/?from=USD&amount=1&date=2021-06-16");
-        Connect.insertList(currencyList);
+        ServerWebReader serverWebReader = new ServerWebReader();
+        HashSet<ServerCurrency> currencyList = serverWebReader.getDBPage("https://www.x-rates.com/historical/?from=USD&amount=1&date=2021-06-16");
+        if(!Connect.checkEntries(serverWebReader.getDate())) // If entries with this date already exist, then cancel the insertion.
+            Connect.insertList(currencyList);
     }
 
+    /***
+     * Verifies that the identical(seemingly) objects are not being stored in the hashset.
+     */
     @Test
-    public void testHashSet() {
+    public void testServerCurrencyHashSet() {
         ServerCurrency sc1 = new ServerCurrency("USD", "10", "2000-4-21");
         ServerCurrency sc2 = new ServerCurrency("USD", "22", "2000-4-21");
         ServerCurrency sc3 = new ServerCurrency("USD", "2", "2000-4-22");
@@ -47,6 +56,15 @@ public class UnitTests {
         hs.add(sc1);
         hs.add(sc2);
         hs.add(sc3);
-        assertEquals(2, hs.size());
+        Assertions.assertEquals(2, hs.size());
+    }
+
+    /***
+     *
+     */
+    @Test
+    public void testCheckEntries() throws Exception {
+        Assertions.assertFalse(Connect.checkEntries("1000-4-21"));
+        Assertions.assertTrue(Connect.checkEntries("2021-06-16"));
     }
 }

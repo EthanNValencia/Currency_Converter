@@ -3,6 +3,7 @@ package CC_Server;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -38,7 +39,11 @@ public class Connect {
         createTable.executeUpdate();
     }
 
-
+    /***
+     * This is a singular insertion
+     * @param serverCurrency
+     * @throws Exception
+     */
     public static void insertCurrency(ServerCurrency serverCurrency) throws Exception {
         final String currency_name = serverCurrency.getName();
         final String currency_rate = serverCurrency.getRate();
@@ -70,6 +75,17 @@ public class Connect {
         String sql = "DROP TABLE currency;";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.executeUpdate();
+    }
+
+    public static boolean checkEntries(String date) throws Exception {
+        String sql = "SELECT * FROM currency WHERE currency_date = '" + date + "';";
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next() == false)
+            return false;
+        else
+            return true;
     }
 
     public static void insertList(HashSet<ServerCurrency> currencyHashSet) throws Exception{
