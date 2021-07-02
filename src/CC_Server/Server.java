@@ -77,25 +77,19 @@ public class Server extends Application {
 
                 Platform.runLater(() -> ta.appendText("Waiting for client connection... \n"));
 
-
-
                 while (true) {
                     Socket socket = serverSocket.accept(); // it waits here for a client message
                     // Create data input and output streams
                     DataInputStream inputFromClient = new DataInputStream(socket.getInputStream());
                     DataOutputStream outputToClient = new DataOutputStream(socket.getOutputStream());
-
                     double number = inputFromClient.readDouble();
                     outputToClient.writeDouble(number);
-
                     Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));
-
                     outputToClient.flush();
                     outputToClient.close();
                     Platform.runLater(() -> ta.appendText("Connection has been closed. \n"));
                 }
-            }
-            catch(IOException ex) {
+            } catch(IOException ex) {
                 ex.printStackTrace();
             }
         }).start();

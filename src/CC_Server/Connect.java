@@ -145,6 +145,11 @@ public class Connect {
         }
     }
 
+    /***
+     * This is a simple method that performs a SQL query that returns all the unique currency names and writes them to a list.
+     * @return It returns a List that contains strings.
+     * @throws Exception It can throw an exception from a variety of database interactive ways.
+     */
     public static List<String> retrieveCurrencyList() throws Exception {
         // SELECT DISTINCT currency_name FROM cur_db.currency;
         String sql = "SELECT DISTINCT currency_name FROM cur_db.currency;";
