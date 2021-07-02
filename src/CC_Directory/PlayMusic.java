@@ -5,8 +5,14 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/***
+ * This is a method that I found in one of my textbooks. I thought it was entertaining, but it takes too long to begin running.
+ */
 public class PlayMusic implements Runnable {
 
+    /***
+     * This is a fun little method that plays audio from a specified URL. It takes a while to load, so it isn't optimal.
+     */
     public void playMusic() {
         Clip clip;
         URL url = null;
@@ -44,6 +50,9 @@ public class PlayMusic implements Runnable {
         }
     }
 
+    /***
+     * This method allows the instantiated object to be run as a thread.
+     */
     @Override
     public void run() {
         playMusic();

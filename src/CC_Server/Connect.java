@@ -40,9 +40,9 @@ public class Connect {
     }
 
     /***
-     * This is a singular insertion
-     * @param serverCurrency
-     * @throws Exception
+     * This is a singular server currency object inserter. Ultimately, this program will be doing so many insertions that the runtime of this method will be problematic. I'll keep this method for testing related purposes.
+     * @param serverCurrency It requires the server-side version of an instantiated currency object as a parameter.
+     * @throws Exception A variety of different exceptions can be thrown by this method.
      */
     public static void insertCurrency(ServerCurrency serverCurrency) throws Exception {
         final String currency_name = serverCurrency.getName();
@@ -56,7 +56,7 @@ public class Connect {
 
     /***
      * Method that is used to delete all the contents of the currency table.
-     * @throws Exception I doubt it can throw an exception, but the tutorial told me to keep this here.
+     * @throws Exception If an exception is thrown, it is likely due to a failure to connect to the database.
      */
     public static void deleteAll() throws Exception{
         String sql = "DELETE FROM currency;";
@@ -77,6 +77,12 @@ public class Connect {
         ps.executeUpdate();
     }
 
+    /***
+     * The idea behind this method is to verify that new inserted data will not conflict with prior existing data within the database. The composite key will cause insertion problems. I don't want Java to attempt to insert data that already exists in the database.
+     * @param date It requires the date as a parameter. This date parameter refers to the established ServerWebReader date field that is established for batch inserts.
+     * @return If the date has already exists in the database, then I can assume attempting to insert will cause exceptions to be thrown, and this method will then return false.
+     * @throws Exception An exception is likely caused by a database connection related problem.
+     */
     public static boolean checkEntries(String date) throws Exception {
         String sql = "SELECT * FROM currency WHERE currency_date = '" + date + "';";
         Connection con = getConnection();
@@ -88,6 +94,11 @@ public class Connect {
             return true;
     }
 
+    /***
+     * This is a batch insert method that is used to insert all currency related objects from a specific page. The data is pulled from pages that are indexed by date.
+     * @param currencyHashSet This takes a HashSet. I moved over to a hashset, because it is a data structure that naturally eliminates duplicates. Attempting to insert data that contains duplicate composite keys is something I want to avoid.
+     * @throws Exception If an exception is thrown here it will likely be from database connectivity related problems.
+     */
     public static void insertList(HashSet<ServerCurrency> currencyHashSet) throws Exception{
         Connection con = getConnection();
         String sql = "INSERT INTO currency (currency_name, currency_rate, currency_date) VALUES(?,?,?)";
