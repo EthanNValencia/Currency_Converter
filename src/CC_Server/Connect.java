@@ -10,8 +10,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 /***
  * Connect class for connecting the server application to a database.
@@ -142,6 +144,22 @@ public class Connect {
             ps.executeUpdate();
         }
     }
+
+    public static List<String> retrieveCurrencyList() throws Exception {
+        // SELECT DISTINCT currency_name FROM cur_db.currency;
+        String sql = "SELECT DISTINCT currency_name FROM cur_db.currency;";
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        List<String> currencyList = new ArrayList<>();
+
+        while (rs.next()){
+            currencyList.add(rs.getString(1));
+        }
+
+        return currencyList;
+    }
+
 
     /***
      * This is an overridden toString method that is useful for testing purposes.

@@ -17,6 +17,7 @@ import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 // --module-path "C:\Program Files\JavaFX\javafx-sdk-16\lib" --add-modules javafx.controls,javafx.fxml
+
 /*
 To run jar in cmd use: (outdated)
 java --module-path "C:\Program Files (x86)\JavaFx\javafx-sdk-15.0.1\lib" --add-modules javafx.controls,javafx.fxml -jar C:\Users\16165\Desktop\SeverTest\out\artifacts\SeverTest_jar\SeverTest.jar
@@ -26,6 +27,8 @@ java --module-path "C:\Program Files (x86)\JavaFx\javafx-sdk-15.0.1\lib" --add-m
  *
  */
 public class Server extends Application {
+
+    ServerWebReader serverWebReader = new ServerWebReader();
 
     /***
      *
@@ -46,7 +49,6 @@ public class Server extends Application {
             System.exit(0);
         });
 
-
         InetAddress ip;
         String hostname;
         try {
@@ -60,9 +62,22 @@ public class Server extends Application {
         new Thread( () -> {
 
             try {
+
                 ServerSocket serverSocket = new ServerSocket(8000);
                 Platform.runLater(() -> ta.appendText("Server started at " + new Date() + '\n'));
+                Platform.runLater(() -> ta.appendText("Server is gathering currency related data.\n"));
+                Platform.runLater(() -> ta.appendText("This may take some time...\n"));
+
+                try {
+                    serverWebReader.insertAnnualCurrencyData();
+                    Platform.runLater(() -> ta.appendText("Currency related data has been successfully gathered.\n"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 Platform.runLater(() -> ta.appendText("Waiting for client connection... \n"));
+
+
 
                 while (true) {
                     Socket socket = serverSocket.accept(); // it waits here for a client message

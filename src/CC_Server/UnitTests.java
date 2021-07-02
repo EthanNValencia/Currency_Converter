@@ -9,6 +9,8 @@ package CC_Server;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.util.HashSet;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UnitTests {
@@ -253,5 +255,11 @@ public class UnitTests {
         } catch (Exception e) {
             fail();
         }
+    }
+
+    @Test
+    public void testConnect_retrieveCurrencyList() throws Exception {
+        List<String> testCurrencyList = Connect.retrieveCurrencyList();
+        assertNotNull(testCurrencyList);
     }
 }
