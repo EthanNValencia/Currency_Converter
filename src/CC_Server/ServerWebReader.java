@@ -1,3 +1,9 @@
+/*
+Ethan J. Nephew
+July 1, 2021
+Server web reader and text processing class.
+*/
+
 package CC_Server;
 
 import java.io.IOException;
@@ -11,14 +17,27 @@ public class ServerWebReader {
 
     private String date;
 
+    /***
+     * This is an accessor method for the date variable.
+     * @return It returns the date content as a string.
+     */
     public String getDate() {
         return date;
     }
 
+    /***
+     * A standard mutator method that sets the date. This is for testing purposes, because dates should always be derived from processed webpages.
+     * @param date Requires a date as a parameter. Format should be: YYYY-MM-DD
+     */
     public void setDate(String date) {
         this.date = date;
     }
 
+    /***
+     * This method ties several other methods together. It takes a scanner that has been used to pull textual data from the web. It then filters through the textual data and engages in processing.
+     * @param scan It takes a scanner object.
+     * @return It returns the processed textual data as a string.
+     */
     public String readDBText(Scanner scan){
         String reader = "";
         String content = "";
@@ -26,7 +45,7 @@ public class ServerWebReader {
             reader = scan.nextLine() + "\n";
             reader = reader.trim() + "\n";
             if (containsDBDate(reader)){
-                date = formateDate(reader).trim();
+                date = formatDate(reader).trim();
             }
             if (containsDBLineContent(reader))
                 content = content.concat(reader);
@@ -34,12 +53,22 @@ public class ServerWebReader {
         return content;
     }
 
-    public String formateDate(String content){
+    /***
+     * This method takes a pre-processed line of interest that contains the date. It filters out non-vital text and returns the post-processed date.
+     * @param content This is the string of pre-processed content.
+     * @return It returns a post-processed date as a string.
+     */
+    public String formatDate(String content){
         content = content.replaceAll("<input type=\"text\" value=\"", "");
         content = content.replaceAll("\" name=\"date\" id=\"historicalDate\">", "");
         return content;
     }
 
+    /***
+     * This method is used to conduct textual processing.
+     * @param content It takes a pre-processed string as a parameter.
+     * @return It returns a post-processed string that has had various text filtered and removed.
+     */
     public String removeDBContent(String content){
         content = content.replaceAll("'>", " ");
         content = content.replaceAll("[?/<>']", "");
@@ -49,6 +78,11 @@ public class ServerWebReader {
         return content;
     }
 
+    /***
+     * This method receives the post-processed string that contains the currency name and rate. It converts the textual data into ServerCurrency objects that are then inserted into a HashSet.
+     * @param content It requires a string of post-processed text.
+     * @return It returns the HashSet of ServerCurrency objects.
+     */
     public HashSet<ServerCurrency> createCurrencyList(String content){
         Scanner scan = new Scanner(content);
         HashSet<ServerCurrency> currencyHashSet = new HashSet<ServerCurrency>();
@@ -60,16 +94,31 @@ public class ServerWebReader {
         return currencyHashSet;
     }
 
+    /***
+     * This method removes alphabetic characters from a string. Ex: Input: "USD 1.0" Output: "1.0"
+     * @param reader It takes a string that contains post-processed text.
+     * @return It returns a string that has had alphabetic characters removed.
+     */
     public String findCurrencyRate(String reader){
         reader = reader.replaceAll("[A-Za-z]", "");
         return reader;
     }
 
+    /***
+     * This method removes numbers, comas, and periods from a string. Ex: Input: "USD 1.0" Output: "USD"
+     * @param reader It takes a string that contains post-processed text.
+     * @return It returns a String that has had numerical, periods, and commas removed.
+     */
     public String findCurrencyName(String reader){
         reader = reader.replaceAll("[0123456789,.]", "");
         return reader;
     }
 
+    /***
+     * This is a simple method that checks whether or not pre-processed lines contain content of interest. This is for searching for currency names and conversion rates.
+     * @param reader Requires a string of content.
+     * @return If the string contains content of specified interest then it will return true.
+     */
     public boolean containsDBLineContent(String reader){
         if (reader.contains("<td class='rtRates'>") && reader.contains("from=USD")) // specifies textual markers
             return true;
@@ -77,6 +126,11 @@ public class ServerWebReader {
             return false;
     }
 
+    /***
+     * This is a simple method that checks whether or not pre-processed lines contain content of interest. This is for searching for date as specified on the source page.
+     * @param reader Requires a string of content.
+     * @return If the string contains content of specified interest then it will return true.
+     */
     public boolean containsDBDate(String reader){
         if (reader.contains("id=\"historicalDate\">")) // specifies textual markers
             return true;
@@ -84,6 +138,11 @@ public class ServerWebReader {
             return false;
     }
 
+    /***
+     * This method ties many of the ServerWebReader methods together and returns the ServerCurrency objects in a HashSet.
+     * @param websiteURL It requires the URL of the website as a string.
+     * @return It returns the HashSet of generated ServerCurrency objects.
+     */
     public HashSet<ServerCurrency> getDBPage(String websiteURL) {
         HashSet<ServerCurrency> currencyList = null;
         try {

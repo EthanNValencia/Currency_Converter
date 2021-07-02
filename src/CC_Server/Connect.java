@@ -1,3 +1,9 @@
+/*
+Ethan J. Nephew
+July 1, 2021
+Database connection class.
+*/
+
 package CC_Server;
 
 import java.sql.Connection;

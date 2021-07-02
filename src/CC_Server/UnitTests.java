@@ -1,20 +1,14 @@
+/*
+Ethan J. Nephew
+July 1, 2021
+Unit tests for the server package.
+*/
+
 package CC_Server;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import CC_Directory.WebReader;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-
-import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class UnitTests {

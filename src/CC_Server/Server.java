@@ -1,3 +1,9 @@
+/*
+Ethan J. Nephew
+July 1, 2021
+Server GUI class.
+*/
+
 package CC_Server;
 
 import java.io.*;
@@ -16,8 +22,15 @@ To run jar in cmd use: (outdated)
 java --module-path "C:\Program Files (x86)\JavaFx\javafx-sdk-15.0.1\lib" --add-modules javafx.controls,javafx.fxml -jar C:\Users\16165\Desktop\SeverTest\out\artifacts\SeverTest_jar\SeverTest.jar
 */
 
+/***
+ *
+ */
 public class Server extends Application {
 
+    /***
+     *
+     * @param primaryStage
+     */
     @Override // Override the start method in the Application class
     public void start(Stage primaryStage) {
         // Text area for displaying contents

@@ -1,3 +1,9 @@
+/*
+Ethan J. Nephew
+July 1, 2021
+Server currency class definition.
+*/
+
 package CC_Server;
 
 import CC_Directory.Currency;

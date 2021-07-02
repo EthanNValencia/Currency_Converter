@@ -1,3 +1,9 @@
+/*
+Ethan J. Nephew
+July 1, 2021
+Play music class.
+*/
+
 package CC_Directory;
 
 import javax.sound.sampled.*;
