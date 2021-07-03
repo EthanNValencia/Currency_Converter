@@ -19,6 +19,18 @@ public class Currency {
         return nationName;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
+    }
+
+    public void setNationName(String nationName) {
+        this.nationName = nationName;
+    }
+
     /***
      * Standard getter method for the currency object name variable.
      * @return Returns what is stored in the object name variable.
@@ -45,6 +57,13 @@ public class Currency {
         this.name = name;
         this.rate = rate;
         this.nationName = nationName;
+    }
+
+    /***
+     * Default constructor for Currency.
+     */
+    public Currency(){
+        // Zero params
     }
 
     /***

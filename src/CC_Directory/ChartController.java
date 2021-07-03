@@ -47,6 +47,6 @@ public class ChartController {
     } catch (NullPointerException npe){
         System.out.println("A null pointer exception was thrown on the client side.");
         System.out.println("The server may not be running.");
-    }
+        }
     }
 }

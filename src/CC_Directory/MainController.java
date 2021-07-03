@@ -6,6 +6,7 @@ Currency converter and presentation application.
 
 package CC_Directory;
 
+import CC_Server.CurrencyDataObject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +26,9 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
+
+import java.io.*;
+import java.net.Socket;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
@@ -40,6 +44,8 @@ public class MainController implements Initializable, CONSTANTS {
     private Tooltip toolTip1 = new Tooltip("This is the currency of Colombia");
     private Tooltip toolTip2 = new Tooltip("This is the currency of Colombia");
     private Tooltip submit = new Tooltip();
+    private ObjectOutputStream toServer = null;
+    private ObjectInputStream fromServer = null;
 
     @FXML
     private ImageView cur1_Image, cur2_Image;
@@ -66,10 +72,52 @@ public class MainController implements Initializable, CONSTANTS {
     private AnchorPane backgroundPane;
 
     @FXML
-    void chart(ActionEvent event){
+    void chart(ActionEvent event) {
+
+        // I PASTED THIS CODE HERE FOR FUTURE USE
+        try {
+            // Create a socket to connect to the server
+            Socket socket = new Socket("localhost", 8000);
+            // Socket socket = new Socket("192.168.0.95", 8000); // this is where this program connects to the server
+
+            // Create an input stream to receive data from the server
+            fromServer = new ObjectInputStream(socket.getInputStream());
+
+            // Create an output stream to send data to the server
+            toServer = new ObjectOutputStream(socket.getOutputStream());
+            // System.out.println("Server connection was successful.");
+            // serverOutputLabel.setText("Connection established.");
+        } catch (
+                IOException ex) {
+            System.out.println("An IO exception occurred on the client side.");
+        }
+
+        try {
+            // Get the number from the server
+            CurrencyDataObject dataObject = new CurrencyDataObject(comboBox1.getValue(), comboBox2.getValue());
+            // inputArea.setText("");
+            // Send the number to the server
+            toServer.writeObject(dataObject);
+            toServer.flush();
+            // Get area from the server
+            System.out.println("Sent to server " + dataObject);
+            CurrencyDataObject returnedInfo = (CurrencyDataObject) fromServer.readObject();
+            System.out.println("Received from server: " + returnedInfo);
+            // Display to the label area
+            // serverOutputLabel.setText("SN: " + sendNumber + " Received: " + returnedNumber);
+        } catch (IOException ex) {
+            System.out.println("The client threw an io exception.");
+            System.out.println("The server may not be running.");
+        } catch (NullPointerException npe) {
+            System.out.println("A null pointer exception was thrown on the client side.");
+            System.out.println("The server may not be running.");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
         try {
             FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource("ChartUI.fxml"));
-            Parent root = (Parent) fxmlLoader1.load();
+            Parent root = fxmlLoader1.load();
             Stage stage = new Stage();
             stage.setTitle("Chart");
             stage.setScene(new Scene(root));
@@ -77,7 +125,7 @@ public class MainController implements Initializable, CONSTANTS {
         } catch (Exception ex) {
             System.out.println("An exception occurred.");
         }
-    }
+}
 
     /***
      * Method that determines what the currency rate is and displays the rate to the GUI.

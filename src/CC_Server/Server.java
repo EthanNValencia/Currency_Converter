@@ -80,16 +80,20 @@ public class Server extends Application {
                 while (true) {
                     Socket socket = serverSocket.accept(); // it waits here for a client message
                     // Create data input and output streams
-                    DataInputStream inputFromClient = new DataInputStream(socket.getInputStream());
-                    DataOutputStream outputToClient = new DataOutputStream(socket.getOutputStream());
-                    double number = inputFromClient.readDouble();
-                    outputToClient.writeDouble(number);
+                    Platform.runLater(() -> ta.appendText("Messaged received!"));
+                    ObjectOutputStream outputToClient = new ObjectOutputStream(socket.getOutputStream());
+                    ObjectInputStream inputFromClient = new ObjectInputStream(socket.getInputStream());
+                    CurrencyDataObject received = (CurrencyDataObject) inputFromClient.readObject();
+                    Platform.runLater(() -> ta.appendText("Messaged received!" + received));
+                    outputToClient.writeObject(received);
+
                     Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));
                     outputToClient.flush();
                     outputToClient.close();
                     Platform.runLater(() -> ta.appendText("Connection has been closed. \n"));
+                    Platform.runLater(() -> ta.appendText("Waiting for client connection... \n"));
                 }
-            } catch(IOException ex) {
+            } catch(IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
         }).start();

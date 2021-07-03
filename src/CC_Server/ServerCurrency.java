@@ -7,12 +7,14 @@ Server currency class definition.
 package CC_Server;
 
 import CC_Directory.Currency;
+
+import java.io.Serializable;
 import java.util.Objects;
 
 /***
  * This is a child class of the Currency class. It has similar behaviors and serves the same purposes of holding currency related data.
  */
-public class ServerCurrency extends Currency {
+public class ServerCurrency extends Currency implements Serializable {
 
     private String date;
     private String description;
@@ -51,6 +53,10 @@ public class ServerCurrency extends Currency {
         super(name, rate);
         this.date = date;
         this.description = description;
+    }
+
+    public ServerCurrency(){
+
     }
 
     /***
