@@ -6,18 +6,19 @@ Server currency class definition.
 
 package CC_Server;
 
-import CC_Directory.Currency;
-
 import java.io.Serializable;
 import java.util.Objects;
 
 /***
  * This is a child class of the Currency class. It has similar behaviors and serves the same purposes of holding currency related data.
  */
-public class ServerCurrency extends Currency implements Serializable {
+public class ServerCurrency implements Serializable {
 
     private String date;
     private String description;
+    protected String name;
+    protected String rate;
+    private String nationName;
 
     /***
      * Standard accessor method that is used to return the currency objects description.
@@ -50,13 +51,49 @@ public class ServerCurrency extends Currency implements Serializable {
      * @param date It requires the date on which this exchange rate was recorded.
      */
     public ServerCurrency(String name, String rate, String date, String description) {
-        super(name, rate);
+        this.name = name;
+        this.rate = rate;
         this.date = date;
         this.description = description;
     }
 
+    public String getNationName() {
+        return getNationName();
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
+    }
+
+    public void setNationName(String nationName) {
+        this.nationName = nationName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getRate() {
+        return rate;
+    }
+
+    public ServerCurrency(String name, String rate, String nationName) {
+        this.name = name;
+        this.rate = rate;
+        this.nationName = nationName;
+    }
+
     public ServerCurrency(){
 
+    }
+
+    public ServerCurrency(String name, String rate) {
+        this.name = name;
+        this.rate = rate;
     }
 
     /***

@@ -86,6 +86,8 @@ public class Server extends Application {
                     CurrencyDataObject received = (CurrencyDataObject) inputFromClient.readObject();
                     Platform.runLater(() -> ta.appendText("Messaged received!" + received));
                     outputToClient.writeObject(received);
+                    System.out.println("In server: " + received.getCurrency1());
+                    System.out.println("In server: " + received.getCurrency2());
 
                     Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));
                     outputToClient.flush();

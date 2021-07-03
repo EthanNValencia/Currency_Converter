@@ -6,12 +6,16 @@ Currency converter and presentation application.
 
 package CC_Directory;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 
 /***
  * Constants for the program. The constants are the website URLs and the currency names.
  */
 public interface CONSTANTS {
+
+    LocalDate DATE_TODAY = LocalDate.now();
+
     String COP = "https://www.exchange-rates.org/converter/USD/COP/1"; // Colombia
     String EUR = "https://www.exchange-rates.org/converter/USD/EUR/1/Y"; // Euro
     String MXN = "https://www.exchange-rates.org/converter/USD/MXN/1/Y"; // Mexico

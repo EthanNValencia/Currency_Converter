@@ -94,7 +94,7 @@ public class MainController implements Initializable, CONSTANTS {
 
         try {
             // Get the number from the server
-            CurrencyDataObject dataObject = new CurrencyDataObject(comboBox1.getValue(), comboBox2.getValue());
+            CurrencyDataObject dataObject = new CurrencyDataObject(comboBox1.getValue(), comboBox2.getValue(), DATE_TODAY);
             // inputArea.setText("");
             // Send the number to the server
             toServer.writeObject(dataObject);

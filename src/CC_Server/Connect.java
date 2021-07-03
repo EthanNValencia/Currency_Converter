@@ -71,6 +71,13 @@ public class Connect implements CC_Server.CONSTANTS{
         ps.executeUpdate();
     }
 
+    public static void getRate(String currencyName) throws Exception{
+        String sql = "SELECT";
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.executeUpdate();
+    }
+
     public static void insertCurrencyDate(String date) throws Exception{
         String sql = "INSERT IGNORE INTO cur_db.cur_date (currency_date) " +
                 "VALUES('" + date + "');";
