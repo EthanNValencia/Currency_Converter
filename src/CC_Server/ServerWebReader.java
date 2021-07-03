@@ -49,6 +49,9 @@ public class ServerWebReader implements CC_Server.CONSTANTS {
             }
             if (containsLineContent(reader))
                 content = content.concat(reader);
+            if (containsDescription(reader)){
+                content = content.concat(reader);
+            }
         }
         return content;
     }
@@ -70,7 +73,10 @@ public class ServerWebReader implements CC_Server.CONSTANTS {
      * @return It returns a post-processed string that has had various text filtered and removed.
      */
     public String removeStringContent(String content){
+        content = content.replaceAll("<td>", "");
+        content = content.replaceAll("</td>", "");
         content = content.replaceAll("'>", " ");
+        content = content.replaceAll("</a>", "");
         content = content.replaceAll("[?/<>']", "");
         content = content.replaceAll("atd", "");
         content = content.replaceAll("td class=rtRates a href=https:www.x-rates.comgraphfrom=USD&amp;to=", "");
@@ -85,11 +91,16 @@ public class ServerWebReader implements CC_Server.CONSTANTS {
      */
     public HashSet<ServerCurrency> createCurrencyList(String content){
         Scanner scan = new Scanner(content);
+        String currencyDescription = "";
         HashSet<ServerCurrency> currencyHashSet = new HashSet<ServerCurrency>();
         String reader = "";
         while (scan.hasNextLine()) {
             reader = scan.nextLine();
-            currencyHashSet.add(new ServerCurrency(findCurrencyName(reader), findCurrencyRate(reader), date));
+            if (!reader.matches(".*\\d.*")) {
+                currencyDescription = reader;
+                reader = scan.nextLine();
+            }
+            currencyHashSet.add(new ServerCurrency(findCurrencyName(reader), findCurrencyRate(reader), date, currencyDescription));
         }
         return currencyHashSet;
     }
@@ -138,6 +149,13 @@ public class ServerWebReader implements CC_Server.CONSTANTS {
             return false;
     }
 
+    public boolean containsDescription(String reader){
+        if (reader.contains("<td>") && reader.contains("</td>")) // specifies textual markers
+            return true;
+        else
+            return false;
+    }
+
     /***
      * This method ties many of the ServerWebReader methods together and returns the ServerCurrency objects in a HashSet.
      * @param websiteURL It requires the URL of the website as a string.
@@ -150,7 +168,6 @@ public class ServerWebReader implements CC_Server.CONSTANTS {
             Scanner scan = new Scanner(url.openStream());
             String content = "";
             content = readText(scan);
-            // date = getDBDate(content);
             content = removeStringContent(content);
             currencyList = createCurrencyList(content);
             return currencyList;
@@ -166,15 +183,19 @@ public class ServerWebReader implements CC_Server.CONSTANTS {
      * @throws Exception A lot could go wrong with this method: database problems and website access problems.
      */
     public void insertAnnualCurrencyData() throws Exception {
-        ServerWebReader serverWebReader = new ServerWebReader();
+        String insertDate;
         HashSet<ServerCurrency> currencyList = null;
-
+        currencyList = getPage(WEBSITE_URL + DATE_TODAY);
         for (int i = 0; i <= DAYS_IN_YEAR; i++) {
-            if (!Connect.checkEntries("" + DATE_TODAY.minusDays(i))) // If entries with this date already exist, then cancel the insertion.
-                currencyList = serverWebReader.getPage(WEBSITE_URL + DATE_TODAY.minusDays(i));
-            if (currencyList != null)
-                Connect.insertList(currencyList);
+            insertDate = "" + DATE_TODAY.minusDays(i);
+            if (!Connect.checkEntries("" + insertDate)) { // If entries with this date already exist, then cancel the insertion.
+                currencyList = getPage(WEBSITE_URL + insertDate);
+                if (currencyList != null) {
+                    Connect.insertCurrencyDate(insertDate);
+                    Connect.insertCurrencyNames(currencyList);
+                    Connect.insertList(currencyList);
+                }
+            }
         }
     }
-
 }

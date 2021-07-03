@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.List;
 
+import static CC_Server.CONSTANTS.DATE_TODAY;
+import static CC_Server.CONSTANTS.WEBSITE_URL;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UnitTests {
@@ -33,6 +35,7 @@ public class UnitTests {
     @Test
     public void testConnection_createTable(){
         try {
+            Connect.dropTable();
             Connect.createTable();
         } catch (Exception e) {
             fail();
@@ -40,15 +43,54 @@ public class UnitTests {
     }
 
     /***
-     * This test passes as long as an exception is not thrown.
+     *
+     */
+    @Test
+    public void testDatabaseBuild(){
+
+        try {
+            Connect.createTable();
+        } catch (Exception e) {
+            fail();
+        }
+
+        ServerWebReader serverWebReader = new ServerWebReader();
+        HashSet<ServerCurrency> currencyHashSet = serverWebReader.getPage(WEBSITE_URL + DATE_TODAY);
+
+        try {
+            Connect.insertCurrencyNames(currencyHashSet);
+        } catch (Exception e) {
+            System.out.println("You probably tried to insert duplicate currency names.");
+            fail();
+        }
+
+        try {
+            Connect.insertCurrencyDate(DATE_TODAY);
+        } catch (Exception e) {
+            System.out.println("You probably tried to insert a duplicate currency date.");
+            fail();
+        }
+
+        try {
+            Connect.insertList(currencyHashSet);
+        } catch (Exception e) {
+            System.out.println("You probably tried to insert duplicate currency fields.");
+            fail();
+        }
+
+
+    }
+
+    /***
+     * This test passes as long as an exception is not thrown. This verifies that if existing data is in the db that the insertion will not be executed.
      * @throws Exception An exception here is likely due to a database connection problem.
      */
     @Test
     public void testWebReader_getDBPage_AND_Connect_insertList() throws Exception {
         ServerWebReader serverWebReader = new ServerWebReader();
-        HashSet<ServerCurrency> currencyList = serverWebReader.getPage("https://www.x-rates.com/historical/?from=USD&amount=1&date=2021-06-16");
+        HashSet<ServerCurrency> currencyHashSet = serverWebReader.getPage(WEBSITE_URL + DATE_TODAY);
         if(!Connect.checkEntries(serverWebReader.getDate())) // If entries with this date already exist, then cancel the insertion.
-            Connect.insertList(currencyList);
+            Connect.insertList(currencyHashSet);
     }
 
     /***
@@ -56,9 +98,9 @@ public class UnitTests {
      */
     @Test
     public void testServerCurrency_hashCode_AND_ServerCurrency_equals() {
-        ServerCurrency sc1 = new ServerCurrency("USD", "10", "2000-4-21");
-        ServerCurrency sc2 = new ServerCurrency("USD", "22", "2000-4-21");
-        ServerCurrency sc3 = new ServerCurrency("USD", "2", "2000-4-22");
+        ServerCurrency sc1 = new ServerCurrency("USD", "10", "2000-4-21", "USA");
+        ServerCurrency sc2 = new ServerCurrency("USD", "22", "2000-4-21", "USA");
+        ServerCurrency sc3 = new ServerCurrency("USD", "2", "2000-4-22", "USA");
         HashSet<ServerCurrency> hs = new HashSet<>();
         hs.add(sc1);
         hs.add(sc2);
@@ -67,30 +109,12 @@ public class UnitTests {
     }
 
     /***
-     * This tests both the Connect.insertCurrency() and the Connect.DeleteCurrency(). It inserts data and then removes it. If an exception is not thrown then it is considered a pass.
-     */
-    @Test
-    public void testConnect_insertCurrency_AND_Connect_deleteCurrency(){
-        ServerCurrency testCurrency = new ServerCurrency("XXX", "10", "1000-04-21");
-        try {
-            Connect.insertCurrency(testCurrency);
-        } catch (Exception e) {
-            fail();
-        }
-        try {
-            Connect.deleteCurrency(testCurrency);
-        } catch (Exception e) {
-            fail();
-        }
-    }
-
-    /***
      * This tests that two ServerCurrency objects with the same names and dates will be considered equal.
      */
     @Test
     public void testServerCurrency_equals_1(){
-        ServerCurrency sc1 = new ServerCurrency("USD", "10", "2000-04-21");
-        ServerCurrency sc2 = new ServerCurrency("USD", "22", "2000-04-21");
+        ServerCurrency sc1 = new ServerCurrency("USD", "10", "2000-04-21", "USA");
+        ServerCurrency sc2 = new ServerCurrency("USD", "22", "2000-04-21", "USA");
         Assertions.assertEquals(sc1, sc2);
     }
 
@@ -99,8 +123,8 @@ public class UnitTests {
      */
     @Test
     public void testServerCurrency_equals_2(){
-        ServerCurrency sc1 = new ServerCurrency("US", "10", "2000-04-21");
-        ServerCurrency sc2 = new ServerCurrency("USD", "22", "2000-04-21");
+        ServerCurrency sc1 = new ServerCurrency("US", "10", "2000-04-21", "USA");
+        ServerCurrency sc2 = new ServerCurrency("USD", "22", "2000-04-21", "USA");
         Assertions.assertNotEquals(sc1, sc2);
     }
 
@@ -109,8 +133,8 @@ public class UnitTests {
      */
     @Test
     public void testServerCurrency_equals_3(){
-        ServerCurrency sc1 = new ServerCurrency("USD", "10", "200-04-21");
-        ServerCurrency sc2 = new ServerCurrency("USD", "22", "2000-04-21");
+        ServerCurrency sc1 = new ServerCurrency("USD", "10", "200-04-21", "USA");
+        ServerCurrency sc2 = new ServerCurrency("USD", "22", "2000-04-21", "USA");
         Assertions.assertNotEquals(sc1, sc2);
     }
 
@@ -119,7 +143,7 @@ public class UnitTests {
      */
     @Test
     public void testConnect_checkEntries() throws Exception {
-        Assertions.assertFalse(Connect.checkEntries("1000-04-21"));
+        Assertions.assertFalse(Connect.checkEntries("1000-03-12"));
         // Assertions.assertTrue(Connect.checkEntries("2021-06-16"));
     }
 
@@ -172,9 +196,9 @@ public class UnitTests {
         testServerWebReader.setDate("10");
         String content = "XXX 1 \n YYY 2 \n ZZZ 3";
         HashSet<ServerCurrency> hashSet = testServerWebReader.createCurrencyList(content);
-        ServerCurrency XXX = new ServerCurrency("XXX", "1", "10");
-        ServerCurrency YYY = new ServerCurrency("YYY", "2", "10");
-        ServerCurrency ZZZ = new ServerCurrency("ZZZ", "3", "10");
+        ServerCurrency XXX = new ServerCurrency("XXX", "1", "10", "XXXX");
+        ServerCurrency YYY = new ServerCurrency("YYY", "2", "10", "YYYY");
+        ServerCurrency ZZZ = new ServerCurrency("ZZZ", "3", "10", "ZZZZ");
         assertTrue(hashSet.contains(XXX));
         assertTrue(hashSet.contains(YYY));
         assertTrue(hashSet.contains(ZZZ));

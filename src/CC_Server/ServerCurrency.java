@@ -14,7 +14,16 @@ import java.util.Objects;
  */
 public class ServerCurrency extends Currency {
 
-    protected String date;
+    private String date;
+    private String description;
+
+    /***
+     * Standard accessor method that is used to return the currency objects description.
+     * @return Returns the full currency description.
+     */
+    public String getDescription(){
+        return description;
+    }
 
     /***
      * Standard accessor method that is used to return the currency objects date record.
@@ -38,9 +47,10 @@ public class ServerCurrency extends Currency {
      * @param rate It requires the exchange rate from USD to itself.
      * @param date It requires the date on which this exchange rate was recorded.
      */
-    public ServerCurrency(String name, String rate, String date) {
+    public ServerCurrency(String name, String rate, String date, String description) {
         super(name, rate);
         this.date = date;
+        this.description = description;
     }
 
     /***
@@ -49,7 +59,7 @@ public class ServerCurrency extends Currency {
      */
     @Override
     public String toString() {
-        return "ServerCurrency{"+ name + " " + date + " " + rate + "}";
+        return "ServerCurrency{"+ name + " " + date + " " + rate + " " + description + "}";
     }
 
     /***

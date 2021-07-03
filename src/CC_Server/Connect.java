@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,7 +19,7 @@ import java.util.List;
 /***
  * Connect class for connecting the server application to a database.
  */
-public class Connect {
+public class Connect implements CC_Server.CONSTANTS{
 
     /***
      * This is the connection method. It is used to connect to the server.
@@ -36,17 +37,46 @@ public class Connect {
     }
 
     /***
-     * This is the method that is used to create the table for the database. If the table is already created then this method will not execute.
+     * This is the method that is used to create the tables for the database. If the tables are already created then this method will not execute.
      * @throws Exception It can throw an exception.
      */
     public static void createTable() throws Exception {
         Connection con = getConnection();
         assert con != null;
-        PreparedStatement createTable
-                = con.prepareStatement("CREATE TABLE IF NOT EXISTS cur_db.currency " +
-                                           "(currency_name varchar(25), currency_rate varchar(25), " +
-                                           "currency_date date, PRIMARY KEY(currency_name, currency_date));");
-        createTable.executeUpdate();
+        for (int i = 0; i < CREATE_TABLES.length; i++) {
+            PreparedStatement create = con.prepareStatement(CREATE_TABLES[i]);
+            create.executeUpdate();
+        }
+    }
+
+    public static void insertCurrencyNames(HashSet<ServerCurrency> currencyHashSet) throws Exception{
+        Connection con = getConnection();
+        String sql = "INSERT IGNORE INTO cur_db.cur_description (currency_name, currency_description) VALUES(?, ?)";
+        PreparedStatement ps = con.prepareStatement(sql);
+        Iterator<ServerCurrency> iterator = currencyHashSet.iterator();
+
+        while(iterator.hasNext()){
+            ServerCurrency serverCurrency = iterator.next();
+            ps.setString(1, serverCurrency.getName());
+            ps.setString(2, serverCurrency.getDescription());
+            ps.executeUpdate();
+        }
+    }
+
+    public static void insertCurrencyDate(LocalDate date) throws Exception{
+        String sql = "INSERT IGNORE INTO cur_db.cur_date (currency_date) " +
+                "VALUES('" + date + "');";
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.executeUpdate();
+    }
+
+    public static void insertCurrencyDate(String date) throws Exception{
+        String sql = "INSERT IGNORE INTO cur_db.cur_date (currency_date) " +
+                "VALUES('" + date + "');";
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.executeUpdate();
     }
 
     /***
@@ -58,7 +88,7 @@ public class Connect {
         final String currency_name = serverCurrency.getName();
         final String currency_rate = serverCurrency.getRate();
         final String currency_date = serverCurrency.getDate();
-        String sql = "INSERT INTO cur_db.currency (currency_name, currency_rate, currency_date) " +
+        String sql = "INSERT IGNORE INTO cur_db.cur (currency_name, currency_rate, currency_date) " +
                      "VALUES('" + currency_name + "' , '" + currency_rate + "' , '" + currency_date + "');";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
@@ -75,7 +105,7 @@ public class Connect {
         final String currency_name = serverCurrency.getName();
         final String currency_rate = serverCurrency.getRate();
         final String currency_date = serverCurrency.getDate();
-        String sql = "DELETE FROM cur_db.currency WHERE " +
+        String sql = "DELETE FROM cur_db.cur WHERE " +
                      "currency_name = '" + currency_name +  "' AND " +
                      "currency_rate = '" + currency_rate +  "' " +
                      "AND currency_date = '" + currency_date +  "';";
@@ -89,7 +119,7 @@ public class Connect {
      * @throws Exception If an exception is thrown, it is likely due to a failure to connect to the database.
      */
     public static void deleteAll() throws Exception{
-        String sql = "DELETE FROM cur_db.currency;";
+        String sql = "DELETE FROM cur_db.cur;";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ps.executeUpdate();
@@ -102,9 +132,10 @@ public class Connect {
     public static void dropTable() throws Exception {
         Connection con = getConnection();
         assert con != null;
-        String sql = "DROP TABLE cur_db.currency;";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.executeUpdate();
+        for(int i = 0; i < DROP_TABLES.length; i++) {
+            PreparedStatement ps = con.prepareStatement(DROP_TABLES[i]);
+            ps.executeUpdate();
+        }
     }
 
     /***
@@ -114,7 +145,11 @@ public class Connect {
      * @throws Exception An exception is likely caused by a database connection related problem.
      */
     public static boolean checkEntries(String date) throws Exception {
-        String sql = "SELECT * FROM cur_db.currency WHERE currency_date = '" + date + "';";
+        String sql = "SELECT de.currency_description, cu.currency_rate, da.currency_date " +
+                     "FROM cur_db.cur_date da, cur_db.cur cu, cur_db.cur_description de " +
+                     "WHERE da.currency_date = cu.currency_date " +
+                     "AND cu.currency_name = de.currency_name " +
+                     "AND da.currency_date = '" + date + "';";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
@@ -131,7 +166,7 @@ public class Connect {
      */
     public static void insertList(HashSet<ServerCurrency> currencyHashSet) throws Exception{
         Connection con = getConnection();
-        String sql = "INSERT INTO cur_db.currency (currency_name, currency_rate, currency_date) VALUES(?,?,?)";
+        String sql = "INSERT IGNORE INTO cur_db.cur (currency_name, currency_rate, currency_date) VALUES(?,?,?)";
         PreparedStatement ps = con.prepareStatement(sql);
         Iterator<ServerCurrency> iterator = currencyHashSet.iterator();
 
@@ -151,8 +186,7 @@ public class Connect {
      * @throws Exception It can throw an exception from a variety of database interactive ways.
      */
     public static List<String> retrieveCurrencyList() throws Exception {
-        // SELECT DISTINCT currency_name FROM cur_db.currency;
-        String sql = "SELECT DISTINCT currency_name FROM cur_db.currency;";
+        String sql = "SELECT DISTINCT currency_name FROM cur_db.cur;";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
@@ -161,10 +195,8 @@ public class Connect {
         while (rs.next()){
             currencyList.add(rs.getString(1));
         }
-
         return currencyList;
     }
-
 
     /***
      * This is an overridden toString method that is useful for testing purposes.
