@@ -148,7 +148,7 @@ public class ServerCurrency implements Serializable {
      */
     @Override
     public String toString() {
-        return "ServerCurrency{"+ name + " " + date + " " + rate + " " + description + " " + exchangeAmount + "}";
+        return "ServerCurrency{name: "+ name + " date: " + date + " rate: " + rate + " description: " + description + " exchangeAmount: " + exchangeAmount + "}";
     }
 
     /***

@@ -1,5 +1,7 @@
 package CC_Server;
 
+import CC_Directory.Calculation;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -8,6 +10,7 @@ import java.time.LocalDate;
  */
 public class CurrencyDataObject implements Serializable {
 
+    private ServerCalculation serverCalculation;
     private ServerCurrency currency1 = new ServerCurrency(); // combobox1
     private ServerCurrency currency2 = new ServerCurrency(); // combobox2
 

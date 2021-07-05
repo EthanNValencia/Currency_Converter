@@ -71,13 +71,6 @@ public class Connect implements CC_Server.CONSTANTS{
         ps.executeUpdate();
     }
 
-    public static void getRate(String currencyName) throws Exception{
-        String sql = "SELECT";
-        Connection con = getConnection();
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.executeUpdate();
-    }
-
     public static void insertCurrencyDate(String date) throws Exception{
         String sql = "INSERT IGNORE INTO cur_db.cur_date (currency_date) " +
                 "VALUES('" + date + "');";
@@ -203,6 +196,28 @@ public class Connect implements CC_Server.CONSTANTS{
             currencyList.add(rs.getString(1));
         }
         return currencyList;
+    }
+
+    public static ServerCurrency findRate(ServerCurrency serverCurrency2) throws Exception {
+        String sql = "SELECT currency_rate FROM cur_db.cur WHERE currency_name = '" + serverCurrency2.getName() + "' AND currency_date = '" + serverCurrency2.getDate() + "';";
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        System.out.println(rs.getString(1));
+        serverCurrency2.setRate(rs.getString(1));
+        return serverCurrency2;
+    }
+
+    public static ServerCurrency findDescription(ServerCurrency serverCurrency) throws Exception {
+        String sql = "SELECT currency_description FROM cur_db.cur WHERE currency_name = '" + serverCurrency.getName() + "';";
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        System.out.println(rs.getString(1));
+        serverCurrency.setDescription(rs.getString(1));
+        return serverCurrency;
     }
 
     /***

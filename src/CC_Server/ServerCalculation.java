@@ -4,14 +4,16 @@ June 15, 2021
 Currency converter and presentation application.
 */
 
-package CC_Directory;
+package CC_Server;
+
+import CC_Directory.Currency;
 
 import java.text.NumberFormat;
 
 /***
  * This class is derived from embedding logics from the controller class into a single class definition that is testable.
  */
-public class Calculation {
+public class ServerCalculation {
 
     NumberFormat nf = NumberFormat.getInstance();
     private String formatRate, inputConversion, displayRate1, displayRate2;
@@ -53,7 +55,7 @@ public class Calculation {
      * @param currency1 This is the first currency object (from this).
      * @param currency2 This is the second currency object (to this).
      */
-    public Calculation(Currency currency1, Currency currency2){
+    public ServerCalculation(ServerCurrency currency1, ServerCurrency currency2){
         double rate = (double) 1 / Double.parseDouble(currency1.getRate());
         rate = rate * Double.parseDouble(currency2.getRate());
         formatRate = String.format("%.3f", rate);

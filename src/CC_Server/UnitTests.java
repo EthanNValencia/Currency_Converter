@@ -8,6 +8,8 @@ package CC_Server;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 
@@ -281,9 +283,46 @@ public class UnitTests {
         }
     }
 
+    /***
+     * Tests that the Connect.retrieveCurrencyList is functioning properly.
+     * @throws Exception
+     */
     @Test
-    public void testConnect_retrieveCurrencyList() throws Exception {
-        List<String> testCurrencyList = Connect.retrieveCurrencyList();
+    public void testConnect_retrieveCurrencyList() {
+        List<String> testCurrencyList = null;
+        try {
+            testCurrencyList = Connect.retrieveCurrencyList();
+        } catch (Exception e) {
+            fail();
+        }
         assertNotNull(testCurrencyList);
+    }
+
+    /***
+     * Tests that the Connect.findRate() method is functioning correctly.
+     */
+    @Test
+    public void testConnect_findRate(){
+        ServerCurrency serverCurrency = new ServerCurrency("COP", null, "2021-07-05", null);
+        try {
+            serverCurrency = Connect.findRate(serverCurrency);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(serverCurrency);
+    }
+
+    @Test
+    public void testServer_checkRate(){
+        ServerCurrency serverCurrency1 = new ServerCurrency();
+        ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null);
+        CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
+        Server server = new Server();
+        try {
+            server.checkRate(currencyDataObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(currencyDataObject);
     }
 }

@@ -47,6 +47,7 @@ public class MainController implements Initializable, CONSTANTS {
     private Tooltip submit = new Tooltip();
     private ObjectOutputStream toServer = null;
     private ObjectInputStream fromServer = null;
+    private CurrencyDataObject dataObject;
 
     @FXML
     private ImageView cur1_Image, cur2_Image;
@@ -89,9 +90,13 @@ public class MainController implements Initializable, CONSTANTS {
             ServerCurrency cur1 = new ServerCurrency();
             ServerCurrency cur2 = new ServerCurrency();
             cur1.setName(comboBox1.getValue());
+            cur1.setRate("1");
             cur2.setName(comboBox2.getValue());
-            cur1.setExchangeAmount(inputArea.getText());
-            CurrencyDataObject dataObject = new CurrencyDataObject(cur1, cur2, DATE_TODAY);
+
+            if (!inputArea.getText().equals(""))
+                cur1.setExchangeAmount(inputArea.getText());
+
+            dataObject = new CurrencyDataObject(cur1, cur2, DATE_TODAY);
             toServer.writeObject(dataObject); // send object to server
             toServer.flush(); // flush request
             System.out.println("Sent to server " + dataObject);
@@ -106,7 +111,7 @@ public class MainController implements Initializable, CONSTANTS {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
+        /*
         try {
             FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource("ChartUI.fxml"));
             Parent root = fxmlLoader1.load();
@@ -117,6 +122,7 @@ public class MainController implements Initializable, CONSTANTS {
         } catch (Exception ex) {
             System.out.println("An exception occurred.");
         }
+        */
 }
 
     /***
@@ -138,11 +144,11 @@ public class MainController implements Initializable, CONSTANTS {
      * @param comboBox2 This is the the string parameter from the second combobox.
      */
     public void getString(String comboBox1, String comboBox2){
-        for (HashMap.Entry<String, Currency> entry : CONSTANTS.nationHashMap.entrySet()){
-            if(entry.getKey() == comboBox1)
-                comboBox1Currency = entry.getValue();
 
-            if(entry.getKey() == comboBox2)
+        for (HashMap.Entry<String, Currency> entry : CONSTANTS.nationHashMap.entrySet()){
+            if(entry.getKey().equals(comboBox1))
+                comboBox1Currency = entry.getValue();
+            if(entry.getKey().equals(comboBox2))
                 comboBox2Currency = entry.getValue();
         }
 
@@ -232,4 +238,5 @@ public class MainController implements Initializable, CONSTANTS {
         comboBox1.setOnAction(e -> getString(comboBox1.getValue(), comboBox2.getValue()));
         comboBox2.setOnAction(e -> getString(comboBox1.getValue(), comboBox2.getValue()));
     }
+
 }

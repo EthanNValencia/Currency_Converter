@@ -28,7 +28,9 @@ java --module-path "C:\Program Files (x86)\JavaFx\javafx-sdk-15.0.1\lib" --add-m
  */
 public class Server extends Application {
 
-    ServerWebReader serverWebReader = new ServerWebReader();
+    private ServerWebReader serverWebReader = new ServerWebReader();
+    private ServerCurrency serverCurrency1;
+    private ServerCurrency serverCurrency2;
 
     /***
      *
@@ -84,14 +86,13 @@ public class Server extends Application {
                     Platform.runLater(() -> ta.appendText("Messaged received!"));
                     ObjectOutputStream outputToClient = new ObjectOutputStream(socket.getOutputStream());
                     ObjectInputStream inputFromClient = new ObjectInputStream(socket.getInputStream());
+
                     CurrencyDataObject receivedDataObject = (CurrencyDataObject) inputFromClient.readObject();
                     Platform.runLater(() -> ta.appendText("Messaged received!" + receivedDataObject));
-                    // ServerCurrency cur1 = receivedDataObject.getCurrency1();
-                    // ServerCurrency cur2 = receivedDataObject.getCurrency2();
+
+                    checkRate(receivedDataObject);
 
                     outputToClient.writeObject(receivedDataObject);
-                    System.out.println("In server: " + receivedDataObject.getCurrency1());
-                    System.out.println("In server: " + receivedDataObject.getCurrency2());
 
                     Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));
                     outputToClient.flush();
@@ -103,6 +104,28 @@ public class Server extends Application {
                 ex.printStackTrace();
             }
         }).start();
+    }
+
+    /***
+     * This method is meant to go through and check what information is provided to the server by the client and complete what can be completed.
+     */
+    public void checkRate(CurrencyDataObject currencyDataObject){
+        if (currencyDataObject.getCurrency2().getRate() == null){
+            try {
+                currencyDataObject.setCurrency2(Connect.findRate(currencyDataObject.getCurrency2()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void checkDescription(CurrencyDataObject currencyDataObject){
+        if(currencyDataObject.getCurrency1().getDescription() == null){
+            
+        }
+        if(currencyDataObject.getCurrency2().getDescription() == null){
+
+        }
     }
 
     /**
