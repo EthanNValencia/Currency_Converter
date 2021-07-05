@@ -20,20 +20,32 @@ public class ServerCurrency implements Serializable {
     private String rate;
     private String exchangeAmount;
 
+    /***
+     * The mutator method for the description variable.
+     * @param description It requires a string containing the currency description.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /***
+     * The accessor method for the variable that stores the amount of currency to be exchanged.
+     * @return It returns the amount of currency that is to be traded.
+     */
     public String getExchangeAmount() {
         return exchangeAmount;
     }
 
+    /***
+     * This is the mutator method for the variable that stores the amount of currency to be exchanged.
+     * @param exchangeAmount It requires the specified amount that is to be traded.
+     */
     public void setExchangeAmount(String exchangeAmount) {
         this.exchangeAmount = exchangeAmount;
     }
 
     /***
-     * Standard accessor method that is used to return the currency objects description.
+     * Standard accessor method that is used to return the object description.
      * @return Returns the full currency description.
      */
     public String getDescription(){
@@ -41,7 +53,7 @@ public class ServerCurrency implements Serializable {
     }
 
     /***
-     * Standard accessor method that is used to return the currency objects date record.
+     * Standard accessor method that is used to return the object date record.
      * @return It returns the date. It should be in the format of: YYYY-MM-DD.
      */
     public String getDate() {
@@ -49,11 +61,72 @@ public class ServerCurrency implements Serializable {
     }
 
     /***
-     * Standard mutator method that should only be used for testing purposes.
+     * Standard mutator method. Should only be used for testing purposes.
      * @param date Requires the date. It should be in the format of: YYYY-MM-DD.
      */
     public void setDate(String date) {
         this.date = date;
+    }
+
+    /***
+     * Standard mutator method that sets the object name.
+     * @param name Requires the specified name.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /***
+     * Standard mutator method that sets the object rate.
+     * @param rate Requires the specified rate.
+     */
+    public void setRate(String rate) {
+        this.rate = rate;
+    }
+
+    /***
+     * The accessor method for the field that stores the name.
+     * @return It returns the data that is contained in the specified variable.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /***
+     * The accessor method for the field that stores the rate.
+     * @return It returns the data that is contained in the specified variable.
+     */
+    public String getRate() {
+        return rate;
+    }
+
+    /***
+     * Zero parameter constructor. It is great for testing.
+     */
+    public ServerCurrency(){
+        // No parameters required.
+    }
+
+    /***
+     * This is a two parameter constructor for the server currency object.
+     * @param name It takes a name (this is meant to be the name of the currency).
+     * @param rate It takes a rate (this is meant to be the exchange rate).
+     */
+    public ServerCurrency(String name, String rate) {
+        this.name = name;
+        this.rate = rate;
+    }
+
+    /***
+     * This is a 3 parameter constructor. It requires the name, rate, and description.
+     * @param name It takes a name (this is meant to be the name of the currency).
+     * @param rate It takes a rate (this is meant to be the exchange rate).
+     * @param description It takes the description of the object.
+     */
+    public ServerCurrency(String name, String rate, String description) {
+        this.name = name;
+        this.rate = rate;
+        this.description = description;
     }
 
     /***
@@ -67,41 +140,6 @@ public class ServerCurrency implements Serializable {
         this.rate = rate;
         this.date = date;
         this.description = description;
-    }
-
-    public String getNationDescription() {
-        return getNationDescription();
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setRate(String rate) {
-        this.rate = rate;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getRate() {
-        return rate;
-    }
-
-    public ServerCurrency(String name, String rate, String description) {
-        this.name = name;
-        this.rate = rate;
-        this.description = description;
-    }
-
-    public ServerCurrency(){
-
-    }
-
-    public ServerCurrency(String name, String rate) {
-        this.name = name;
-        this.rate = rate;
     }
 
     /***
