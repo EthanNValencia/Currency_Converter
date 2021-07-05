@@ -121,10 +121,18 @@ public class Server extends Application {
 
     public void checkDescription(CurrencyDataObject currencyDataObject){
         if(currencyDataObject.getCurrency1().getDescription() == null){
-            
+            try {
+                currencyDataObject.setCurrency2(Connect.findDescription(currencyDataObject.getCurrency2()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         if(currencyDataObject.getCurrency2().getDescription() == null){
-
+            try {
+                currencyDataObject.setCurrency2(Connect.findDescription(currencyDataObject.getCurrency2()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
