@@ -8,6 +8,9 @@ import java.time.LocalDate;
  */
 public class CurrencyDataObject implements Serializable {
 
+    private ServerCurrency currency1 = new ServerCurrency(); // combobox1
+    private ServerCurrency currency2 = new ServerCurrency(); // combobox2
+
     public ServerCurrency getCurrency1() {
         return currency1;
     }
@@ -24,12 +27,9 @@ public class CurrencyDataObject implements Serializable {
         this.currency2 = currency2;
     }
 
-    private ServerCurrency currency1 = new ServerCurrency(); // combobox1
-    private ServerCurrency currency2 = new ServerCurrency(); // combobox2
-
-    public CurrencyDataObject(String curName1, String curName2, LocalDate localDate) {
-        this.currency1.setName(curName1);
-        this.currency2.setName(curName2);
+    public CurrencyDataObject(ServerCurrency cur1, ServerCurrency cur2, LocalDate localDate) {
+        this.currency1 = cur1;
+        this.currency2 = cur2;
         this.currency1.setDate(localDate.toString());
         this.currency2.setDate(localDate.toString());
     }
@@ -41,4 +41,6 @@ public class CurrencyDataObject implements Serializable {
                 ", currency2=" + currency2 +
                 '}';
     }
+
+
 }

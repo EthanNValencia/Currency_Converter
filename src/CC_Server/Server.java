@@ -77,17 +77,21 @@ public class Server extends Application {
 
                 Platform.runLater(() -> ta.appendText("Waiting for client connection... \n"));
 
+
                 while (true) {
                     Socket socket = serverSocket.accept(); // it waits here for a client message
                     // Create data input and output streams
                     Platform.runLater(() -> ta.appendText("Messaged received!"));
                     ObjectOutputStream outputToClient = new ObjectOutputStream(socket.getOutputStream());
                     ObjectInputStream inputFromClient = new ObjectInputStream(socket.getInputStream());
-                    CurrencyDataObject received = (CurrencyDataObject) inputFromClient.readObject();
-                    Platform.runLater(() -> ta.appendText("Messaged received!" + received));
-                    outputToClient.writeObject(received);
-                    System.out.println("In server: " + received.getCurrency1());
-                    System.out.println("In server: " + received.getCurrency2());
+                    CurrencyDataObject receivedDataObject = (CurrencyDataObject) inputFromClient.readObject();
+                    Platform.runLater(() -> ta.appendText("Messaged received!" + receivedDataObject));
+                    // ServerCurrency cur1 = receivedDataObject.getCurrency1();
+                    // ServerCurrency cur2 = receivedDataObject.getCurrency2();
+
+                    outputToClient.writeObject(receivedDataObject);
+                    System.out.println("In server: " + receivedDataObject.getCurrency1());
+                    System.out.println("In server: " + receivedDataObject.getCurrency2());
 
                     Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));
                     outputToClient.flush();

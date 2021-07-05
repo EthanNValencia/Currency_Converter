@@ -7,6 +7,7 @@ Currency converter and presentation application.
 package CC_Directory;
 
 import CC_Server.CurrencyDataObject;
+import CC_Server.ServerCurrency;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -74,37 +75,28 @@ public class MainController implements Initializable, CONSTANTS {
     @FXML
     void chart(ActionEvent event) {
 
-        // I PASTED THIS CODE HERE FOR FUTURE USE
         try {
-            // Create a socket to connect to the server
             Socket socket = new Socket("localhost", 8000);
             // Socket socket = new Socket("192.168.0.95", 8000); // this is where this program connects to the server
-
-            // Create an input stream to receive data from the server
             fromServer = new ObjectInputStream(socket.getInputStream());
-
-            // Create an output stream to send data to the server
             toServer = new ObjectOutputStream(socket.getOutputStream());
-            // System.out.println("Server connection was successful.");
-            // serverOutputLabel.setText("Connection established.");
         } catch (
                 IOException ex) {
             System.out.println("An IO exception occurred on the client side.");
         }
 
         try {
-            // Get the number from the server
-            CurrencyDataObject dataObject = new CurrencyDataObject(comboBox1.getValue(), comboBox2.getValue(), DATE_TODAY);
-            // inputArea.setText("");
-            // Send the number to the server
-            toServer.writeObject(dataObject);
-            toServer.flush();
-            // Get area from the server
+            ServerCurrency cur1 = new ServerCurrency();
+            ServerCurrency cur2 = new ServerCurrency();
+            cur1.setName(comboBox1.getValue());
+            cur2.setName(comboBox2.getValue());
+            cur1.setExchangeAmount(inputArea.getText());
+            CurrencyDataObject dataObject = new CurrencyDataObject(cur1, cur2, DATE_TODAY);
+            toServer.writeObject(dataObject); // send object to server
+            toServer.flush(); // flush request
             System.out.println("Sent to server " + dataObject);
             CurrencyDataObject returnedInfo = (CurrencyDataObject) fromServer.readObject();
             System.out.println("Received from server: " + returnedInfo);
-            // Display to the label area
-            // serverOutputLabel.setText("SN: " + sendNumber + " Received: " + returnedNumber);
         } catch (IOException ex) {
             System.out.println("The client threw an io exception.");
             System.out.println("The server may not be running.");

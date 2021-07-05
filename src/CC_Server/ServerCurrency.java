@@ -16,9 +16,21 @@ public class ServerCurrency implements Serializable {
 
     private String date;
     private String description;
-    protected String name;
-    protected String rate;
-    private String nationName;
+    private String name;
+    private String rate;
+    private String exchangeAmount;
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getExchangeAmount() {
+        return exchangeAmount;
+    }
+
+    public void setExchangeAmount(String exchangeAmount) {
+        this.exchangeAmount = exchangeAmount;
+    }
 
     /***
      * Standard accessor method that is used to return the currency objects description.
@@ -57,8 +69,8 @@ public class ServerCurrency implements Serializable {
         this.description = description;
     }
 
-    public String getNationName() {
-        return getNationName();
+    public String getNationDescription() {
+        return getNationDescription();
     }
 
     public void setName(String name) {
@@ -69,10 +81,6 @@ public class ServerCurrency implements Serializable {
         this.rate = rate;
     }
 
-    public void setNationName(String nationName) {
-        this.nationName = nationName;
-    }
-
     public String getName() {
         return name;
     }
@@ -81,10 +89,10 @@ public class ServerCurrency implements Serializable {
         return rate;
     }
 
-    public ServerCurrency(String name, String rate, String nationName) {
+    public ServerCurrency(String name, String rate, String description) {
         this.name = name;
         this.rate = rate;
-        this.nationName = nationName;
+        this.description = description;
     }
 
     public ServerCurrency(){
@@ -102,7 +110,7 @@ public class ServerCurrency implements Serializable {
      */
     @Override
     public String toString() {
-        return "ServerCurrency{"+ name + " " + date + " " + rate + " " + description + "}";
+        return "ServerCurrency{"+ name + " " + date + " " + rate + " " + description + " " + exchangeAmount + "}";
     }
 
     /***
