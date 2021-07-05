@@ -90,7 +90,7 @@ public class Server extends Application {
                     CurrencyDataObject receivedDataObject = (CurrencyDataObject) inputFromClient.readObject();
                     Platform.runLater(() -> ta.appendText("Messaged received!" + receivedDataObject));
 
-                    checkRate(receivedDataObject);
+                    findRate(receivedDataObject);
 
                     outputToClient.writeObject(receivedDataObject);
 
@@ -109,7 +109,11 @@ public class Server extends Application {
     /***
      * This method is meant to go through and check what information is provided to the server by the client and complete what can be completed.
      */
-    public void checkRate(CurrencyDataObject currencyDataObject){
+    public CurrencyDataObject findRate(CurrencyDataObject currencyDataObject){ // This is only needed for the second currency object.
+        if (currencyDataObject.getCurrency1().getRate() == null){
+            currencyDataObject.getCurrency1().setRate("1");
+        }
+
         if (currencyDataObject.getCurrency2().getRate() == null){
             try {
                 currencyDataObject.setCurrency2(Connect.findRate(currencyDataObject.getCurrency2()));
@@ -117,12 +121,13 @@ public class Server extends Application {
                 e.printStackTrace();
             }
         }
+        return currencyDataObject;
     }
 
-    public void checkDescription(CurrencyDataObject currencyDataObject){
+    public CurrencyDataObject findDescription(CurrencyDataObject currencyDataObject){
         if(currencyDataObject.getCurrency1().getDescription() == null){
             try {
-                currencyDataObject.setCurrency2(Connect.findDescription(currencyDataObject.getCurrency2()));
+                currencyDataObject.setCurrency1(Connect.findDescription(currencyDataObject.getCurrency1()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -134,6 +139,7 @@ public class Server extends Application {
                 e.printStackTrace();
             }
         }
+        return currencyDataObject;
     }
 
     /**

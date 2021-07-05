@@ -37,15 +37,14 @@ public class UnitTests {
     @Test
     public void testConnection_createTable(){
         try {
-            Connect.dropTable();
-            Connect.createTable();
+            Connect.createTable(); // The SQL query handles the situation of a pre-existing table.
         } catch (Exception e) {
             fail();
         }
     }
 
     /***
-     *
+     * This tests that the database is being created properly. This requires an internet connection and a database to pass.
      */
     @Test
     public void testDatabaseBuild(){
@@ -309,20 +308,55 @@ public class UnitTests {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(serverCurrency);
+        assertNotNull(serverCurrency.getRate());
     }
 
+    /***
+     * This tests that the Server.findRate() method is working correctly.
+     */
     @Test
-    public void testServer_checkRate(){
+    public void testServer_findRate(){
         ServerCurrency serverCurrency1 = new ServerCurrency();
         ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null);
         CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
         Server server = new Server();
         try {
-            server.checkRate(currencyDataObject);
+            server.findRate(currencyDataObject);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(currencyDataObject);
+        assertNotEquals(null, currencyDataObject.getCurrency1().getRate());
+        assertNotEquals(null, currencyDataObject.getCurrency2().getRate());
+    }
+
+    /***
+     * This verifies that the Server.findDescription() functions correctly.
+     */
+    @Test
+    public void testServer_findDescription(){
+        ServerCurrency serverCurrency1 = new ServerCurrency("AED", null, null, null);
+        ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null);
+        CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
+        Server server = new Server();
+        currencyDataObject = server.findDescription(currencyDataObject);
+        assertNotEquals(null, currencyDataObject.getCurrency1().getDescription());
+        assertNotEquals(null, currencyDataObject.getCurrency2().getDescription());
+    }
+
+    /***
+     * This verifies that the Server.findRate() and the Server.findDescription() can function consecutively.
+     */
+    @Test
+    public void testServer_findRate_findDescription(){
+        ServerCurrency serverCurrency1 = new ServerCurrency("AED", null, null, null);
+        ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null);
+        CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
+        Server server = new Server();
+        currencyDataObject = server.findDescription(currencyDataObject);
+        currencyDataObject = server.findRate(currencyDataObject);
+        assertNotEquals(null, currencyDataObject.getCurrency1().getRate());
+        assertNotEquals(null, currencyDataObject.getCurrency2().getRate());
+        assertNotEquals(null, currencyDataObject.getCurrency1().getDescription());
+        assertNotEquals(null, currencyDataObject.getCurrency2().getDescription());
     }
 }
