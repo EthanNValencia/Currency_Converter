@@ -49,6 +49,11 @@ public class Connect implements CC_Server.CONSTANTS{
         }
     }
 
+    /***
+     *
+     * @param currencyHashSet
+     * @throws Exception
+     */
     public static void insertCurrencyNames(HashSet<ServerCurrency> currencyHashSet) throws Exception{
         Connection con = getConnection();
         String sql = "INSERT IGNORE INTO cur_db.cur_description (currency_name, currency_description) VALUES(?, ?)";
@@ -63,6 +68,53 @@ public class Connect implements CC_Server.CONSTANTS{
         }
     }
 
+    /***
+     * Since USD is the base rate, it will always be 1. Therefore there is no need to scan any USD data directly. USD data can simply be derived from calculations.
+     */
+    public static void insertUSD() throws Exception {
+        Connection con = getConnection();
+        String sql = "INSERT IGNORE INTO cur_db.cur_description (currency_name, currency_description) VALUES ('USD', 'United States Dollar');";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.executeUpdate();
+
+        sql = "SELECT DISTINCT currency_date FROM cur_db.cur WHERE NOT EXISTS (SELECT currency_name FROM cur_db.cur WHERE currency_name = 'USD');";
+        ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        // LocalDate[] localDates
+        while (rs.next()){
+            // I want to add the USD entries to the database that do not exist, or more specifically, do not have a date. 
+        }
+
+        /*
+        for(int i = 0; i <= countDateEntries(); i++) {
+            LocalDate localDate = LocalDate.now();
+            sql = "INSERT IGNORE INTO cur_db.cur (currency_name, currency_rate, currency_date) VALUES ('USD', '1', '" + localDate.minusDays(i) +"');";
+            ps = con.prepareStatement(sql);
+            ps.executeUpdate();
+        }
+
+        "INSERT IGNORE INTO cur_db.cur_description (currency_name, currency_description) VALUES ('USD', 'United States Dollar');"
+        "INSERT IGNORE INTO cur_db.cur (currency_name, currency_rate, currency_date) VALUES ('USD', '1', '" + + "');"
+
+        SELECT DISTINCT currency_date FROM cur_db.cur WHERE NOT EXISTS (SELECT currency_name FROM cur_db.cur WHERE currency_name = 'USD');
+
+        */
+    }
+
+    public static int countDateEntries() throws Exception {
+        Connection con = getConnection();
+        String sql = "SELECT COUNT(DISTINCT currency_date) FROM cur_db.cur_date;";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        return rs.getInt(1);
+    }
+
+    /***
+     *
+     * @param date
+     * @throws Exception
+     */
     public static void insertCurrencyDate(LocalDate date) throws Exception{
         String sql = "INSERT IGNORE INTO cur_db.cur_date (currency_date) " +
                 "VALUES('" + date + "');";
@@ -71,6 +123,11 @@ public class Connect implements CC_Server.CONSTANTS{
         ps.executeUpdate();
     }
 
+    /***
+     *
+     * @param date
+     * @throws Exception
+     */
     public static void insertCurrencyDate(String date) throws Exception{
         String sql = "INSERT IGNORE INTO cur_db.cur_date (currency_date) " +
                 "VALUES('" + date + "');";
@@ -198,6 +255,12 @@ public class Connect implements CC_Server.CONSTANTS{
         return currencyList;
     }
 
+    /***
+     *
+     * @param serverCurrency2
+     * @return
+     * @throws Exception
+     */
     public static ServerCurrency findRate(ServerCurrency serverCurrency2) throws Exception {
         String sql = "SELECT currency_rate FROM cur_db.cur WHERE currency_name = '" + serverCurrency2.getName() + "' AND currency_date = '" + serverCurrency2.getDate() + "';";
         Connection con = getConnection();
@@ -208,6 +271,12 @@ public class Connect implements CC_Server.CONSTANTS{
         return serverCurrency2;
     }
 
+    /***
+     *
+     * @param serverCurrency
+     * @return
+     * @throws Exception
+     */
     public static ServerCurrency findDescription(ServerCurrency serverCurrency) throws Exception {
         String sql = "SELECT currency_description FROM cur_db.cur_description WHERE currency_name = '" + serverCurrency.getName() + "';";
         Connection con = getConnection();

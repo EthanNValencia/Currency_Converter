@@ -9,6 +9,7 @@ package CC_Server;
 import java.io.*;
 import java.net.*;
 import java.util.Date;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -29,8 +30,6 @@ java --module-path "C:\Program Files (x86)\JavaFx\javafx-sdk-15.0.1\lib" --add-m
 public class Server extends Application {
 
     private ServerWebReader serverWebReader = new ServerWebReader();
-    private ServerCurrency serverCurrency1;
-    private ServerCurrency serverCurrency2;
 
     /***
      *
@@ -107,11 +106,17 @@ public class Server extends Application {
     }
 
     /***
-     * This method is meant to go through and check what information is provided to the server by the client and complete what can be completed.
+     *
+     * @param currencyDataObject
+     * @return
      */
     public CurrencyDataObject findRate(CurrencyDataObject currencyDataObject){ // This is only needed for the second currency object.
         if (currencyDataObject.getCurrency1().getRate() == null){
-            currencyDataObject.getCurrency1().setRate("1");
+            try {
+                currencyDataObject.setCurrency1(Connect.findRate(currencyDataObject.getCurrency1()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         if (currencyDataObject.getCurrency2().getRate() == null){
@@ -124,6 +129,11 @@ public class Server extends Application {
         return currencyDataObject;
     }
 
+    /***
+     *
+     * @param currencyDataObject
+     * @return
+     */
     public CurrencyDataObject findDescription(CurrencyDataObject currencyDataObject){
         if(currencyDataObject.getCurrency1().getDescription() == null){
             try {
@@ -139,6 +149,22 @@ public class Server extends Application {
                 e.printStackTrace();
             }
         }
+        return currencyDataObject;
+    }
+
+    /***
+     *
+     * @param currencyDataObject
+     * @return
+     */
+    public CurrencyDataObject calculateRate(CurrencyDataObject currencyDataObject) {
+        String formatRate;
+        double rate = (double) 1 / Double.parseDouble(currencyDataObject.getCurrency1().getRate());
+        rate = rate * Double.parseDouble(currencyDataObject.getCurrency2().getRate());
+        formatRate = String.format("%.3f", rate);
+        if (formatRate.equals("0.000"))
+            formatRate = String.format("%.7f", rate);
+
         return currencyDataObject;
     }
 

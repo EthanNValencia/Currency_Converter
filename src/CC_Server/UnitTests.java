@@ -354,6 +354,7 @@ public class UnitTests {
         Server server = new Server();
         currencyDataObject = server.findDescription(currencyDataObject);
         currencyDataObject = server.findRate(currencyDataObject);
+        System.out.println(currencyDataObject);
         assertNotEquals(null, currencyDataObject.getCurrency1().getRate());
         assertNotEquals(null, currencyDataObject.getCurrency2().getRate());
         assertNotEquals(null, currencyDataObject.getCurrency1().getDescription());
