@@ -41,7 +41,7 @@ public class Server extends Application {
         TextArea ta = new TextArea();
 
         // Create a scene and place it in the stage
-        Scene scene = new Scene(new ScrollPane(ta), 450, 200);
+        Scene scene = new Scene(new ScrollPane(ta), 485, 190);
         primaryStage.setTitle("Server"); // Set the stage title
         primaryStage.setScene(scene); // Place the scene in the stage
         primaryStage.show(); // Display the stage
@@ -113,14 +113,14 @@ public class Server extends Application {
     public CurrencyDataObject findRate(CurrencyDataObject currencyDataObject){ // This is only needed for the second currency object.
         if (currencyDataObject.getCurrency1().getRawRate() == null){
             try {
-                currencyDataObject.setCurrency1(Connect.findRate(currencyDataObject.getCurrency1()));
+                currencyDataObject.setCurrency1(Connect.getRate(currencyDataObject.getCurrency1()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         if (currencyDataObject.getCurrency2().getRawRate() == null){
             try {
-                currencyDataObject.setCurrency2(Connect.findRate(currencyDataObject.getCurrency2()));
+                currencyDataObject.setCurrency2(Connect.getRate(currencyDataObject.getCurrency2()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -136,14 +136,14 @@ public class Server extends Application {
     public CurrencyDataObject findDescription(CurrencyDataObject currencyDataObject){
         if(currencyDataObject.getCurrency1().getDescription() == null){
             try {
-                currencyDataObject.setCurrency1(Connect.findDescription(currencyDataObject.getCurrency1()));
+                currencyDataObject.setCurrency1(Connect.getDescription(currencyDataObject.getCurrency1()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         if(currencyDataObject.getCurrency2().getDescription() == null){
             try {
-                currencyDataObject.setCurrency2(Connect.findDescription(currencyDataObject.getCurrency2()));
+                currencyDataObject.setCurrency2(Connect.getDescription(currencyDataObject.getCurrency2()));
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -303,7 +303,7 @@ public class UnitTests {
     public void testConnect_findRate(){
         ServerCurrency serverCurrency = new ServerCurrency("COP", null, "2021-07-05", null);
         try {
-            serverCurrency = Connect.findRate(serverCurrency);
+            serverCurrency = Connect.getRate(serverCurrency);
         } catch (Exception e) {
             e.printStackTrace();
         }

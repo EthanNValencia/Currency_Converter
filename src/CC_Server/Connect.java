@@ -254,7 +254,7 @@ public class Connect implements CC_Server.CONSTANTS{
      * @return
      * @throws Exception
      */
-    public static ServerCurrency findRate(ServerCurrency serverCurrency) throws Exception {
+    public static ServerCurrency getRate(ServerCurrency serverCurrency) throws Exception {
         String sql = "SELECT currency_rate FROM cur_db.cur WHERE currency_name = '" + serverCurrency.getName() + "' AND currency_date = '" + serverCurrency.getDate() + "';";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
@@ -270,7 +270,7 @@ public class Connect implements CC_Server.CONSTANTS{
      * @return
      * @throws Exception
      */
-    public static ServerCurrency findDescription(ServerCurrency serverCurrency) throws Exception {
+    public static ServerCurrency getDescription(ServerCurrency serverCurrency) throws Exception {
         String sql = "SELECT currency_description FROM cur_db.cur_description WHERE currency_name = '" + serverCurrency.getName() + "';";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);

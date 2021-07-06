@@ -86,7 +86,6 @@ public class MainController implements Initializable, CONSTANTS {
             ServerCurrency cur1 = new ServerCurrency();
             ServerCurrency cur2 = new ServerCurrency();
             cur1.setName(comboBox1.getValue());
-            cur1.setRawRate("1");
             cur2.setName(comboBox2.getValue());
             if (!inputArea.getText().equals(""))
                 cur1.setExchangeAmount(inputArea.getText());
