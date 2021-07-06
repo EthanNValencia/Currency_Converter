@@ -271,6 +271,22 @@ public class Connect implements CC_Server.CONSTANTS {
         return serverCurrency;
     }
 
+    public static List<ServerCurrency> generateList(ServerCurrency serverCurrency) throws Exception {
+        String sql = "SELECT * FROM cur_db.cur WHERE currency_name = '" + serverCurrency.getName() + "' ORDER BY currency_date;";
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        List<ServerCurrency> serverCurrencyList = new ArrayList<>();
+        while(rs.next()) {
+            ServerCurrency sc = new ServerCurrency();
+            sc.setName(rs.getString(1));
+            sc.setRawRate(rs.getString(2));
+            sc.setDate(rs.getString(3));
+            serverCurrencyList.add(sc);
+        }
+        return serverCurrencyList;
+    }
+
     /***
      * This is an overridden toString method that is useful for testing purposes.
      * @return Returns a string of the object name.

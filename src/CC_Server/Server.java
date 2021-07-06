@@ -85,13 +85,22 @@ public class Server extends Application {
 
                     CurrencyDataObject receivedDataObject = (CurrencyDataObject) inputFromClient.readObject();
                     Platform.runLater(() -> ta.appendText("Server received client data.\n"));
+                    System.out.println(receivedDataObject.getList());
+                    if (receivedDataObject.getList()) {
+                        try {
+                            receivedDataObject.setServerCurrencyList(Connect.generateList(receivedDataObject.getCurrency1()));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else if (!receivedDataObject.getList()) {
+                        // Data object modification
+                        receivedDataObject = findRate(receivedDataObject);
+                        receivedDataObject = findDescription(receivedDataObject);
+                        receivedDataObject = calculateRate(receivedDataObject);
+                        receivedDataObject = calculateExchange(receivedDataObject);
+                        // Data object modification
+                    }
 
-                    // Data object modification
-                    receivedDataObject = findRate(receivedDataObject);
-                    receivedDataObject = findDescription(receivedDataObject);
-                    receivedDataObject = calculateRate(receivedDataObject);
-                    receivedDataObject = calculateExchange(receivedDataObject);
-                    // Data object modification
                     outputToClient.writeObject(receivedDataObject);
 
                     Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));

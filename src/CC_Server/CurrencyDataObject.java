@@ -4,6 +4,7 @@ import CC_Directory.Calculation;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 /***
  * The idea behind this class is for it to be a data packet that is sent between the client and server.
@@ -13,6 +14,25 @@ public class CurrencyDataObject implements Serializable {
     private ServerCalculation serverCalculation;
     private ServerCurrency currency1 = new ServerCurrency(); // combobox1
     private ServerCurrency currency2 = new ServerCurrency(); // combobox2
+    private List<ServerCurrency> serverCurrencyList;
+    private boolean getList = false;
+
+
+    public boolean getList(){
+        return getList;
+    }
+
+    public void setList(Boolean getList){
+        this.getList = getList;
+    }
+
+    public List<ServerCurrency> getServerCurrencyList(){
+        return serverCurrencyList;
+    }
+
+    public void setServerCurrencyList(List<ServerCurrency> list){
+        this.serverCurrencyList = list;
+    }
 
     /***
      * This is the accessor method for the first server currency object.
@@ -57,6 +77,21 @@ public class CurrencyDataObject implements Serializable {
         this.currency2 = cur2;
         this.currency1.setDate(localDate.toString());
         this.currency2.setDate(localDate.toString());
+    }
+
+    /***
+     * A constructor for the CurrencyDataObject.
+     * @param cur1 It requires the currency data taken from combo box 1.
+     * @param localDate It requires the date in the LocalDate format (not a string).
+     */
+    public CurrencyDataObject(ServerCurrency cur1, LocalDate localDate, boolean getList) {
+        this.currency1 = cur1;
+        this.currency1.setDate(localDate.toString());
+        this.getList = getList;
+    }
+
+    public CurrencyDataObject() {
+
     }
 
     /***

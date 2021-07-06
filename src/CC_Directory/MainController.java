@@ -49,7 +49,7 @@ public class MainController implements Initializable, CONSTANTS {
     private Tooltip submit = new Tooltip();
     private ObjectOutputStream toServer = null;
     private ObjectInputStream fromServer = null;
-    private CurrencyDataObject sentInfo;
+    private Client client;
 
     @FXML
     private ImageView cur1_Image, cur2_Image;
@@ -80,7 +80,6 @@ public class MainController implements Initializable, CONSTANTS {
 
     @FXML
     void chart(ActionEvent event) {
-        serverRequest();
         try { // THIS LOADS THE CHART WINDOW DO NOT DELETE
             FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource("ChartUI.fxml"));
             Parent root = fxmlLoader1.load();
@@ -98,44 +97,14 @@ public class MainController implements Initializable, CONSTANTS {
      * This method sends a server request that generates a data object and receives a data object. The received data object is processed and displayed to relevant areas within the GUI.
      */
     public void serverRequest(){
-        try {
-            Socket socket = new Socket("localhost", 8000);
-            // Socket socket = new Socket("192.168.0.95", 8000); // this is where this program connects to the server
-            fromServer = new ObjectInputStream(socket.getInputStream());
-            toServer = new ObjectOutputStream(socket.getOutputStream());
-        } catch (
-                IOException ex) {
-            System.out.println("An IO exception occurred on the client side.");
+        client = new Client(comboBox1.getValue(), comboBox2.getValue(), inputArea.getText());
+        outputRate.setText(client.getOutputRate());
+        conversionIndicator.setText(client.getConversionIndicator());
+        if (client.getDataObject().getCurrency1().getExchangeAmount() != null) {
+            textArea.appendText(client.getTextArea());
         }
-        try {
-            ServerCurrency cur1 = new ServerCurrency();
-            ServerCurrency cur2 = new ServerCurrency();
-            cur1.setName(comboBox1.getValue());
-            cur2.setName(comboBox2.getValue());
-            if (!inputArea.getText().equals("")) {
-                cur1.setExchangeAmount(inputArea.getText());
-            }
-            sentInfo = new CurrencyDataObject(cur1, cur2, DATE_TODAY);
-            toServer.writeObject(sentInfo); // send object to server
-            toServer.flush(); // flush request
-            CurrencyDataObject returnedInfo = (CurrencyDataObject) fromServer.readObject();
-            outputRate.setText(returnedInfo.getCurrency1().getAdjustedRate() + " " + returnedInfo.getCurrency1().getName() + " = " + returnedInfo.getCurrency2().getAdjustedRate() + " " + returnedInfo.getCurrency2().getName());
-            conversionIndicator.setText("Converting " + returnedInfo.getCurrency1().getName() + " to " + returnedInfo.getCurrency2().getName());
-            if (returnedInfo.getCurrency1().getExchangeAmount() != null) {
-                textArea.appendText(returnedInfo.getCurrency1().getExchangeAmount() + " " + returnedInfo.getCurrency1().getName() + " = " + returnedInfo.getCurrency2().getExchangeAmount() + " " + returnedInfo.getCurrency2().getName() + "\n");
-            }
-            toolTip1.setText(returnedInfo.getCurrency1().getDescription());
-            toolTip2.setText(returnedInfo.getCurrency2().getDescription());
-
-        } catch (IOException ex) {
-            System.out.println("The client threw an io exception.");
-            System.out.println("The server may not be running.");
-        } catch (NullPointerException npe) {
-            System.out.println("A null pointer exception was thrown on the client side.");
-            System.out.println("The server may not be running.");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        toolTip1.setText(client.getDataObject().getCurrency1().getDescription());
+        toolTip2.setText(client.getDataObject().getCurrency2().getDescription());
     }
 
     /***

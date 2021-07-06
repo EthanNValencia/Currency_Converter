@@ -468,4 +468,17 @@ public class UnitTests {
         currencyDataObject = server.calculateExchange(currencyDataObject);
         assertEquals("0.0001500", currencyDataObject.getCurrency2().getExchangeAmount());
     }
+
+    /***
+     * This verifies that the Connect.generateList() method is not throwing an exception.
+     */
+    @Test
+    public void testServer_generateList(){
+        ServerCurrency serverCurrency1 = new ServerCurrency("COP", null, null, null, null, null);
+        try {
+            Connect.generateList(serverCurrency1);
+        } catch (Exception e) {
+            fail();
+        }
+    }
 }
