@@ -19,7 +19,7 @@ import java.util.List;
 /***
  * Connect class for connecting the server application to a database. The methods of this class are mostly defined by their SQL queries.
  */
-public class Connect implements CC_Server.CONSTANTS{
+public class Connect implements CC_Server.CONSTANTS {
 
     /***
      * This is the connection method. It is used to connect to the server.
@@ -50,11 +50,11 @@ public class Connect implements CC_Server.CONSTANTS{
     }
 
     /***
-     *
-     * @param currencyHashSet
-     * @throws Exception
+     * This inserts currency data by using a HashSet that is generated during the page reading and page processing stage.
+     * @param currencyHashSet It requires the populated HashSet.
+     * @throws Exception A exception would likely be caused by database connectivity related problems.
      */
-    public static void insertCurrencyNames(HashSet<ServerCurrency> currencyHashSet) throws Exception{
+    public static void insertCurrencyNames(HashSet<ServerCurrency> currencyHashSet) throws Exception {
         Connection con = getConnection();
         String sql = "INSERT IGNORE INTO cur_db.cur_description (currency_name, currency_description) VALUES(?, ?)";
         PreparedStatement ps = con.prepareStatement(sql);
@@ -78,10 +78,12 @@ public class Connect implements CC_Server.CONSTANTS{
         PreparedStatement ps = con.prepareStatement(sql); // adds the USD info into the cur_description table.
         ps.executeUpdate();
 
+        // This block issues a database request to retrieve the dates of the missing fields.
         sql = "SELECT d.currency_date FROM cur_db.cur_date d WHERE NOT EXISTS (SELECT c.currency_date FROM cur_db.cur c WHERE c.currency_date = d.currency_date AND c.currency_name = 'USD');";
         ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
 
+        // The point of this block is to generated and insert missing fields.
         sql = "INSERT IGNORE INTO cur_db.cur (currency_name, currency_rate, currency_date) VALUES (?,?,?);";
         ps = con.prepareStatement(sql);
         while (rs.next()){
@@ -93,21 +95,12 @@ public class Connect implements CC_Server.CONSTANTS{
         ps.executeBatch();
     }
 
-    public static int countDateEntries() throws Exception {
-        Connection con = getConnection();
-        String sql = "SELECT COUNT(DISTINCT currency_date) FROM cur_db.cur_date;";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        return rs.getInt(1);
-    }
-
     /***
-     *
-     * @param date
+     * This method inserts the currency dates into the database.
+     * @param date It requires a LocalDate object that is to be inserted.
      * @throws Exception
      */
-    public static void insertCurrencyDate(LocalDate date) throws Exception{
+    public static void insertCurrencyDate(LocalDate date) throws Exception {
         String sql = "INSERT IGNORE INTO cur_db.cur_date (currency_date) " +
                 "VALUES('" + date + "');";
         Connection con = getConnection();
@@ -120,7 +113,7 @@ public class Connect implements CC_Server.CONSTANTS{
      * @param date
      * @throws Exception
      */
-    public static void insertCurrencyDate(String date) throws Exception{
+    public static void insertCurrencyDate(String date) throws Exception {
         String sql = "INSERT IGNORE INTO cur_db.cur_date (currency_date) " +
                 "VALUES('" + date + "');";
         Connection con = getConnection();
@@ -144,7 +137,6 @@ public class Connect implements CC_Server.CONSTANTS{
         ps.executeUpdate();
     }
 
-
     /***
      *
      * @param serverCurrency
@@ -167,7 +159,7 @@ public class Connect implements CC_Server.CONSTANTS{
      * Method that is used to delete all the contents of the currency table.
      * @throws Exception If an exception is thrown, it is likely due to a failure to connect to the database.
      */
-    public static void deleteAll() throws Exception{
+    public static void deleteAll() throws Exception {
         String sql = "DELETE FROM cur_db.cur;";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
@@ -213,7 +205,7 @@ public class Connect implements CC_Server.CONSTANTS{
      * @param currencyHashSet This takes a HashSet. I moved over to a hashset, because it is a data structure that naturally eliminates duplicates. Attempting to insert data that contains duplicate composite keys is something I want to avoid.
      * @throws Exception If an exception is thrown here it will likely be from database connectivity related problems.
      */
-    public static void insertList(HashSet<ServerCurrency> currencyHashSet) throws Exception{
+    public static void insertList(HashSet<ServerCurrency> currencyHashSet) throws Exception {
         Connection con = getConnection();
         String sql = "INSERT IGNORE INTO cur_db.cur (currency_name, currency_rate, currency_date) VALUES(?,?,?)";
         PreparedStatement ps = con.prepareStatement(sql);
@@ -241,7 +233,6 @@ public class Connect implements CC_Server.CONSTANTS{
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         List<String> currencyList = new ArrayList<>();
-
         while (rs.next()){
             currencyList.add(rs.getString(1));
         }
@@ -265,7 +256,7 @@ public class Connect implements CC_Server.CONSTANTS{
     }
 
     /***
-     *
+     * This method takes the data object and fills the description parameters in the contained objects.
      * @param serverCurrency
      * @return
      * @throws Exception

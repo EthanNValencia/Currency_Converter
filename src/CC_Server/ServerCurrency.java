@@ -22,16 +22,16 @@ public class ServerCurrency implements Serializable {
     private String adjustedRate = null;
 
     /***
-     *
-     * @return
+     * The accessor method for the variable that stores the calculated rate.
+     * @return Returns the calculated rate of exchange.
      */
     public String getAdjustedRate() {
         return adjustedRate;
     }
 
     /***
-     *
-     * @param adjustedRate
+     * This is the mutator method for the calculated rate variable.
+     * @param adjustedRate Returns the contained calculated rate.
      */
     public void setAdjustedRate(String adjustedRate) {
         this.adjustedRate = adjustedRate;
@@ -47,7 +47,7 @@ public class ServerCurrency implements Serializable {
 
     /***
      * The accessor method for the variable that stores the amount of currency to be exchanged.
-     * @return It returns the amount of currency that is to be traded.
+     * @return Returns the amount of currency that is to be traded.
      */
     public String getExchangeAmount() {
         return exchangeAmount;
@@ -71,7 +71,7 @@ public class ServerCurrency implements Serializable {
 
     /***
      * Standard accessor method that is used to return the object date record.
-     * @return It returns the date. It should be in the format of: YYYY-MM-DD.
+     * @return Returns the date. It should be in the format of: YYYY-MM-DD.
      */
     public String getDate() {
         return date;
@@ -103,7 +103,7 @@ public class ServerCurrency implements Serializable {
 
     /***
      * The accessor method for the field that stores the name.
-     * @return It returns the data that is contained in the specified variable.
+     * @return Returns the data that is contained in the specified variable.
      */
     public String getName() {
         return name;
@@ -111,7 +111,7 @@ public class ServerCurrency implements Serializable {
 
     /***
      * The accessor method for the field that stores the rate.
-     * @return It returns the data that is contained in the specified variable.
+     * @return Returns the data that is contained in the specified variable.
      */
     public String getRawRate() {
         return rawRate;

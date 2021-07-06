@@ -7,6 +7,7 @@ Unit tests for the server package.
 package CC_Server;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -22,6 +23,7 @@ public class UnitTests {
      * This verifies that a connection is being made to the server. This is a good troubleshooting test to use when attempting to establish a connection.
      */
     @Test
+    @Order(1)
     public void testConnection_getConnection(){
         try {
             Connect.getConnection();
@@ -34,6 +36,7 @@ public class UnitTests {
      * This verifies that the Connection.createTable() method will not throw an exception.
      */
     @Test
+    @Order(2)
     public void testConnection_createTable(){
         try {
             Connect.createTable(); // The SQL query handles the situation of a pre-existing table.
@@ -46,6 +49,7 @@ public class UnitTests {
      * This tests that the database is being created properly. This requires an internet connection and a database to pass.
      */
     @Test
+    @Order(3)
     public void testDatabaseBuild(){
 
         try {
@@ -332,21 +336,33 @@ public class UnitTests {
      * This verifies that the Server.findDescription() functions correctly.
      */
     @Test
-    public void testServer_findDescription(){
+    public void testServer_findDescription_NOTNULL_1(){
         ServerCurrency serverCurrency1 = new ServerCurrency("AED", null, null, null);
-        ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null);
+        ServerCurrency serverCurrency2 = new ServerCurrency(null, null, null, null);
         CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
         Server server = new Server();
         currencyDataObject = server.findDescription(currencyDataObject);
         assertNotEquals(null, currencyDataObject.getCurrency1().getDescription());
+    }
+
+    /***
+     * This verifies that the Server.findDescription() functions correctly.
+     */
+    @Test
+    public void testServer_findDescription_NOTNULL_2(){
+        ServerCurrency serverCurrency1 = new ServerCurrency(null, null, null, null);
+        ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null);
+        CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
+        Server server = new Server();
+        currencyDataObject = server.findDescription(currencyDataObject);
         assertNotEquals(null, currencyDataObject.getCurrency2().getDescription());
     }
 
     /***
-     * This verifies that the Server.findRate() and the Server.findDescription() can function consecutively.
+     * This verifies that the Server.findRate() and the Server.findDescription() can function consecutively. If this test fails, then that means the server currency object fields are not being populated.
      */
     @Test
-    public void testServer_findRate_findDescription(){
+    public void testServer_findRate_findDescription_NOTNULL_1(){
         ServerCurrency serverCurrency1 = new ServerCurrency("AED", null, null, null);
         ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null);
         CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
@@ -363,7 +379,7 @@ public class UnitTests {
      * This verifies that the Server.findRate(), Server.findDescription(), Server.calculateRate() can function consecutively without problem.
      */
     @Test
-    public void testServer_calculateRate(){
+    public void testServer_calculateRate_NOTNULL_1(){
         ServerCurrency serverCurrency1 = new ServerCurrency("AED", null, null, null, null, null);
         ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null, null, null);
         CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
@@ -372,20 +388,84 @@ public class UnitTests {
         currencyDataObject = server.findRate(currencyDataObject);
         currencyDataObject = server.calculateRate(currencyDataObject);
         assertNotNull(currencyDataObject.getCurrency1().getAdjustedRate());
+    }
+
+    /***
+     * This verifies that the Server.findRate(), Server.findDescription(), Server.calculateRate() can function consecutively without problem.
+     */
+    @Test
+    public void testServer_calculateRate_NOTNULL_2(){
+        ServerCurrency serverCurrency1 = new ServerCurrency("AED", null, null, null, null, null);
+        ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null, null, null);
+        CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
+        Server server = new Server();
+        currencyDataObject = server.findDescription(currencyDataObject);
+        currencyDataObject = server.findRate(currencyDataObject);
+        currencyDataObject = server.calculateRate(currencyDataObject);
         assertNotNull(currencyDataObject.getCurrency2().getAdjustedRate());
     }
 
+    /***
+     * This tests that the Server.calculateRate() method is returning the anticipated results.
+     */
+    @Test
+    public void testServer_calculateRate_Predicted_1(){
+        ServerCurrency serverCurrency1 = new ServerCurrency(null, null, null, "0.5", null, null);
+        ServerCurrency serverCurrency2 = new ServerCurrency(null, null, null, "2", null, null);
+        CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
+        Server server = new Server();
+        currencyDataObject = server.calculateRate(currencyDataObject);
+        assertEquals("1", currencyDataObject.getCurrency1().getAdjustedRate());
+    }
+
+    /***
+     * This tests that the Server.CalculateRate() is returning the anticipated results.
+     */
+    @Test
+    public void testServer_calculateRate_Predicted_2(){
+        ServerCurrency serverCurrency1 = new ServerCurrency(null, null, null, "0.5", null, null);
+        ServerCurrency serverCurrency2 = new ServerCurrency(null, null, null, "2", null, null);
+        CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
+        Server server = new Server();
+        currencyDataObject = server.calculateRate(currencyDataObject);
+        assertEquals("4.000", currencyDataObject.getCurrency2().getAdjustedRate());
+    }
+
+    /***
+     * This tests that the Server.insertUSD() method is inserting USD.
+     */
     @Test
     public void testServer_insertUSD(){
-        try {
-            testServerWebReader_insertAnnualCurrencyData();
-        } catch (Exception e) {
-            fail();
-        }
         try {
             Connect.insertUSD();
         } catch (Exception e) {
             fail();
         }
+    }
+
+    /***
+     * This tests that the Server.calculateExchange() method is returning the anticipated results.
+     */
+    @Test
+    public void testServer_calculateExchange(){
+        ServerCurrency serverCurrency1 = new ServerCurrency(null, null, null, null, "2", null);
+        ServerCurrency serverCurrency2 = new ServerCurrency(null, null, null, null, null, "2");
+        CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
+        Server server = new Server();
+        currencyDataObject = server.calculateExchange(currencyDataObject);
+        assertEquals("4.00", currencyDataObject.getCurrency2().getExchangeAmount());
+    }
+
+    /***
+     * This tests that the Server.calculateExchange() method is returning the anticipated results.
+     */
+    @Test
+    public void testServer_calculateExchange_checkLower(){
+        ServerCurrency serverCurrency1 = new ServerCurrency(null, null, null, null, "30000", null);
+        ServerCurrency serverCurrency2 = new ServerCurrency(null, null, null, null, null, "0.000000005");
+        CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
+        Server server = new Server();
+        currencyDataObject = server.calculateExchange(currencyDataObject);
+        assertEquals("0.0001500", currencyDataObject.getCurrency2().getExchangeAmount());
     }
 }

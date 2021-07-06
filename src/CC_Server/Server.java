@@ -8,8 +8,8 @@ package CC_Server;
 
 import java.io.*;
 import java.net.*;
+import java.text.NumberFormat;
 import java.util.Date;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -29,8 +29,6 @@ java --module-path "C:\Program Files (x86)\JavaFx\javafx-sdk-15.0.1\lib" --add-m
  */
 public class Server extends Application {
 
-    private ServerWebReader serverWebReader = new ServerWebReader();
-
     /***
      * This is the overridden start method that is used to begin the the GUI.
      * @param primaryStage Requires the primary stage.
@@ -39,7 +37,6 @@ public class Server extends Application {
     public void start(Stage primaryStage) {
         // Text area for displaying contents
         TextArea ta = new TextArea();
-
         // Create a scene and place it in the stage
         Scene scene = new Scene(new ScrollPane(ta), 485, 190);
         primaryStage.setTitle("Server"); // Set the stage title
@@ -68,7 +65,7 @@ public class Server extends Application {
                 Platform.runLater(() -> ta.appendText("Server started at " + new Date() + '\n'));
                 Platform.runLater(() -> ta.appendText("Server is gathering currency related data.\n"));
                 Platform.runLater(() -> ta.appendText("This may take some time...\n"));
-
+                ServerWebReader serverWebReader = new ServerWebReader();
                 try {
                     serverWebReader.insertAnnualCurrencyData();
                     Platform.runLater(() -> ta.appendText("Currency related data has been successfully gathered.\n"));
@@ -88,9 +85,13 @@ public class Server extends Application {
 
                     CurrencyDataObject receivedDataObject = (CurrencyDataObject) inputFromClient.readObject();
                     Platform.runLater(() -> ta.appendText("Server received client data.\n"));
+
+                    // Data object modification
                     receivedDataObject = findRate(receivedDataObject);
                     receivedDataObject = findDescription(receivedDataObject);
                     receivedDataObject = calculateRate(receivedDataObject);
+                    receivedDataObject = calculateExchange(receivedDataObject);
+                    // Data object modification
                     outputToClient.writeObject(receivedDataObject);
 
                     Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));
@@ -134,14 +135,14 @@ public class Server extends Application {
      * @return It returns an appended data object.
      */
     public CurrencyDataObject findDescription(CurrencyDataObject currencyDataObject){
-        if(currencyDataObject.getCurrency1().getDescription() == null){
+        if(currencyDataObject.getCurrency1().getName() != null && currencyDataObject.getCurrency1().getDescription() == null){
             try {
                 currencyDataObject.setCurrency1(Connect.getDescription(currencyDataObject.getCurrency1()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if(currencyDataObject.getCurrency2().getDescription() == null){
+        if(currencyDataObject.getCurrency2().getName() != null && currencyDataObject.getCurrency2().getDescription() == null){
             try {
                 currencyDataObject.setCurrency2(Connect.getDescription(currencyDataObject.getCurrency2()));
             } catch (Exception e) {
@@ -161,11 +162,38 @@ public class Server extends Application {
         double rate = (double) 1 / Double.parseDouble(currencyDataObject.getCurrency1().getRawRate());
         rate = rate * Double.parseDouble(currencyDataObject.getCurrency2().getRawRate());
         formatRate = String.format("%.3f", rate);
-        if (formatRate.equals("0.000"))
+        if (formatRate.equals("0.000")) {
             formatRate = String.format("%.7f", rate);
+        }
         currencyDataObject.getCurrency1().setAdjustedRate("1");
         currencyDataObject.getCurrency2().setAdjustedRate(formatRate);
         return currencyDataObject;
+    }
+
+    /***
+     * This method looks complicated, but it simply converts two strings to doubles, performs an arithmetic operation, and then converts the double result back to a string and stores it in the data object.
+     * @param currencyDataObject It requires the data object.
+     * @return It returns the modified data object.
+     */
+    public CurrencyDataObject calculateExchange(CurrencyDataObject currencyDataObject){
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setMinimumFractionDigits(2);
+        if (currencyDataObject.getCurrency1().getExchangeAmount() != null) {
+            double number = Double.parseDouble(currencyDataObject.getCurrency1().getExchangeAmount()) *
+                            Double.parseDouble(currencyDataObject.getCurrency2().getAdjustedRate());
+            String strNumber = checkLower(number, nf); // This checks that the value returned is not zero.
+            currencyDataObject.getCurrency2().setExchangeAmount(strNumber);
+        }
+        return currencyDataObject;
+    }
+
+    public String checkLower(double number, NumberFormat nf){
+        String strNumber = nf.format(number);
+        if(strNumber.equals("0.00")) {
+            nf.setMinimumFractionDigits(7);
+            strNumber = nf.format(number);
+        }
+        return strNumber;
     }
 
     /**
@@ -174,4 +202,6 @@ public class Server extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+
 }
