@@ -108,6 +108,13 @@ public class ServerCurrency implements Serializable {
     }
 
     /***
+     * Single parameter ServerCurrency constructor.
+     */
+    public ServerCurrency(String name){
+        this.name = name;
+    }
+
+    /***
      * This is a two parameter constructor for the server currency object.
      * @param name It takes a name (this is meant to be the name of the currency).
      * @param rate It takes a rate (this is meant to be the exchange rate).

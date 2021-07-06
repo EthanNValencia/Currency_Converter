@@ -8,7 +8,6 @@ package CC_Server;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -316,7 +315,7 @@ public class UnitTests {
      */
     @Test
     public void testServer_findRate(){
-        ServerCurrency serverCurrency1 = new ServerCurrency();
+        ServerCurrency serverCurrency1 = new ServerCurrency("EUR");
         ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null);
         CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
         Server server = new Server();
@@ -359,5 +358,19 @@ public class UnitTests {
         assertNotEquals(null, currencyDataObject.getCurrency2().getRate());
         assertNotEquals(null, currencyDataObject.getCurrency1().getDescription());
         assertNotEquals(null, currencyDataObject.getCurrency2().getDescription());
+    }
+
+    @Test
+    public void testServer_insertUSD(){
+        try {
+            testServerWebReader_insertAnnualCurrencyData();
+        } catch (Exception e) {
+            fail();
+        }
+        try {
+            Connect.insertUSD();
+        } catch (Exception e) {
+            fail();
+        }
     }
 }

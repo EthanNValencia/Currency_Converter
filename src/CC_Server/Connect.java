@@ -64,41 +64,33 @@ public class Connect implements CC_Server.CONSTANTS{
             ServerCurrency serverCurrency = iterator.next();
             ps.setString(1, serverCurrency.getName());
             ps.setString(2, serverCurrency.getDescription());
-            ps.executeUpdate();
+            ps.addBatch();
         }
+        ps.executeBatch();
     }
 
     /***
      * Since USD is the base rate, it will always be 1. Therefore there is no need to scan any USD data directly. USD data can simply be derived from calculations.
      */
-    public static void insertUSD() throws Exception {
+    public static void insertUSD() throws Exception { // this method assumes that the date entries exist in the database.
         Connection con = getConnection();
         String sql = "INSERT IGNORE INTO cur_db.cur_description (currency_name, currency_description) VALUES ('USD', 'United States Dollar');";
-        PreparedStatement ps = con.prepareStatement(sql);
+        PreparedStatement ps = con.prepareStatement(sql); // adds the USD info into the cur_description table.
         ps.executeUpdate();
 
-        sql = "SELECT DISTINCT currency_date FROM cur_db.cur WHERE NOT EXISTS (SELECT currency_name FROM cur_db.cur WHERE currency_name = 'USD');";
+        sql = "SELECT d.currency_date FROM cur_db.cur_date d WHERE NOT EXISTS (SELECT c.currency_date FROM cur_db.cur c WHERE c.currency_date = d.currency_date AND c.currency_name = 'USD');";
         ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
-        // LocalDate[] localDates
+
+        sql = "INSERT IGNORE INTO cur_db.cur (currency_name, currency_rate, currency_date) VALUES (?,?,?);";
+        ps = con.prepareStatement(sql);
         while (rs.next()){
-            // I want to add the USD entries to the database that do not exist, or more specifically, do not have a date. 
+            ps.setString(1, "USD");
+            ps.setString(2, "1");
+            ps.setString(3, rs.getString(1));
+            ps.addBatch();
         }
-
-        /*
-        for(int i = 0; i <= countDateEntries(); i++) {
-            LocalDate localDate = LocalDate.now();
-            sql = "INSERT IGNORE INTO cur_db.cur (currency_name, currency_rate, currency_date) VALUES ('USD', '1', '" + localDate.minusDays(i) +"');";
-            ps = con.prepareStatement(sql);
-            ps.executeUpdate();
-        }
-
-        "INSERT IGNORE INTO cur_db.cur_description (currency_name, currency_description) VALUES ('USD', 'United States Dollar');"
-        "INSERT IGNORE INTO cur_db.cur (currency_name, currency_rate, currency_date) VALUES ('USD', '1', '" + + "');"
-
-        SELECT DISTINCT currency_date FROM cur_db.cur WHERE NOT EXISTS (SELECT currency_name FROM cur_db.cur WHERE currency_name = 'USD');
-
-        */
+        ps.executeBatch();
     }
 
     public static int countDateEntries() throws Exception {
@@ -233,8 +225,9 @@ public class Connect implements CC_Server.CONSTANTS{
             ps.setString(2, serverCurrency.getRate());
             ps.setString(3, serverCurrency.getDate());
             //System.out.println(ps.toString());
-            ps.executeUpdate();
+            ps.addBatch();
         }
+        ps.executeBatch();
     }
 
     /***
