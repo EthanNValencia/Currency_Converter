@@ -11,8 +11,11 @@ import CC_Server.ServerCurrency;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,6 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.Socket;
@@ -77,7 +81,6 @@ public class MainController implements Initializable, CONSTANTS {
     @FXML
     void chart(ActionEvent event) {
         serverRequest();
-        /*
         try { // THIS LOADS THE CHART WINDOW DO NOT DELETE
             FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource("ChartUI.fxml"));
             Parent root = fxmlLoader1.load();
@@ -87,8 +90,8 @@ public class MainController implements Initializable, CONSTANTS {
             stage.show();
         } catch (Exception ex) {
             System.out.println("An exception occurred.");
+            System.out.println(ex);
         }
-        */
 }
 
     /***
