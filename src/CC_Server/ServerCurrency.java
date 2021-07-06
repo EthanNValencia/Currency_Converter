@@ -14,11 +14,28 @@ import java.util.Objects;
  */
 public class ServerCurrency implements Serializable {
 
-    private String date;
-    private String description;
-    private String name;
-    private String rate;
-    private String exchangeAmount;
+    private String name = null;
+    private String date = null;
+    private String description = null;
+    private String rawRate = null;
+    private String exchangeAmount = null;
+    private String adjustedRate = null;
+
+    /***
+     *
+     * @return
+     */
+    public String getAdjustedRate() {
+        return adjustedRate;
+    }
+
+    /***
+     *
+     * @param adjustedRate
+     */
+    public void setAdjustedRate(String adjustedRate) {
+        this.adjustedRate = adjustedRate;
+    }
 
     /***
      * The mutator method for the description variable.
@@ -78,10 +95,10 @@ public class ServerCurrency implements Serializable {
 
     /***
      * Standard mutator method that sets the object rate.
-     * @param rate Requires the specified rate.
+     * @param rawRate Requires the specified rate.
      */
-    public void setRate(String rate) {
-        this.rate = rate;
+    public void setRawRate(String rawRate) {
+        this.rawRate = rawRate;
     }
 
     /***
@@ -96,8 +113,8 @@ public class ServerCurrency implements Serializable {
      * The accessor method for the field that stores the rate.
      * @return It returns the data that is contained in the specified variable.
      */
-    public String getRate() {
-        return rate;
+    public String getRawRate() {
+        return rawRate;
     }
 
     /***
@@ -117,36 +134,54 @@ public class ServerCurrency implements Serializable {
     /***
      * This is a two parameter constructor for the server currency object.
      * @param name It takes a name (this is meant to be the name of the currency).
-     * @param rate It takes a rate (this is meant to be the exchange rate).
+     * @param rawRate It takes a rate (this is meant to be the exchange rate).
      */
-    public ServerCurrency(String name, String rate) {
+    public ServerCurrency(String name, String rawRate) {
         this.name = name;
-        this.rate = rate;
+        this.rawRate = rawRate;
     }
 
     /***
      * This is a 3 parameter constructor. It requires the name, rate, and description.
      * @param name It takes a name (this is meant to be the name of the currency).
-     * @param rate It takes a rate (this is meant to be the exchange rate).
+     * @param rawRate It takes a rate (this is meant to be the exchange rate).
      * @param description It takes the description of the object.
      */
-    public ServerCurrency(String name, String rate, String description) {
+    public ServerCurrency(String name, String rawRate, String description) {
         this.name = name;
-        this.rate = rate;
+        this.rawRate = rawRate;
         this.description = description;
     }
 
     /***
      * The ServerCurrency is a child class of the CC_Directory.Currency class. It only differs in that it has an addition date variable.
      * @param name It requires the name of the currency.
-     * @param rate It requires the exchange rate from USD to itself.
+     * @param rawRate It requires the exchange rate from USD to itself.
      * @param date It requires the date on which this exchange rate was recorded.
      */
-    public ServerCurrency(String name, String rate, String date, String description) {
+    public ServerCurrency(String name, String rawRate, String date, String description) {
         this.name = name;
-        this.rate = rate;
+        this.rawRate = rawRate;
         this.date = date;
         this.description = description;
+    }
+
+    /***
+     * This is a full, 6 parameter constructor. The reason for this is to help improve readability for testing.
+     * @param name
+     * @param date
+     * @param description
+     * @param rawRate
+     * @param exchangeAmount
+     * @param adjustedRate
+     */
+    public ServerCurrency(String name, String date, String description, String rawRate, String exchangeAmount, String adjustedRate) {
+        this.name = name;
+        this.date = date;
+        this.description = description;
+        this.rawRate = rawRate;
+        this.exchangeAmount = exchangeAmount;
+        this.adjustedRate = adjustedRate;
     }
 
     /***
@@ -155,7 +190,7 @@ public class ServerCurrency implements Serializable {
      */
     @Override
     public String toString() {
-        return "ServerCurrency{name: "+ name + " date: " + date + " rate: " + rate + " description: " + description + " exchangeAmount: " + exchangeAmount + "}";
+        return "ServerCurrency{name: "+ name + ", date: " + date + ", rate: " + rawRate + ", description: " + description + ", exchangeAmount: " + exchangeAmount + ", adjustedRate: " + adjustedRate + "}";
     }
 
     /***

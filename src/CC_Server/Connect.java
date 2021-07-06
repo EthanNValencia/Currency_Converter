@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /***
- * Connect class for connecting the server application to a database.
+ * Connect class for connecting the server application to a database. The methods of this class are mostly defined by their SQL queries.
  */
 public class Connect implements CC_Server.CONSTANTS{
 
@@ -135,7 +135,7 @@ public class Connect implements CC_Server.CONSTANTS{
      */
     public static void insertCurrency(ServerCurrency serverCurrency) throws Exception {
         final String currency_name = serverCurrency.getName();
-        final String currency_rate = serverCurrency.getRate();
+        final String currency_rate = serverCurrency.getRawRate();
         final String currency_date = serverCurrency.getDate();
         String sql = "INSERT IGNORE INTO cur_db.cur (currency_name, currency_rate, currency_date) " +
                      "VALUES('" + currency_name + "' , '" + currency_rate + "' , '" + currency_date + "');";
@@ -152,7 +152,7 @@ public class Connect implements CC_Server.CONSTANTS{
      */
     public static void deleteCurrency(ServerCurrency serverCurrency) throws Exception {
         final String currency_name = serverCurrency.getName();
-        final String currency_rate = serverCurrency.getRate();
+        final String currency_rate = serverCurrency.getRawRate();
         final String currency_date = serverCurrency.getDate();
         String sql = "DELETE FROM cur_db.cur WHERE " +
                      "currency_name = '" + currency_name +  "' AND " +
@@ -222,7 +222,7 @@ public class Connect implements CC_Server.CONSTANTS{
         while(iterator.hasNext()){
             ServerCurrency serverCurrency = iterator.next();
             ps.setString(1, serverCurrency.getName());
-            ps.setString(2, serverCurrency.getRate());
+            ps.setString(2, serverCurrency.getRawRate());
             ps.setString(3, serverCurrency.getDate());
             //System.out.println(ps.toString());
             ps.addBatch();
@@ -249,19 +249,19 @@ public class Connect implements CC_Server.CONSTANTS{
     }
 
     /***
-     *
-     * @param serverCurrency2
+     * This method pulls the USD-to-X rate.
+     * @param serverCurrency
      * @return
      * @throws Exception
      */
-    public static ServerCurrency findRate(ServerCurrency serverCurrency2) throws Exception {
-        String sql = "SELECT currency_rate FROM cur_db.cur WHERE currency_name = '" + serverCurrency2.getName() + "' AND currency_date = '" + serverCurrency2.getDate() + "';";
+    public static ServerCurrency findRate(ServerCurrency serverCurrency) throws Exception {
+        String sql = "SELECT currency_rate FROM cur_db.cur WHERE currency_name = '" + serverCurrency.getName() + "' AND currency_date = '" + serverCurrency.getDate() + "';";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         rs.next();
-        serverCurrency2.setRate(rs.getString(1));
-        return serverCurrency2;
+        serverCurrency.setRawRate(rs.getString(1));
+        return serverCurrency;
     }
 
     /***

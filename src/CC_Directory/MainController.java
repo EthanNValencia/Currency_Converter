@@ -10,11 +10,8 @@ import CC_Server.CurrencyDataObject;
 import CC_Server.ServerCurrency;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,7 +23,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
-import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.Socket;
@@ -47,7 +43,7 @@ public class MainController implements Initializable, CONSTANTS {
     private Tooltip submit = new Tooltip();
     private ObjectOutputStream toServer = null;
     private ObjectInputStream fromServer = null;
-    private CurrencyDataObject dataObject;
+    private CurrencyDataObject currencyDataObject;
 
     @FXML
     private ImageView cur1_Image, cur2_Image;
@@ -90,16 +86,14 @@ public class MainController implements Initializable, CONSTANTS {
             ServerCurrency cur1 = new ServerCurrency();
             ServerCurrency cur2 = new ServerCurrency();
             cur1.setName(comboBox1.getValue());
-            cur1.setRate("1");
+            cur1.setRawRate("1");
             cur2.setName(comboBox2.getValue());
-
             if (!inputArea.getText().equals(""))
                 cur1.setExchangeAmount(inputArea.getText());
-
-            dataObject = new CurrencyDataObject(cur1, cur2, DATE_TODAY);
-            toServer.writeObject(dataObject); // send object to server
+            currencyDataObject = new CurrencyDataObject(cur1, cur2, DATE_TODAY);
+            toServer.writeObject(currencyDataObject); // send object to server
             toServer.flush(); // flush request
-            System.out.println("Sent to server " + dataObject);
+            System.out.println("Sent to server " + currencyDataObject);
             CurrencyDataObject returnedInfo = (CurrencyDataObject) fromServer.readObject();
             System.out.println("Received from server: " + returnedInfo);
         } catch (IOException ex) {
@@ -112,7 +106,7 @@ public class MainController implements Initializable, CONSTANTS {
             e.printStackTrace();
         }
         /*
-        try {
+        try { // THIS LOADS THE CHART WINDOW DO NOT DELETE
             FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource("ChartUI.fxml"));
             Parent root = fxmlLoader1.load();
             Stage stage = new Stage();

@@ -25,15 +25,15 @@ java --module-path "C:\Program Files (x86)\JavaFx\javafx-sdk-15.0.1\lib" --add-m
 */
 
 /***
- *
+ * This is the server class definition. This class brings together all the CC_Server classes. It also has some local algorithms and logics.
  */
 public class Server extends Application {
 
     private ServerWebReader serverWebReader = new ServerWebReader();
 
     /***
-     *
-     * @param primaryStage
+     * This is the overridden start method that is used to begin the the GUI.
+     * @param primaryStage Requires the primary stage.
      */
     @Override // Override the start method in the Application class
     public void start(Stage primaryStage) {
@@ -87,10 +87,10 @@ public class Server extends Application {
                     ObjectInputStream inputFromClient = new ObjectInputStream(socket.getInputStream());
 
                     CurrencyDataObject receivedDataObject = (CurrencyDataObject) inputFromClient.readObject();
-                    Platform.runLater(() -> ta.appendText("Messaged received!" + receivedDataObject));
-
-                    findRate(receivedDataObject);
-
+                    Platform.runLater(() -> ta.appendText("Server received client data."));
+                    receivedDataObject = findRate(receivedDataObject);
+                    receivedDataObject = findDescription(receivedDataObject);
+                    receivedDataObject = calculateRate(receivedDataObject);
                     outputToClient.writeObject(receivedDataObject);
 
                     Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));
@@ -106,20 +106,19 @@ public class Server extends Application {
     }
 
     /***
-     *
-     * @param currencyDataObject
-     * @return
+     * This class uses provided currency object information to build on the data structure. The currency rate is added in this method.
+     * @param currencyDataObject Requires the data object.
+     * @return It returns an appended data object.
      */
     public CurrencyDataObject findRate(CurrencyDataObject currencyDataObject){ // This is only needed for the second currency object.
-        if (currencyDataObject.getCurrency1().getRate() == null){
+        if (currencyDataObject.getCurrency1().getRawRate() == null){
             try {
                 currencyDataObject.setCurrency1(Connect.findRate(currencyDataObject.getCurrency1()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-        if (currencyDataObject.getCurrency2().getRate() == null){
+        if (currencyDataObject.getCurrency2().getRawRate() == null){
             try {
                 currencyDataObject.setCurrency2(Connect.findRate(currencyDataObject.getCurrency2()));
             } catch (Exception e) {
@@ -130,9 +129,9 @@ public class Server extends Application {
     }
 
     /***
-     *
-     * @param currencyDataObject
-     * @return
+     * This class uses provided currency object information to build on the data structure. The currency description is added in this method.
+     * @param currencyDataObject Requires the data object.
+     * @return It returns an appended data object.
      */
     public CurrencyDataObject findDescription(CurrencyDataObject currencyDataObject){
         if(currencyDataObject.getCurrency1().getDescription() == null){
@@ -153,18 +152,19 @@ public class Server extends Application {
     }
 
     /***
-     *
-     * @param currencyDataObject
-     * @return
+     * This class calculates the conversion rates between two currencies and assigns the adjusted conversion rates.
+     * @param currencyDataObject Requires the data object.
+     * @return It returns an appended data object.
      */
     public CurrencyDataObject calculateRate(CurrencyDataObject currencyDataObject) {
         String formatRate;
-        double rate = (double) 1 / Double.parseDouble(currencyDataObject.getCurrency1().getRate());
-        rate = rate * Double.parseDouble(currencyDataObject.getCurrency2().getRate());
+        double rate = (double) 1 / Double.parseDouble(currencyDataObject.getCurrency1().getRawRate());
+        rate = rate * Double.parseDouble(currencyDataObject.getCurrency2().getRawRate());
         formatRate = String.format("%.3f", rate);
         if (formatRate.equals("0.000"))
             formatRate = String.format("%.7f", rate);
-
+        currencyDataObject.getCurrency1().setAdjustedRate("1");
+        currencyDataObject.getCurrency2().setAdjustedRate(formatRate);
         return currencyDataObject;
     }
 

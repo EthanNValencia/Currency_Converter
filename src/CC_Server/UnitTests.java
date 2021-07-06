@@ -307,7 +307,7 @@ public class UnitTests {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        assertNotNull(serverCurrency.getRate());
+        assertNotNull(serverCurrency.getRawRate());
     }
 
     /***
@@ -324,8 +324,8 @@ public class UnitTests {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        assertNotEquals(null, currencyDataObject.getCurrency1().getRate());
-        assertNotEquals(null, currencyDataObject.getCurrency2().getRate());
+        assertNotEquals(null, currencyDataObject.getCurrency1().getRawRate());
+        assertNotEquals(null, currencyDataObject.getCurrency2().getRawRate());
     }
 
     /***
@@ -353,11 +353,26 @@ public class UnitTests {
         Server server = new Server();
         currencyDataObject = server.findDescription(currencyDataObject);
         currencyDataObject = server.findRate(currencyDataObject);
-        System.out.println(currencyDataObject);
-        assertNotEquals(null, currencyDataObject.getCurrency1().getRate());
-        assertNotEquals(null, currencyDataObject.getCurrency2().getRate());
+        assertNotEquals(null, currencyDataObject.getCurrency1().getRawRate());
+        assertNotEquals(null, currencyDataObject.getCurrency2().getRawRate());
         assertNotEquals(null, currencyDataObject.getCurrency1().getDescription());
         assertNotEquals(null, currencyDataObject.getCurrency2().getDescription());
+    }
+
+    /***
+     * This verifies that the Server.findRate(), Server.findDescription(), Server.calculateRate() can function consecutively without problem.
+     */
+    @Test
+    public void testServer_calculateRate(){
+        ServerCurrency serverCurrency1 = new ServerCurrency("AED", null, null, null, null, null);
+        ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null, null, null);
+        CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
+        Server server = new Server();
+        currencyDataObject = server.findDescription(currencyDataObject);
+        currencyDataObject = server.findRate(currencyDataObject);
+        currencyDataObject = server.calculateRate(currencyDataObject);
+        assertNotNull(currencyDataObject.getCurrency1().getAdjustedRate());
+        assertNotNull(currencyDataObject.getCurrency2().getAdjustedRate());
     }
 
     @Test
