@@ -186,7 +186,7 @@ public class ServerWebReader implements CC_Server.CONSTANTS {
         String insertDate;
         HashSet<ServerCurrency> currencyList = null;
         currencyList = getPage(WEBSITE_URL + DATE_TODAY);
-        for (int i = 0; i <= DAYS_IN_YEAR; i++) {
+        for (int i = 0; i <= RANGE_OF_DAYS_TO_SCAN; i++) {
             insertDate = "" + DATE_TODAY.minusDays(i);
             if (!Connect.checkEntries("" + insertDate)) { // If entries with this date already exist, then cancel the insertion.
                 currencyList = getPage(WEBSITE_URL + insertDate);

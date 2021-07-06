@@ -82,12 +82,12 @@ public class Server extends Application {
                 while (true) {
                     Socket socket = serverSocket.accept(); // it waits here for a client message
                     // Create data input and output streams
-                    Platform.runLater(() -> ta.appendText("Messaged received!"));
+                    Platform.runLater(() -> ta.appendText("Messaged received!\n"));
                     ObjectOutputStream outputToClient = new ObjectOutputStream(socket.getOutputStream());
                     ObjectInputStream inputFromClient = new ObjectInputStream(socket.getInputStream());
 
                     CurrencyDataObject receivedDataObject = (CurrencyDataObject) inputFromClient.readObject();
-                    Platform.runLater(() -> ta.appendText("Server received client data."));
+                    Platform.runLater(() -> ta.appendText("Server received client data.\n"));
                     receivedDataObject = findRate(receivedDataObject);
                     receivedDataObject = findDescription(receivedDataObject);
                     receivedDataObject = calculateRate(receivedDataObject);
