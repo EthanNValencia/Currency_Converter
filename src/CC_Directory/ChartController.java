@@ -24,23 +24,18 @@ public class ChartController implements CONSTANTS {
     Button chartButton;
 
     public void btnAction(){
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        ServerCurrency sc1 = new ServerCurrency("COP");
-        Client client = new Client( new CurrencyDataObject(sc1, DATE_TODAY, true));
-        List<ServerCurrency> currencyList = client.getDataObject().getServerCurrencyList();
-        for (int i = 0; i < currencyList.size(); i++){
-            ServerCurrency serverCurrency = currencyList.get(i);
-            series.getData().add(new XYChart.Data<>(serverCurrency.getDate(), Double.parseDouble(serverCurrency.getRawRate())));
+        String[] listCur = {"EUR", "MXN", "JPY", "GBP", "PHP", "RUB", "CNY"};
+        for (int i = 0; i < listCur.length; i++) {
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            ServerCurrency sc1 = new ServerCurrency(listCur[i]);
+            Client client = new Client(new CurrencyDataObject(sc1, DATE_TODAY, true));
+            List<ServerCurrency> currencyList = client.getDataObject().getServerCurrencyList();
+            for (int j = 0; j < currencyList.size(); j++) {
+                ServerCurrency serverCurrency = currencyList.get(j);
+                series.getData().add(new XYChart.Data<>(serverCurrency.getDate(), Double.parseDouble(serverCurrency.getRawRate())));
+            }
+            lineChart.getData().add(series);
         }
-
-
-        /*
-        series.getData().add(new XYChart.Data<>("Jan", 400));
-        series.getData().add(new XYChart.Data<>("Feb", 200));
-        series.getData().add(new XYChart.Data<>("Mar", 300));
-        series.getData().add(new XYChart.Data<>("Apr", 600));
-        */
-        lineChart.getData().add(series);
     }
 
 }

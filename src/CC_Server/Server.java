@@ -82,10 +82,8 @@ public class Server extends Application {
                     Platform.runLater(() -> ta.appendText("Messaged received!\n"));
                     ObjectOutputStream outputToClient = new ObjectOutputStream(socket.getOutputStream());
                     ObjectInputStream inputFromClient = new ObjectInputStream(socket.getInputStream());
-
                     CurrencyDataObject receivedDataObject = (CurrencyDataObject) inputFromClient.readObject();
                     Platform.runLater(() -> ta.appendText("Server received client data.\n"));
-                    System.out.println(receivedDataObject.getList());
                     if (receivedDataObject.getList()) {
                         try {
                             receivedDataObject.setServerCurrencyList(Connect.generateList(receivedDataObject.getCurrency1()));
