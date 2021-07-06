@@ -27,6 +27,7 @@ public class ChartController implements CONSTANTS {
         String[] listCur = {"EUR", "MXN", "JPY", "GBP", "PHP", "RUB", "CNY"};
         for (int i = 0; i < listCur.length; i++) {
             XYChart.Series<String, Number> series = new XYChart.Series<>();
+            series.setName(listCur[i]);
             ServerCurrency sc1 = new ServerCurrency(listCur[i]);
             Client client = new Client(new CurrencyDataObject(sc1, DATE_TODAY, true));
             List<ServerCurrency> currencyList = client.getDataObject().getServerCurrencyList();
