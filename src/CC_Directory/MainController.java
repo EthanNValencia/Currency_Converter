@@ -74,7 +74,7 @@ public class MainController implements Initializable, CONSTANTS {
             Parent root = fxmlLoader1.load();
             Stage stage = new Stage();
             stage.setResizable(false);
-            stage.setTitle("Chart");
+            stage.setTitle("Historical Data");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception ex) {

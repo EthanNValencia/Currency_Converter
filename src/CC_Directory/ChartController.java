@@ -5,6 +5,7 @@ import CC_Server.ServerCurrency;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Side;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
@@ -14,6 +15,7 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -80,7 +82,9 @@ public class ChartController implements CONSTANTS, Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         chartButton.setVisible(false);
-        lineChart.setLegendVisible(false);
+        lineChart.setLegendVisible(true);
+        lineChart.setLegendSide(Side.TOP);
+
         List<RadioButton> list = new ArrayList<>();
         for (int i = 0; i < 40; i++){
             RadioButton rb = new RadioButton();
