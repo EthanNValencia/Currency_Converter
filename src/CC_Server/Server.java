@@ -41,6 +41,7 @@ public class Server extends Application {
         Scene scene = new Scene(new ScrollPane(ta), 350, 190);
         primaryStage.setTitle("Server"); // Set the stage title
         primaryStage.setScene(scene); // Place the scene in the stage
+        primaryStage.setResizable(false);
         primaryStage.show(); // Display the stage
         primaryStage.setOnCloseRequest(e -> {
             Platform.exit(); // This shuts down all server threads when the window closes.
