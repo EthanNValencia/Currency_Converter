@@ -91,15 +91,19 @@ public class Client implements CONSTANTS {
         this.comboBox1 = comboBox1;
         this.comboBox2 = comboBox2;
         this.inputArea = inputArea;
-        serverRequest();
+        this.dataObject = new CurrencyDataObject(new ServerCurrency(comboBox1), new ServerCurrency(comboBox2), DATE_TODAY);
+        if (!inputArea.equals("")) {
+            dataObject.getCurrency1().setExchangeAmount(inputArea);
+        }
+        serverRequest(dataObject);
     }
 
     public Client(CurrencyDataObject currencyDataObject){
         this.dataObject = currencyDataObject;
-        serverRequest();
+        serverRequest(this.dataObject);
     }
 
-    public void serverRequest(){
+    public void serverRequest(CurrencyDataObject currencyDataObject){
         try {
             Socket socket = new Socket("localhost", 8000);
             // Socket socket = new Socket("192.168.0.95", 8000); // this is where this program connects to the server
@@ -110,21 +114,11 @@ public class Client implements CONSTANTS {
             System.out.println("An IO exception occurred on the client side.");
         }
         try {
-            if (!dataObject.getList()) {
-                ServerCurrency cur1 = new ServerCurrency();
-                ServerCurrency cur2 = new ServerCurrency();
-                cur1.setName(comboBox1);
-                cur2.setName(comboBox2);
-                if (!inputArea.equals("")) {
-                    cur1.setExchangeAmount(inputArea);
-                }
-                dataObject = new CurrencyDataObject(cur1, cur2, DATE_TODAY);
-            }
             toServer.writeObject(dataObject); // send object to server
             toServer.flush(); // flush request
             CurrencyDataObject returnedInfo = (CurrencyDataObject) fromServer.readObject();
             outputRate = returnedInfo.getCurrency1().getAdjustedRate() + " " + returnedInfo.getCurrency1().getName() + " = " + returnedInfo.getCurrency2().getAdjustedRate() + " " + returnedInfo.getCurrency2().getName();
-            conversionIndicator = "Converting " + returnedInfo.getCurrency1().getName() + " to " + returnedInfo.getCurrency2().getName();
+            conversionIndicator = "Converting the " + returnedInfo.getCurrency1().getDescription() + " to the " + returnedInfo.getCurrency2().getDescription();
             if (returnedInfo.getCurrency1().getExchangeAmount() != null) {
                 textArea = returnedInfo.getCurrency1().getExchangeAmount() + " " + returnedInfo.getCurrency1().getName() + " = " + returnedInfo.getCurrency2().getExchangeAmount() + " " + returnedInfo.getCurrency2().getName() + "\n";
             }

@@ -6,10 +6,7 @@ Currency converter and presentation application.
 
 package CC_Directory;
 
-import CC_Server.CurrencyDataObject;
-import CC_Server.ServerCurrency;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,7 +17,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -32,7 +28,6 @@ import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -97,7 +92,9 @@ public class MainController implements Initializable, CONSTANTS {
      * This method sends a server request that generates a data object and receives a data object. The received data object is processed and displayed to relevant areas within the GUI.
      */
     public void serverRequest(){
+
         client = new Client(comboBox1.getValue(), comboBox2.getValue(), inputArea.getText());
+
         outputRate.setText(client.getOutputRate());
         conversionIndicator.setText(client.getConversionIndicator());
         if (client.getDataObject().getCurrency1().getExchangeAmount() != null) {
@@ -138,21 +135,14 @@ public class MainController implements Initializable, CONSTANTS {
         comboBox1.setTooltip(toolTip1);
         comboBox2.setTooltip(toolTip2);
 
-        try {
-            Image image = new Image("CC_Images/COP.png"); // default setting
-            cur1_Image.setImage(image);
-            cur2_Image.setImage(image);
-        } catch (IllegalArgumentException iae) {
-            System.out.println("Image not found.");
-        }
-
         outputRate.setText("");
         conversionIndicator.setText("");
 
-        for (int i = 0; i < CONSTANTS.CURRENCYNAMES.length; i++) {
-            comboBox1.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
-            comboBox2.getItems().add(CONSTANTS.CURRENCYNAMES[i]);
+        for (int i = 0; i < CONSTANTS.CURRENCY_NAMES.length; i++) {
+            comboBox1.getItems().add(CONSTANTS.CURRENCY_NAMES[i]);
+            comboBox2.getItems().add(CONSTANTS.CURRENCY_NAMES[i]);
         }
+
         inputArea.setVisible(false);
         submitButton.setVisible(true);
         chartButton.setVisible(true);
@@ -170,6 +160,7 @@ public class MainController implements Initializable, CONSTANTS {
         clearTextArea.setOnAction(e -> {
             textArea.setText("");
         });
+        changeImages();
     }
 
 }

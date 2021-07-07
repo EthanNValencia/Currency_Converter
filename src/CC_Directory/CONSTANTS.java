@@ -15,7 +15,10 @@ import java.util.HashMap;
 public interface CONSTANTS {
 
     LocalDate DATE_TODAY = LocalDate.now();
+    String[] CURRENCY_NAMES = {"USD","AED", "ARS", "AUD", "BGN", "BHD", "BND", "BRL", "BWP", "CAD", "CHF", "CLP", "CNY", "COP", "CZK", "DKK", "EUR", "GBP", "HKD", "HRK", "HUF", "IDR", "ILS", "INR", "IRR", "ISK", "JPY", "KRW", "KWD", "KZT", "LKR", "LYD", "MUR", "MXN", "MYR", "NOK", "NPR", "NZD", "OMR", "PHP", "PKR", "PLN", "QAR", "RON", "RUB", "SAR", "SEK", "SGD", "THB", "TRY", "TTD", "TWD", "VEF", "ZAR"};
+    String[] COMPLETE_CURRENCY_NAMES = {"AED", "ARS", "AUD", "BGN", "BHD", "BND", "BRL", "BWP", "CAD", "CHF", "CNY", "CZK", "DKK", "EUR", "GBP", "HKD", "HRK", "HUF", "ILS", "INR", "ISK", "JPY", "KWD", "KZT", "LKR", "LYD", "MUR", "MXN", "MYR", "NZD", "OMR", "PHP", "PKR", "PLN", "QAR", "RON", "RUB", "SAR", "SEK", "SGD", "THB", "TRY", "TTD", "TWD", "ZAR"};
 
+    /*
     String COP = "https://www.exchange-rates.org/converter/USD/COP/1"; // Colombia
     String EUR = "https://www.exchange-rates.org/converter/USD/EUR/1/Y"; // Euro
     String MXN = "https://www.exchange-rates.org/converter/USD/MXN/1/Y"; // Mexico
@@ -25,10 +28,6 @@ public interface CONSTANTS {
     String RUB = "https://www.exchange-rates.org/converter/USD/RUB/1/Y"; // Russia
     String CNY = "https://www.exchange-rates.org/converter/USD/CNY/1/Y"; // China
     String INR = "https://www.exchange-rates.org/converter/USD/INR/1/Y"; // India
-    String[] CURRENCYNAMES = {"COP", "EUR", "USD", "MXN", "JPY", "GBP", "PHP", "RUB", "CNY"};
-    String[] COMPLETE_CURRENCY_NAMES = {"AED", "ARS", "AUD", "BGN", "BHD", "BND", "BRL", "BWP", "CAD", "CHF", "CNY", "CZK", "DKK", "EUR", "GBP", "HKD", "HRK", "HUF", "ILS", "INR", "ISK", "JPY", "KWD", "KZT", "LKR", "LYD", "MUR", "MXN", "MYR", "NZD", "OMR", "PHP", "PKR", "PLN", "QAR", "RON", "RUB", "SAR", "SEK", "SGD", "THB", "TRY", "TTD", "TWD", "ZAR"};
-
-    // I'm not sure if there is a better way to create this hashmap. I would like it to be more automated, but at some point I would have to type raw data.
     HashMap<String, Currency> nationHashMap = new HashMap<>(24, 0.5f) {{
         put("USD", new Currency("USD", "1", "the United States"));
         put("COP", new Currency("COP", WebReader.getPage(CONSTANTS.COP), "Colombia"));
@@ -41,7 +40,7 @@ public interface CONSTANTS {
         put("CNY", new Currency("CNY", WebReader.getPage(CONSTANTS.CNY), "China"));
         put("INR", new Currency("INR", WebReader.getPage(CONSTANTS.INR), "India"));
     }};
-
+    */
 
 
 }

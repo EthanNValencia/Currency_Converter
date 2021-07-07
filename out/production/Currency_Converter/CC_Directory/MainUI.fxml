@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CC_Directory.MainController">
+<GridPane alignment="center" hgap="10" prefHeight="265.0" prefWidth="450.0" vgap="10" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CC_Directory.MainController">
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>
@@ -21,19 +21,19 @@
    </rowConstraints>
    <children>
       <AnchorPane fx:id="backgroundPane" prefHeight="280.0" prefWidth="400.0" />
-      <Pane prefHeight="280.0" prefWidth="400.0">
+      <Pane prefHeight="260.0" prefWidth="450.0">
          <children>
             <Label fx:id="outputRate" layoutX="11.0" layoutY="70.0" text="Rate output area" />
             <ComboBox fx:id="comboBox1" layoutX="47.0" layoutY="10.0" prefHeight="25.0" prefWidth="85.0" />
-            <ComboBox fx:id="comboBox2" layoutX="181.0" layoutY="10.0" prefHeight="25.0" prefWidth="85.0" />
-            <TextField fx:id="inputArea" layoutX="273.0" layoutY="11.0" prefHeight="25.0" prefWidth="118.0" promptText="Enter amount" />
-            <Button fx:id="submitButton" layoutX="336.0" layoutY="47.0" mnemonicParsing="false" onAction="#serverRequest" text="Submit" />
+            <ComboBox fx:id="comboBox2" layoutX="226.0" layoutY="10.0" prefHeight="25.0" prefWidth="85.0" />
+            <TextField fx:id="inputArea" layoutX="322.0" layoutY="10.0" prefHeight="25.0" prefWidth="118.0" promptText="Enter amount" />
+            <Button fx:id="submitButton" layoutX="385.0" layoutY="45.0" mnemonicParsing="false" onAction="#serverRequest" text="Submit" />
             <Label fx:id="conversionIndicator" layoutX="11.0" layoutY="46.0" text="Conversion indicator" />
             <ImageView fx:id="cur1_Image" fitHeight="25.0" fitWidth="25.0" layoutX="12.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="cur2_Image" fitHeight="25.0" fitWidth="25.0" layoutX="146.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
-            <Button fx:id="chartButton" layoutX="10.0" layoutY="115.0" mnemonicParsing="false" onAction="#chart" text="Chart Data" />
-            <TextArea fx:id="textArea" layoutX="5.0" layoutY="150.0" prefHeight="125.0" prefWidth="390.0" />
-            <Button fx:id="clearTextArea" layoutX="347.0" layoutY="115.0" mnemonicParsing="false" text="Clear" />
+            <ImageView fx:id="cur2_Image" fitHeight="25.0" fitWidth="25.0" layoutX="190.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+            <Button fx:id="chartButton" layoutX="10.0" layoutY="95.0" mnemonicParsing="false" onAction="#chart" text="Chart Data" />
+            <TextArea fx:id="textArea" layoutX="10.0" layoutY="129.0" prefHeight="125.0" prefWidth="430.0" />
+            <Button fx:id="clearTextArea" layoutX="397.0" layoutY="94.0" mnemonicParsing="false" text="Clear" />
          </children>
       </Pane>
    </children>

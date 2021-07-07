@@ -85,7 +85,6 @@ public class Server extends Application {
                     CurrencyDataObject receivedDataObject = (CurrencyDataObject) inputFromClient.readObject();
                     Platform.runLater(() -> ta.appendText("Server received client data.\n"));
                     // For some reason the later check is not working
-                    System.out.println("Received:" + receivedDataObject);
                     if (!receivedDataObject.getList()) {
                         // Data object modification
                         receivedDataObject = findRate(receivedDataObject);
