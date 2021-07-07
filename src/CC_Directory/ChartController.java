@@ -3,6 +3,7 @@ package CC_Directory;
 import CC_Server.CurrencyDataObject;
 import CC_Server.ServerCurrency;
 import javafx.fxml.FXML;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.Chart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
@@ -16,7 +17,11 @@ import java.net.Socket;
 import java.time.LocalDate;
 import java.util.List;
 
+/***
+ * This method controls the chart window. The chart window is used for displaying historical rates in a way that is visual.
+ */
 public class ChartController implements CONSTANTS {
+
     @FXML
     LineChart<String, Number> lineChart;
 
