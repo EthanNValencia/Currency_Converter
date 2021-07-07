@@ -127,6 +127,7 @@ public class MainController implements Initializable, CONSTANTS {
         LinearGradient linGrad = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, stop);
         BackgroundFill bckFill = new BackgroundFill(linGrad, CornerRadii.EMPTY, Insets.EMPTY);
         backgroundPane.setBackground(new Background(bckFill));
+
         comboBox1.setTooltip(toolTip1);
         comboBox2.setTooltip(toolTip2);
 

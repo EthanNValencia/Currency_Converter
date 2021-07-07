@@ -5,13 +5,18 @@ import CC_Server.ServerCurrency;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,20 +38,23 @@ public class ChartController implements CONSTANTS, Initializable {
     @FXML
     FlowPane flowPane;
 
+    @FXML
+    private AnchorPane backgroundPane;
+
     public void btnAction(ActionEvent event){
         event.getSource();
         lineChart.setCreateSymbols(false);
         lineChart.setAnimated(false);
-        String[] listCur = COMPLETE_CURRENCY_NAMES;
+
         /*
         lineChart.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         lineChart.getData().clear();
         */
 
-        for (int i = 0; i < listCur.length; i++) {
+        for (int i = 0; i < CURRENCY_NAMES.length; i++) {
             XYChart.Series<String, Number> series = new XYChart.Series<>();
-            series.setName(listCur[i]);
-            ServerCurrency sc1 = new ServerCurrency(listCur[i]);
+            series.setName(CURRENCY_NAMES[i]);
+            ServerCurrency sc1 = new ServerCurrency(CURRENCY_NAMES[i]);
             Client client = new Client(new CurrencyDataObject(sc1, DATE_TODAY, true));
             List<ServerCurrency> currencyList = client.getDataObject().getServerCurrencyList();
             for (int j = 0; j < currencyList.size(); j++) {
@@ -81,20 +89,29 @@ public class ChartController implements CONSTANTS, Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        Stop[] stop = new Stop[]{new Stop(0, Color.GRAY), new Stop(1, Color.WHITE)};
+        LinearGradient linGrad = new LinearGradient(0, 1, 0, 0, true, CycleMethod.NO_CYCLE, stop);
+        BackgroundFill bckFill = new BackgroundFill(linGrad, CornerRadii.EMPTY, Insets.EMPTY);
+        backgroundPane.setBackground(new Background(bckFill));
+
         chartButton.setVisible(false);
         lineChart.setLegendVisible(true);
         lineChart.setLegendSide(Side.TOP);
+        lineChart.setCreateSymbols(false);
+        flowPane.setHgap(10);
+        flowPane.setVgap(10);
 
         List<RadioButton> list = new ArrayList<>();
-        for (int i = 0; i < 40; i++){
+        for (int i = 0; i < CURRENCY_NAMES.length; i++){
             RadioButton rb = new RadioButton();
             rb.setText(String.valueOf(CURRENCY_NAMES[i]));
-            rb.setMinSize(55, 5);
+            rb.setMinSize(50, 5);
             rb.setOnAction(this::getCurrencyData);
             list.add(rb);
         }
-        flowPane.setHgap(10);
-        flowPane.setVgap(10);
+        flowPane.setAlignment(Pos.TOP_CENTER);
+
         // flowPane.getChildren().add(new Button("Five"));
         for (int i = 0; i < list.size(); i++) {
             flowPane.getChildren().add(list.get(i));

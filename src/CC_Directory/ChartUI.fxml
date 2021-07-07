@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 
-<AnchorPane prefHeight="660.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CC_Directory.ChartController">
+<AnchorPane fx:id="backgroundPane" prefHeight="685.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CC_Directory.ChartController">
    <children>
       <LineChart fx:id="lineChart" animated="false" layoutX="11.0" layoutY="10.0" prefHeight="550.0" prefWidth="780.0">
         <xAxis>
@@ -17,7 +17,7 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </LineChart>
-      <Button fx:id="chartButton" layoutX="11.0" layoutY="620.0" mnemonicParsing="false" onAction="#btnAction" text="Chart Data" />
-      <FlowPane fx:id="flowPane" layoutX="56.0" layoutY="547.0" prefHeight="55.0" prefWidth="690.0" />
+      <Button fx:id="chartButton" layoutX="10.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnAction" text="Chart Data" />
+      <FlowPane fx:id="flowPane" layoutX="10.0" layoutY="547.0" prefHeight="55.0" prefWidth="780.0" />
    </children>
 </AnchorPane>
