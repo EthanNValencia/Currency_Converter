@@ -197,5 +197,6 @@ public class ServerWebReader implements CC_Server.CONSTANTS {
                 }
             }
         }
+        Connect.insertUSD(); // After the db fields are update the USD field will be updated too.
     }
 }
