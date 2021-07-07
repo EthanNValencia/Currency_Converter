@@ -36,14 +36,8 @@ import java.util.ResourceBundle;
  */
 public class MainController implements Initializable, CONSTANTS {
 
-    private Currency comboBox1Currency = null;
-    private Currency comboBox2Currency = null;
-    private Calculation calculateObj;
     private Tooltip toolTip1 = new Tooltip("This is the currency of Colombia");
     private Tooltip toolTip2 = new Tooltip("This is the currency of Colombia");
-    private Tooltip submit = new Tooltip();
-    private ObjectOutputStream toServer = null;
-    private ObjectInputStream fromServer = null;
     private Client client;
 
     @FXML
@@ -79,6 +73,7 @@ public class MainController implements Initializable, CONSTANTS {
             FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource("ChartUI.fxml"));
             Parent root = fxmlLoader1.load();
             Stage stage = new Stage();
+            stage.setResizable(false);
             stage.setTitle("Chart");
             stage.setScene(new Scene(root));
             stage.show();

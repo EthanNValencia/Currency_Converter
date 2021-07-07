@@ -38,12 +38,12 @@ public class Server extends Application {
         // Text area for displaying contents
         TextArea ta = new TextArea();
         // Create a scene and place it in the stage
-        Scene scene = new Scene(new ScrollPane(ta), 485, 190);
+        Scene scene = new Scene(new ScrollPane(ta), 350, 190);
         primaryStage.setTitle("Server"); // Set the stage title
         primaryStage.setScene(scene); // Place the scene in the stage
         primaryStage.show(); // Display the stage
         primaryStage.setOnCloseRequest(e -> {
-            Platform.exit(); // This shuts down all server threads when the window opens.
+            Platform.exit(); // This shuts down all server threads when the window closes.
             System.exit(0);
         });
 
