@@ -6,7 +6,7 @@ public interface CONSTANTS {
     LocalDate DATE_TODAY = LocalDate.now();
     String WEBSITE_URL = "https://www.x-rates.com/historical/?from=USD&amount=1&date=";
     Integer RANGE_OF_DAYS_TO_SCAN = 10; // For development purposes, I will limit this to the present day.
-                              // I do not want to cause egregious network traffic for x-rates.
+                                         // I do not want to cause egregious network traffic for x-rates.
 
     String[] CREATE_TABLES = {"CREATE TABLE IF NOT EXISTS cur_db.cur_description (currency_name VARCHAR(25), currency_description VARCHAR(250), PRIMARY KEY(currency_name));",
                              "CREATE TABLE IF NOT EXISTS cur_db.cur_date (currency_date DATE, PRIMARY KEY(currency_date));",

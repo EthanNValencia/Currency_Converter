@@ -272,7 +272,10 @@ public class Connect implements CC_Server.CONSTANTS {
     }
 
     public static List<ServerCurrency> generateList(ServerCurrency serverCurrency) throws Exception {
-        String sql = "SELECT * FROM cur_db.cur WHERE currency_name = '" + serverCurrency.getName() + "' ORDER BY currency_date;";
+        String sql = "SELECT currency_name, AVG(currency_rate) AS avg_rate, DATE_FORMAT(currency_date, '%Y-%M') AS date  FROM cur_db.cur \n" +
+                "WHERE currency_name = '"+ serverCurrency.getName() +"'\n" +
+                "GROUP BY DATE_FORMAT(currency_date,'%Y-%M-&D')\n" +
+                "ORDER BY currency_date ASC;";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
