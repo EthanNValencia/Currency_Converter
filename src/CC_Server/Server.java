@@ -84,26 +84,28 @@ public class Server extends Application {
                     ObjectInputStream inputFromClient = new ObjectInputStream(socket.getInputStream());
                     CurrencyDataObject receivedDataObject = (CurrencyDataObject) inputFromClient.readObject();
                     Platform.runLater(() -> ta.appendText("Server received client data.\n"));
-                    if (receivedDataObject.getList()) {
-                        try {
-                            receivedDataObject.setServerCurrencyList(Connect.generateList(receivedDataObject.getCurrency1()));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else if (!receivedDataObject.getList()) {
+                    // For some reason the later check is not working
+                    System.out.println("Received:" + receivedDataObject);
+                    if (!receivedDataObject.getList()) {
                         // Data object modification
                         receivedDataObject = findRate(receivedDataObject);
                         receivedDataObject = findDescription(receivedDataObject);
                         receivedDataObject = calculateRate(receivedDataObject);
                         receivedDataObject = calculateExchange(receivedDataObject);
-                        // Data object modification
                     }
-
+                        // Data object modification
+                    if (receivedDataObject.getList()) { // this check is not working.
+                        try {
+                            receivedDataObject.setServerCurrencyList(Connect.generateList(receivedDataObject.getCurrency1()));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                     outputToClient.writeObject(receivedDataObject);
-
                     Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));
                     outputToClient.flush();
                     outputToClient.close();
+                    receivedDataObject.setList(false);
                     Platform.runLater(() -> ta.appendText("Connection has been closed. \n"));
                     Platform.runLater(() -> ta.appendText("Waiting for client connection... \n"));
                 }

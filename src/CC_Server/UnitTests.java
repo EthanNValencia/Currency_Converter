@@ -1,12 +1,11 @@
 /*
 Ethan J. Nephew
 July 1, 2021
-Unit tests for the server package.
+Unit tests for the server package. Running these tests should be the first thing done. 
 */
 
 package CC_Server;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
