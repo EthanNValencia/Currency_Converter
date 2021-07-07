@@ -33,7 +33,8 @@ public class ChartController implements CONSTANTS {
         lineChart.setCreateSymbols(false);
         lineChart.setAnimated(false);
         // String[] listCur = {"EUR", "MXN", "JPY", "GBP", "PHP", "RUB", "CNY"};
-        String[] listCur = {"MXN"};
+        // String[] listCur = {"MXN"};
+        String[] listCur = COMPLETE_CURRENCY_NAMES;
         /*
         lineChart.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
         lineChart.getData().clear();
@@ -44,7 +45,6 @@ public class ChartController implements CONSTANTS {
             ServerCurrency sc1 = new ServerCurrency(listCur[i]);
             Client client = new Client(new CurrencyDataObject(sc1, DATE_TODAY, true));
             List<ServerCurrency> currencyList = client.getDataObject().getServerCurrencyList();
-            System.out.println(currencyList);
             for (int j = 0; j < currencyList.size(); j++) {
                 ServerCurrency serverCurrency = currencyList.get(j);
                 series.getData().add(new XYChart.Data<>(serverCurrency.getDate(), Double.parseDouble(serverCurrency.getRawRate())));

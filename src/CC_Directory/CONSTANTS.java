@@ -26,6 +26,7 @@ public interface CONSTANTS {
     String CNY = "https://www.exchange-rates.org/converter/USD/CNY/1/Y"; // China
     String INR = "https://www.exchange-rates.org/converter/USD/INR/1/Y"; // India
     String[] CURRENCYNAMES = {"COP", "EUR", "USD", "MXN", "JPY", "GBP", "PHP", "RUB", "CNY"};
+    String[] COMPLETE_CURRENCY_NAMES = {"AED", "ARS", "AUD", "BGN", "BHD", "BND", "BRL", "BWP", "CAD", "CHF", "CNY", "CZK", "DKK", "EUR", "GBP", "HKD", "HRK", "HUF", "ILS", "INR", "ISK", "JPY", "KWD", "KZT", "LKR", "LYD", "MUR", "MXN", "MYR", "NZD", "OMR", "PHP", "PKR", "PLN", "QAR", "RON", "RUB", "SAR", "SEK", "SGD", "THB", "TRY", "TTD", "TWD", "ZAR"};
 
     // I'm not sure if there is a better way to create this hashmap. I would like it to be more automated, but at some point I would have to type raw data.
     HashMap<String, Currency> nationHashMap = new HashMap<>(24, 0.5f) {{

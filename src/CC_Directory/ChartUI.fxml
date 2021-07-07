@@ -6,9 +6,9 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CC_Directory.ChartController">
+<AnchorPane prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CC_Directory.ChartController">
    <children>
-      <LineChart fx:id="lineChart" animated="false" layoutX="11.0" layoutY="10.0" prefHeight="344.0" prefWidth="578.0" title="Line Chart">
+      <LineChart fx:id="lineChart" animated="false" layoutX="11.0" layoutY="10.0" prefHeight="600.0" prefWidth="780.0" title="Line Chart">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -16,6 +16,6 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </LineChart>
-      <Button fx:id="chartButton" layoutX="51.0" layoutY="354.0" mnemonicParsing="false" onAction="#btnAction" text="Button" />
+      <Button fx:id="chartButton" layoutX="11.0" layoutY="614.0" mnemonicParsing="false" onAction="#btnAction" text="Chart Data" />
    </children>
 </AnchorPane>
