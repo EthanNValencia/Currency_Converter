@@ -23,17 +23,12 @@ public class Connect implements CC_Server.CONSTANTS {
 
     /***
      * This is the connection method. It is used to connect to the server.
-     * @return This method returns the connection object.
+     * @return This method returns the database connection object.
      * @throws Exception It can throw an exception.
      */
     public static Connection getConnection() throws Exception {
-        String driver = "com.mysql.cj.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/cur_db";
-        String username = "Currency_User";
-        String password = "EFtkgT%gt44De";
-        Class.forName(driver);
-
-        return DriverManager.getConnection(url, username, password);
+        Class.forName(CONSTANTS.DRIVER);
+        return DriverManager.getConnection(CONSTANTS.URL, CONSTANTS.USERNAME, CONSTANTS.PASSWORD);
     }
 
     /***
@@ -98,7 +93,7 @@ public class Connect implements CC_Server.CONSTANTS {
     /***
      * This method inserts the currency dates into the database.
      * @param date It requires a LocalDate object that is to be inserted.
-     * @throws Exception
+     * @throws Exception A database related exception will can be thrown.
      */
     public static void insertCurrencyDate(LocalDate date) throws Exception {
         String sql = "INSERT IGNORE INTO cur_db.cur_date (currency_date) " +
@@ -111,7 +106,7 @@ public class Connect implements CC_Server.CONSTANTS {
     /***
      *
      * @param date
-     * @throws Exception
+     * @throws Exception A database related exception will can be thrown.
      */
     public static void insertCurrencyDate(String date) throws Exception {
         String sql = "INSERT IGNORE INTO cur_db.cur_date (currency_date) " +
@@ -124,7 +119,7 @@ public class Connect implements CC_Server.CONSTANTS {
     /***
      * This is a singular server currency object inserter. Ultimately, this program will be doing so many insertions that the runtime of this method will be problematic. I'll keep this method for testing related purposes.
      * @param serverCurrency It requires the server-side version of an instantiated currency object as a parameter.
-     * @throws Exception A variety of different exceptions can be thrown by this method.
+     * @throws Exception A database related exception will can be thrown.
      */
     public static void insertCurrency(ServerCurrency serverCurrency) throws Exception {
         final String currency_name = serverCurrency.getName();
@@ -140,7 +135,7 @@ public class Connect implements CC_Server.CONSTANTS {
     /***
      *
      * @param serverCurrency
-     * @throws Exception
+     * @throws Exception A database related exception will can be thrown.
      */
     public static void deleteCurrency(ServerCurrency serverCurrency) throws Exception {
         final String currency_name = serverCurrency.getName();
@@ -168,7 +163,7 @@ public class Connect implements CC_Server.CONSTANTS {
 
     /***
      * This method is used to drop the table from the db.
-     * @throws Exception This method will throw an exception, especially if something goes wrong during the db connection and updating processes.
+     * @throws Exception A database related exception will can be thrown.
      */
     public static void dropTable() throws Exception {
         Connection con = getConnection();
@@ -183,7 +178,7 @@ public class Connect implements CC_Server.CONSTANTS {
      * The idea behind this method is to verify that new inserted data will not conflict with prior existing data within the database. The composite key will cause insertion problems. I don't want Java to attempt to insert data that already exists in the database.
      * @param date It requires the date as a parameter. This date parameter refers to the established ServerWebReader date field that is established for batch inserts.
      * @return If the date has already exists in the database, then I can assume attempting to insert will cause exceptions to be thrown, and this method will then return false.
-     * @throws Exception An exception is likely caused by a database connection related problem.
+     * @throws Exception A database related exception will can be thrown.
      */
     public static boolean checkEntries(String date) throws Exception {
         String sql = "SELECT de.currency_description, cu.currency_rate, da.currency_date " +
@@ -203,7 +198,7 @@ public class Connect implements CC_Server.CONSTANTS {
     /***
      * This is a batch insert method that is used to insert all currency related objects from a specific page. The data is pulled from pages that are indexed by date.
      * @param currencyHashSet This takes a HashSet. I moved over to a hashset, because it is a data structure that naturally eliminates duplicates. Attempting to insert data that contains duplicate composite keys is something I want to avoid.
-     * @throws Exception If an exception is thrown here it will likely be from database connectivity related problems.
+     * @throws Exception A database related exception will can be thrown.
      */
     public static void insertList(HashSet<ServerCurrency> currencyHashSet) throws Exception {
         Connection con = getConnection();
@@ -225,7 +220,7 @@ public class Connect implements CC_Server.CONSTANTS {
     /***
      * This is a simple method that performs a SQL query that returns all the unique currency names and writes them to a list.
      * @return It returns a List that contains strings.
-     * @throws Exception It can throw an exception from a variety of database interactive ways.
+     * @throws Exception A database related exception will can be thrown.
      */
     public static List<String> retrieveCurrencyList() throws Exception {
         String sql = "SELECT DISTINCT currency_name FROM cur_db.cur;";
@@ -243,7 +238,7 @@ public class Connect implements CC_Server.CONSTANTS {
      * This method pulls the USD-to-X rate.
      * @param serverCurrency
      * @return
-     * @throws Exception
+     * @throws Exception A database related exception will can be thrown.
      */
     public static ServerCurrency getRate(ServerCurrency serverCurrency) throws Exception {
         String sql = "SELECT currency_rate FROM cur_db.cur WHERE currency_name = '" + serverCurrency.getName() + "' AND currency_date = '" + serverCurrency.getDate() + "';";
@@ -259,7 +254,7 @@ public class Connect implements CC_Server.CONSTANTS {
      * This method takes the data object and fills the description parameters in the contained objects.
      * @param serverCurrency
      * @return
-     * @throws Exception
+     * @throws Exception A database related exception will can be thrown.
      */
     public static ServerCurrency getDescription(ServerCurrency serverCurrency) throws Exception {
         String sql = "SELECT currency_description FROM cur_db.cur_description WHERE currency_name = '" + serverCurrency.getName() + "';";
@@ -271,7 +266,13 @@ public class Connect implements CC_Server.CONSTANTS {
         return serverCurrency;
     }
 
-    public static List<ServerCurrency> generateList(ServerCurrency serverCurrency) throws Exception {
+    /***
+     * This method uses name of a server currency object to generate a list of historical currency rates. The currency rates will be averaged by the month.
+     * @param serverCurrency It requires the specific server currency object.
+     * @return This method returns a list of server currency objects. This list is passed up to the GUI chart.
+     * @throws Exception A database related exception will can be thrown.
+     */
+    public static List<ServerCurrency> generateHistoricalMonthlyDataList(ServerCurrency serverCurrency) throws Exception {
         String sql = "SELECT currency_name, AVG(currency_rate) AS avg_rate, DATE_FORMAT(currency_date, '%Y-%M') AS date  FROM cur_db.cur \n" +
                 "WHERE currency_name = '"+ serverCurrency.getName() +"'\n" +
                 "GROUP BY DATE_FORMAT(currency_date,'%Y-%M-&D')\n" +

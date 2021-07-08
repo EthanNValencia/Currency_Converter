@@ -17,6 +17,9 @@ import static CC_Server.CONSTANTS.DATE_TODAY;
 import static CC_Server.CONSTANTS.WEBSITE_URL;
 import static org.junit.jupiter.api.Assertions.*;
 
+/***
+ * These are the unit tests for the server side of the application. No attempt to run the program should be made prior to all these tests passing.
+ */
 public class UnitTests {
 
     /***
@@ -87,14 +90,17 @@ public class UnitTests {
 
     /***
      * This test passes as long as an exception is not thrown. This verifies that if existing data is in the db that the insertion will not be executed.
-     * @throws Exception An exception here is likely due to a database connection problem.
      */
     @Test
-    public void testWebReader_getDBPage_AND_Connect_insertList() throws Exception {
+    public void testWebReader_getDBPage_AND_Connect_insertList() {
         ServerWebReader serverWebReader = new ServerWebReader();
         HashSet<ServerCurrency> currencyHashSet = serverWebReader.getPage(WEBSITE_URL + DATE_TODAY);
-        if(!Connect.checkEntries(serverWebReader.getDate())) // If entries with this date already exist, then cancel the insertion.
-            Connect.insertList(currencyHashSet);
+        try {
+            if(!Connect.checkEntries(serverWebReader.getDate())) // If entries with this date already exist, then cancel the insertion.
+                Connect.insertList(currencyHashSet);
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     /***
@@ -171,7 +177,7 @@ public class UnitTests {
     }
 
     /***
-     *
+     * This tests that the ServerWebReader.FormatDate() method is filtering out the correct data and returning the edited string.
      */
     @Test
     public void testServerWebReader_FormatDate(){
@@ -181,7 +187,7 @@ public class UnitTests {
     }
 
     /***
-     * This tests that the ServerWebReader.removeStringContent() is functioning as intended.
+     * This tests that the ServerWebReader.removeStringContent() is filtering out the correct data and returning the edited string.
      */
     @Test
     public void testServerWebReader_removeStringContent(){
@@ -241,7 +247,7 @@ public class UnitTests {
     }
 
     /***
-     * Tests that the ServerWebReader.containsLineContent() is correctly returning false.
+     * Tests that the ServerWebReader.containsLineContent() is correctly checking the string for content of interest.
      */
     @Test
     public void testServerWebReader_containsDBLineContent_FALSE(){
@@ -253,7 +259,7 @@ public class UnitTests {
     }
 
     /***
-     * This verifies that the ServerWebReader.containsDate() is correctly returning true.
+     * This verifies that the ServerWebReader.containsDate() is assessing that the providing string does contain a date.
      */
     @Test
     public void testServerWebReader_containsDate_TRUE(){
@@ -263,7 +269,7 @@ public class UnitTests {
     }
 
     /***
-     * This verifies that the ServerWebReader.containsDate() is correctly returning false.
+     * This verifies that the ServerWebReader.containsDate() is assessing that the providing string does not contain a date.
      */
     @Test
     public void testServerWebReader_containsDate_FALSE(){
@@ -273,7 +279,7 @@ public class UnitTests {
     }
 
     /***
-     * This test checks whether or not a years worth of prior currency rates, for each currency, is contained in the database. If a day is missing then it insert that days currency data.
+     * This test checks whether or not the specified duration of currency rates, for each currency, is contained in the database. If a day is missing then it insert that days currency data.
      */
     @Test
     public void testServerWebReader_insertAnnualCurrencyData(){
@@ -286,8 +292,7 @@ public class UnitTests {
     }
 
     /***
-     * Tests that the Connect.retrieveCurrencyList is functioning properly.
-     * @throws Exception
+     * Tests that the Connect.retrieveCurrencyList is populating a list. It is difficult to say what the content of the list should be, but I can say that the list should have content.
      */
     @Test
     public void testConnect_retrieveCurrencyList() {
@@ -457,7 +462,7 @@ public class UnitTests {
     }
 
     /***
-     * This tests that the Server.calculateExchange() method is returning the anticipated results.
+     * This tests that the Server.calculateExchange() method is correctly calculating the amount of exchange.
      */
     @Test
     public void testServer_calculateExchange_checkLower(){
@@ -470,13 +475,13 @@ public class UnitTests {
     }
 
     /***
-     * This verifies that the Connect.generateList() method is not throwing an exception.
+     * This verifies that the Connect.generateList() method is not throwing an exception. So long as a existing currency name is provided this query should execute without throwing an exception.
      */
     @Test
     public void testServer_generateList(){
         ServerCurrency serverCurrency1 = new ServerCurrency("COP", null, null, null, null, null);
         try {
-            Connect.generateList(serverCurrency1);
+            Connect.generateHistoricalMonthlyDataList(serverCurrency1);
         } catch (Exception e) {
             fail();
         }

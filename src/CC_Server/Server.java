@@ -59,9 +59,7 @@ public class Server extends Application {
         }
 
         new Thread( () -> {
-
             try {
-
                 ServerSocket serverSocket = new ServerSocket(8000);
                 Platform.runLater(() -> ta.appendText("Server started at " + new Date() + '\n'));
                 Platform.runLater(() -> ta.appendText("Server is gathering currency related data.\n"));
@@ -73,9 +71,7 @@ public class Server extends Application {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 Platform.runLater(() -> ta.appendText("Waiting for client connection... \n"));
-
 
                 while (true) {
                     Socket socket = serverSocket.accept(); // it waits here for a client message
@@ -96,7 +92,7 @@ public class Server extends Application {
                         // Data object modification
                     if (receivedDataObject.getList()) { // this check is not working.
                         try {
-                            receivedDataObject.setServerCurrencyList(Connect.generateList(receivedDataObject.getCurrency1()));
+                            receivedDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyDataList(receivedDataObject.getCurrency1()));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
