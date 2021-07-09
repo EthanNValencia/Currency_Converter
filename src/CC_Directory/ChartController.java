@@ -121,11 +121,12 @@ public class ChartController implements CONSTANTS, Initializable {
         for (int i = 0; i < CURRENCY_NAMES.length; i++){
             RadioButton rb = new RadioButton();
             rb.setText(String.valueOf(CURRENCY_NAMES[i]));
-            rb.setMinSize(50, 5);
+            rb.setMinSize(50, 2);
+            // rb.setPrefSize(45, 5);
             rb.setOnAction(this::getCurrencyData);
             list.add(rb);
         }
-        flowPane.setAlignment(Pos.TOP_CENTER);
+        flowPane.setAlignment(Pos.TOP_LEFT);
 
         // flowPane.getChildren().add(new Button("Five"));
         for (int i = 0; i < list.size(); i++) {
