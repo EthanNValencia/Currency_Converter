@@ -8,6 +8,7 @@ package CC_Server;
 
 import java.io.*;
 import java.net.*;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Date;
 import javafx.application.Application;
@@ -166,10 +167,16 @@ public class Server extends Application {
         String formatRate;
         double rate = (double) 1 / Double.parseDouble(currencyDataObject.getCurrency1().getRawRate());
         rate = rate * Double.parseDouble(currencyDataObject.getCurrency2().getRawRate());
+        formatRate = checkLower(rate);
+        /*
         formatRate = String.format("%.3f", rate);
         if (formatRate.equals("0.000")) {
             formatRate = String.format("%.7f", rate);
         }
+        if (formatRate.equals("0.0000000")) {
+            formatRate = String.format("%.14f", rate);
+        }
+        */
         currencyDataObject.getCurrency1().setAdjustedRate("1");
         currencyDataObject.getCurrency2().setAdjustedRate(formatRate);
         return currencyDataObject;
@@ -186,18 +193,32 @@ public class Server extends Application {
         if (currencyDataObject.getCurrency1().getExchangeAmount() != null) {
             double number = Double.parseDouble(currencyDataObject.getCurrency1().getExchangeAmount()) *
                             Double.parseDouble(currencyDataObject.getCurrency2().getAdjustedRate());
-            String strNumber = checkLower(number, nf); // This checks that the value returned is not zero.
+            String strNumber = checkLower(number); // This checks that the value returned is not zero.
             currencyDataObject.getCurrency2().setExchangeAmount(strNumber);
         }
         return currencyDataObject;
     }
 
-    public String checkLower(double number, NumberFormat nf){
+    public String checkLower(double number){
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setMinimumFractionDigits(20);
+        String strNumber = String.valueOf(number);
+        strNumber = new DecimalFormat("#,##0.##############").format(Double.parseDouble(strNumber));
+        // strNumber = new DecimalFormat("#,###.00").format(strNumber);
+        /*
+        NumberFormat nf = NumberFormat.getInstance();
+        int counter = 2;
+        nf.setMinimumFractionDigits(counter);
         String strNumber = nf.format(number);
-        if(strNumber.equals("0.00")) {
+        if (strNumber.equals("0.00")) {
             nf.setMinimumFractionDigits(7);
             strNumber = nf.format(number);
         }
+        if (strNumber.equals("0.0000000")) {
+            nf.setMinimumFractionDigits(14);
+            strNumber = nf.format(number);
+        }
+        */
         return strNumber;
     }
 

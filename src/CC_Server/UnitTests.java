@@ -486,4 +486,18 @@ public class UnitTests {
             fail();
         }
     }
+    @Test
+    public void testServer_formatDecimals_SevenDecimals(){
+        double testDbl = 0.00000000800000;
+        Server server = new Server();
+        assertEquals("0.000000008", server.checkLower(testDbl));
+    }
+
+    @Test
+    public void testServer_formatDecimals_FourDecimals(){
+        double testDbl = 25.000801;
+        Server server = new Server();
+        assertEquals("25.000801", server.checkLower(testDbl));
+    }
+
 }

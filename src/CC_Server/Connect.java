@@ -65,7 +65,7 @@ public class Connect implements CC_Server.CONSTANTS {
     }
 
     /***
-     * Since USD is the base rate, it will always be 1. Therefore there is no need to scan any USD data directly. USD data can simply be derived from calculations.
+     * Since USD is the base rate, it will always be 1. Therefore there is no need to scan any USD data directly. USD data can simply be derived.
      */
     public static void insertUSD() throws Exception { // this method assumes that the date entries exist in the database.
         Connection con = getConnection();
@@ -92,7 +92,7 @@ public class Connect implements CC_Server.CONSTANTS {
 
     /***
      * This method inserts the currency dates into the database.
-     * @param date It requires a LocalDate object that is to be inserted.
+     * @param date It requires a LocalDate object that is to be inserted. The format must be: "YYYY-MM-DD"
      * @throws Exception A database related exception will can be thrown.
      */
     public static void insertCurrencyDate(LocalDate date) throws Exception {
@@ -104,8 +104,8 @@ public class Connect implements CC_Server.CONSTANTS {
     }
 
     /***
-     *
-     * @param date
+     * This method is used to insert currency dates into the date table.
+     * @param date It requires a string that contains the date. The format must be: "YYYY-MM-DD"
      * @throws Exception A database related exception will can be thrown.
      */
     public static void insertCurrencyDate(String date) throws Exception {
@@ -125,16 +125,23 @@ public class Connect implements CC_Server.CONSTANTS {
         final String currency_name = serverCurrency.getName();
         final String currency_rate = serverCurrency.getRawRate();
         final String currency_date = serverCurrency.getDate();
-        String sql = "INSERT IGNORE INTO cur_db.cur (currency_name, currency_rate, currency_date) " +
-                     "VALUES('" + currency_name + "' , '" + currency_rate + "' , '" + currency_date + "');";
+        final String currency_description = serverCurrency.getDescription();
+        String sql = "INSERT IGNORE INTO cur_db.cur_description WHERE " +
+                     "currency_name = '" + currency_name + "' " +
+                     "AND currency_description = '" + currency_description + "';";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
+        ps.executeUpdate();
+        sql = "INSERT IGNORE INTO cur_db.cur (currency_name, currency_rate, currency_date) " +
+              "VALUES('" + currency_name + "' , '" + currency_rate + "' , '" + currency_date + "');";
+        con = getConnection();
+        ps = con.prepareStatement(sql);
         ps.executeUpdate();
     }
 
     /***
-     *
-     * @param serverCurrency
+     * This deletes a specific currency entry from the cur table and deletes its description from the description table.
+     * @param serverCurrency It requires a server currency with the specified name, raw rate, and date.
      * @throws Exception A database related exception will can be thrown.
      */
     public static void deleteCurrency(ServerCurrency serverCurrency) throws Exception {
@@ -147,6 +154,11 @@ public class Connect implements CC_Server.CONSTANTS {
                      "AND currency_date = '" + currency_date +  "';";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
+        ps.executeUpdate();
+        sql = "DELETE FROM cur_db.cur_description WHERE " +
+                "currency_name = '" + currency_name +  "';";
+        con = getConnection();
+        ps = con.prepareStatement(sql);
         ps.executeUpdate();
     }
 
@@ -162,7 +174,7 @@ public class Connect implements CC_Server.CONSTANTS {
     }
 
     /***
-     * This method is used to drop the table from the db.
+     * This method is used to drop all the tables from the db. CONSIDER DELETING
      * @throws Exception A database related exception will can be thrown.
      */
     public static void dropTable() throws Exception {
@@ -211,15 +223,14 @@ public class Connect implements CC_Server.CONSTANTS {
             ps.setString(1, serverCurrency.getName());
             ps.setString(2, serverCurrency.getRawRate());
             ps.setString(3, serverCurrency.getDate());
-            //System.out.println(ps.toString());
             ps.addBatch();
         }
         ps.executeBatch();
     }
 
     /***
-     * This is a simple method that performs a SQL query that returns all the unique currency names and writes them to a list.
-     * @return It returns a List that contains strings.
+     * This is a simple method that performs a SQL query that returns all the unique currency names and writes them to a list. I used this to generate a complete list of currencies for the client side CONSTANTS.
+     * @return It returns a List that contains every definite currency name that is contained in the database.
      * @throws Exception A database related exception will can be thrown.
      */
     public static List<String> retrieveCurrencyList() throws Exception {
@@ -235,9 +246,9 @@ public class Connect implements CC_Server.CONSTANTS {
     }
 
     /***
-     * This method pulls the USD-to-X rate.
-     * @param serverCurrency
-     * @return
+     * This method pulls the present day USD-to-X rate from the database. Which rate is determined by the server currency name.
+     * @param serverCurrency It requires a server currency object that has a name.
+     * @return It returns the modified server currency object that should contain the raw rate (the rate from USD to the server currency object name).
      * @throws Exception A database related exception will can be thrown.
      */
     public static ServerCurrency getRate(ServerCurrency serverCurrency) throws Exception {
@@ -251,9 +262,9 @@ public class Connect implements CC_Server.CONSTANTS {
     }
 
     /***
-     * This method takes the data object and fills the description parameters in the contained objects.
-     * @param serverCurrency
-     * @return
+     * This method takes the data object and fills the description parameters in the contained objects. The currency description will be displayed both in labels and as tooltips in the main GUI.
+     * @param serverCurrency Requires a specific server currency object. The object must contain a name that is contained in the database.
+     * @return It returns a modified server currency object that should contain a description.
      * @throws Exception A database related exception will can be thrown.
      */
     public static ServerCurrency getDescription(ServerCurrency serverCurrency) throws Exception {

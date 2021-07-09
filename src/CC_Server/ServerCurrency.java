@@ -168,12 +168,12 @@ public class ServerCurrency implements Serializable {
 
     /***
      * This is a full, 6 parameter constructor. The reason for this is to help improve readability for testing.
-     * @param name
-     * @param date
-     * @param description
-     * @param rawRate
-     * @param exchangeAmount
-     * @param adjustedRate
+     * @param name It requires the name of the currency.
+     * @param date It requires the date on which this exchange rate was recorded.
+     * @param description It requires the description of the currency.
+     * @param rawRate It requires the exchange rate from USD to itself.
+     * @param exchangeAmount It requires the exchange amount.
+     * @param adjustedRate It requires the adjusted rate.
      */
     public ServerCurrency(String name, String date, String description, String rawRate, String exchangeAmount, String adjustedRate) {
         this.name = name;
@@ -195,7 +195,7 @@ public class ServerCurrency implements Serializable {
 
     /***
      * This is the overridden equals method that is useful for comparing ServerCurrency objects with the goal of eliminating duplicates.
-     * @param o It takes a rather generic object to be compared.
+     * @param o It takes a generic object to be compared.
      * @return It returns whether or not the hashcode of each object is equal or not.
      */
     @Override
