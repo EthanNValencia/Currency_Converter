@@ -22,7 +22,6 @@ import javafx.scene.paint.Stop;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -41,13 +40,19 @@ public class ChartController implements CONSTANTS, Initializable {
     private NumberAxis yAxis ;
 
     @FXML
-    Button chartButton;
+    private Button chartButton;
 
     @FXML
-    FlowPane flowPane;
+    private FlowPane flowPane;
 
     @FXML
     private AnchorPane backgroundPane;
+
+    @FXML
+    private Button buttonExchangeRate, buttonRateOfChange;
+
+    private boolean exchangeRate = true;
+    private boolean rateOfChange = false;
 
     public void btnAction(ActionEvent event){
         event.getSource();
@@ -75,11 +80,11 @@ public class ChartController implements CONSTANTS, Initializable {
 
     public void getCurrencyData(ActionEvent event){
         String sourceName = ((RadioButton)event.getSource()).getText();
-        if(!lineChart.getData().toString().contains(sourceName)) {
+        if (!lineChart.getData().toString().contains(sourceName)) {
             XYChart.Series series = new XYChart.Series();
             series.setName(sourceName);
             ServerCurrency sc1 = new ServerCurrency(sourceName);
-            Client client = new Client(new CurrencyDataObject(sc1, DATE_TODAY, true, false));
+            Client client = new Client(new CurrencyDataObject(sc1, DATE_TODAY, exchangeRate, rateOfChange));
             List<ServerCurrency> currencyList = client.getDataObject().getServerCurrencyList();
             for (int j = 0; j < currencyList.size(); j++) {
                 ServerCurrency serverCurrency = currencyList.get(j);
@@ -87,11 +92,52 @@ public class ChartController implements CONSTANTS, Initializable {
             }
             lineChart.getData().add(series);
         } else if (lineChart.getData().toString().contains(sourceName)){
-            for(int i = 0; i < lineChart.getData().size(); i++) {
-                if(lineChart.getData().get(i).toString().contains(sourceName)) {
+            for (int i = 0; i < lineChart.getData().size(); i++) {
+                if (lineChart.getData().get(i).toString().contains(sourceName)) {
                     lineChart.getData().remove(i);
                 }
             }
+        }
+    }
+
+    public void changeChartType(ActionEvent event){
+        if (event.getSource().equals(buttonExchangeRate)){
+            exchangeRate = true;
+            rateOfChange = false;
+            buttonExchangeRate.setDisable(true);
+            buttonRateOfChange.setDisable(false);
+            yAxis.setLabel("USD to X");
+            lineChart.getData().clear();
+            addRadioButtonsInFlowPane();
+        }
+        if (event.getSource().equals(buttonRateOfChange)) {
+            rateOfChange = true;
+            exchangeRate = false;
+            buttonRateOfChange.setDisable(true);
+            buttonExchangeRate.setDisable(false);
+            yAxis.setLabel("Average Rate of Change (Below 1 represents a currency devaluation)");
+            lineChart.getData().clear();
+            addRadioButtonsInFlowPane();
+        }
+    }
+
+    public void addRadioButtonsInFlowPane(){
+        flowPane.getChildren().clear();
+        flowPane.setHgap(10);
+        flowPane.setVgap(10);
+        flowPane.setAlignment(Pos.TOP_LEFT);
+
+        List<RadioButton> list = new ArrayList<>();
+        for (int i = 0; i < CURRENCY_NAMES.length; i++){
+            RadioButton rb = new RadioButton();
+            rb.setText(String.valueOf(CURRENCY_NAMES[i]));
+            rb.setMinSize(50, 2);
+            // rb.setPrefSize(45, 5);
+            rb.setOnAction(this::getCurrencyData);
+            list.add(rb);
+        }
+        for (int i = 0; i < list.size(); i++) {
+            flowPane.getChildren().add(list.get(i));
         }
     }
 
@@ -102,7 +148,7 @@ public class ChartController implements CONSTANTS, Initializable {
         LinearGradient linGrad = new LinearGradient(0, 1, 0, 0, true, CycleMethod.NO_CYCLE, stop);
         BackgroundFill bckFill = new BackgroundFill(linGrad, CornerRadii.EMPTY, Insets.EMPTY);
         backgroundPane.setBackground(new Background(bckFill));
-
+        buttonExchangeRate.setDisable(true);
         chartButton.setVisible(false);
 
         xAxis.setLabel("Months");
@@ -114,23 +160,6 @@ public class ChartController implements CONSTANTS, Initializable {
         lineChart.setLegendVisible(true);
         lineChart.setLegendSide(Side.TOP);
         lineChart.setCreateSymbols(false);
-        flowPane.setHgap(10);
-        flowPane.setVgap(10);
-
-        List<RadioButton> list = new ArrayList<>();
-        for (int i = 0; i < CURRENCY_NAMES.length; i++){
-            RadioButton rb = new RadioButton();
-            rb.setText(String.valueOf(CURRENCY_NAMES[i]));
-            rb.setMinSize(50, 2);
-            // rb.setPrefSize(45, 5);
-            rb.setOnAction(this::getCurrencyData);
-            list.add(rb);
-        }
-        flowPane.setAlignment(Pos.TOP_LEFT);
-
-        // flowPane.getChildren().add(new Button("Five"));
-        for (int i = 0; i < list.size(); i++) {
-            flowPane.getChildren().add(list.get(i));
-        }
+        addRadioButtonsInFlowPane();
     }
 }

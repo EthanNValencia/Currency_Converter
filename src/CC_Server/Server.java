@@ -83,26 +83,31 @@ public class Server extends Application {
                     CurrencyDataObject receivedDataObject = (CurrencyDataObject) inputFromClient.readObject();
                     Platform.runLater(() -> ta.appendText("Server received client data.\n"));
                     // For some reason the later check is not working
-                    if (!receivedDataObject.getList()) {
+                    if (!receivedDataObject.getHistoricalList() && !receivedDataObject.getRateOfChangeList()) { // problem here
                         // Data object modification
                         receivedDataObject = findRate(receivedDataObject);
                         receivedDataObject = findDescription(receivedDataObject);
                         receivedDataObject = calculateRate(receivedDataObject);
                         receivedDataObject = calculateExchange(receivedDataObject);
-                    }
-                        // Data object modification
-                    if (receivedDataObject.getList()) { // ADD ANOTHER CHECK FOR SWITCHING
+                    } else if (receivedDataObject.getHistoricalList()) { // ADD ANOTHER CHECK FOR SWITCHING
                         try {
                             receivedDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyDataList(receivedDataObject.getCurrency1()));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                    } else if (receivedDataObject.getRateOfChangeList()) { // ADD ANOTHER CHECK FOR SWITCHING
+                        try {
+                            receivedDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyRateOfChangeList(receivedDataObject.getCurrency1()));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
+                    // End data object modification for chart
                     outputToClient.writeObject(receivedDataObject);
                     Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));
                     outputToClient.flush();
                     outputToClient.close();
-                    receivedDataObject.setList(false);
+                    receivedDataObject.setHistoricalList(false);
                     Platform.runLater(() -> ta.appendText("Connection has been closed. \n"));
                     Platform.runLater(() -> ta.appendText("Waiting for client connection... \n"));
                 }

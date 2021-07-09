@@ -12,16 +12,23 @@ public class CurrencyDataObject implements Serializable {
     private ServerCurrency currency1 = new ServerCurrency(); // combobox1
     private ServerCurrency currency2 = new ServerCurrency(); // combobox2
     private List<ServerCurrency> serverCurrencyList;
-    private boolean getHistorialList = false;
+    private boolean getHistoricalList = false;
     private boolean getRateOfChangeList = false;
 
-
-    public boolean getList(){
-        return getHistorialList;
+    public boolean getRateOfChangeList(){
+        return getRateOfChangeList;
     }
 
-    public void setList(Boolean getList){
-        this.getHistorialList = getList;
+    public void setRateOfChangeList(Boolean getRateOfChangeList){
+        this.getRateOfChangeList = getRateOfChangeList;
+    }
+
+    public boolean getHistoricalList(){
+        return getHistoricalList;
+    }
+
+    public void setHistoricalList(Boolean getList){
+        this.getHistoricalList = getList;
     }
 
     public List<ServerCurrency> getServerCurrencyList(){
@@ -85,7 +92,7 @@ public class CurrencyDataObject implements Serializable {
     public CurrencyDataObject(ServerCurrency cur1, LocalDate localDate, boolean getHistoricalList, boolean getRateOfChangeList) {
         this.currency1 = cur1;
         this.currency1.setDate(localDate.toString());
-        this.getHistorialList = getHistoricalList;
+        this.getHistoricalList = getHistoricalList;
         this.getRateOfChangeList = getRateOfChangeList;
     }
 
@@ -102,6 +109,9 @@ public class CurrencyDataObject implements Serializable {
         return "CurrencyDataObject{" +
                 "currency1=" + currency1 +
                 ", currency2=" + currency2 +
+                ", serverCurrencyList=" + serverCurrencyList +
+                ", getHistoricalList=" + getHistoricalList +
+                ", getRateOfChangeList=" + getRateOfChangeList +
                 '}';
     }
 
