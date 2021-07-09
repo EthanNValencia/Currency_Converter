@@ -285,9 +285,9 @@ public class Connect implements CC_Server.CONSTANTS {
      */
     public static List<ServerCurrency> generateHistoricalMonthlyDataList(ServerCurrency serverCurrency) throws Exception {
         String sql = "SELECT currency_name, AVG(currency_rate) AS avg_rate, DATE_FORMAT(currency_date, '%Y-%M') AS date  FROM cur_db.cur \n" +
-                "WHERE currency_name = '"+ serverCurrency.getName() +"'\n" +
-                "GROUP BY DATE_FORMAT(currency_date,'%Y-%M-&D')\n" +
-                "ORDER BY currency_date ASC;";
+                     "WHERE currency_name = '" + serverCurrency.getName() +"'\n" +
+                     "GROUP BY DATE_FORMAT(currency_date,'%Y-%M-&D')\n" +
+                     "ORDER BY currency_date ASC;";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
@@ -301,6 +301,33 @@ public class Connect implements CC_Server.CONSTANTS {
         }
         return serverCurrencyList;
     }
+
+
+    public static List<ServerCurrency> generateHistoricalMonthlyRateOfChangeList(ServerCurrency serverCurrency) throws Exception {
+        String sql = "SELECT dt2.currency_name, AVG((dt2.currency_rate / dt1.currency_rate)) AS avg_rate_of_change, DATE_FORMAT(dt2.currency_date, '%Y-%M') AS date\n" +
+                     "FROM cur_db.cur dt1, cur_db.cur dt2\n" +
+                     "WHERE DATEDIFF(dt1.currency_date, dt2.currency_date) = '1' \n" +
+                     "AND dt1.currency_name = dt2.currency_name\n" +
+                     "AND dt1.currency_name = '" + serverCurrency.getName() + "'\n" +
+                     "GROUP BY DATE_FORMAT(dt2.currency_date,'%Y-%M-&D')\n" +
+                     "ORDER BY dt1.currency_date ASC;";
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        List<ServerCurrency> serverCurrencyList = new ArrayList<>();
+        while(rs.next()) {
+            ServerCurrency sc = new ServerCurrency();
+            sc.setName(rs.getString(1));
+            sc.setRawRate(rs.getString(2));
+            sc.setDate(rs.getString(3));
+            serverCurrencyList.add(sc);
+        }
+        return serverCurrencyList;
+    }
+    /*
+
+    */
+
 
     /***
      * This is an overridden toString method that is useful for testing purposes.

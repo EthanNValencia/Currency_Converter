@@ -91,7 +91,7 @@ public class Server extends Application {
                         receivedDataObject = calculateExchange(receivedDataObject);
                     }
                         // Data object modification
-                    if (receivedDataObject.getList()) { // this check is not working.
+                    if (receivedDataObject.getList()) { // ADD ANOTHER CHECK FOR SWITCHING
                         try {
                             receivedDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyDataList(receivedDataObject.getCurrency1()));
                         } catch (Exception e) {

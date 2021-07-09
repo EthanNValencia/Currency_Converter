@@ -8,7 +8,9 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
@@ -30,7 +32,13 @@ import java.util.ResourceBundle;
 public class ChartController implements CONSTANTS, Initializable {
 
     @FXML
-    LineChart<String, Number> lineChart;
+    private LineChart<String, Number> lineChart;
+
+    @FXML
+    private CategoryAxis xAxis ;
+
+    @FXML
+    private NumberAxis yAxis ;
 
     @FXML
     Button chartButton;
@@ -55,7 +63,7 @@ public class ChartController implements CONSTANTS, Initializable {
             XYChart.Series<String, Number> series = new XYChart.Series<>();
             series.setName(CURRENCY_NAMES[i]);
             ServerCurrency sc1 = new ServerCurrency(CURRENCY_NAMES[i]);
-            Client client = new Client(new CurrencyDataObject(sc1, DATE_TODAY, true));
+            Client client = new Client(new CurrencyDataObject(sc1, DATE_TODAY, true, false));
             List<ServerCurrency> currencyList = client.getDataObject().getServerCurrencyList();
             for (int j = 0; j < currencyList.size(); j++) {
                 ServerCurrency serverCurrency = currencyList.get(j);
@@ -68,10 +76,10 @@ public class ChartController implements CONSTANTS, Initializable {
     public void getCurrencyData(ActionEvent event){
         String sourceName = ((RadioButton)event.getSource()).getText();
         if(!lineChart.getData().toString().contains(sourceName)) {
-            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            XYChart.Series series = new XYChart.Series();
             series.setName(sourceName);
             ServerCurrency sc1 = new ServerCurrency(sourceName);
-            Client client = new Client(new CurrencyDataObject(sc1, DATE_TODAY, true));
+            Client client = new Client(new CurrencyDataObject(sc1, DATE_TODAY, true, false));
             List<ServerCurrency> currencyList = client.getDataObject().getServerCurrencyList();
             for (int j = 0; j < currencyList.size(); j++) {
                 ServerCurrency serverCurrency = currencyList.get(j);
@@ -96,6 +104,13 @@ public class ChartController implements CONSTANTS, Initializable {
         backgroundPane.setBackground(new Background(bckFill));
 
         chartButton.setVisible(false);
+
+        xAxis.setLabel("Months");
+        yAxis.setLabel("USD to X");
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
+        yAxis.setForceZeroInRange(false);
+
         lineChart.setLegendVisible(true);
         lineChart.setLegendSide(Side.TOP);
         lineChart.setCreateSymbols(false);

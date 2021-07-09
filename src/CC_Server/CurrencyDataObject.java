@@ -12,15 +12,16 @@ public class CurrencyDataObject implements Serializable {
     private ServerCurrency currency1 = new ServerCurrency(); // combobox1
     private ServerCurrency currency2 = new ServerCurrency(); // combobox2
     private List<ServerCurrency> serverCurrencyList;
-    private boolean getList = false;
+    private boolean getHistorialList = false;
+    private boolean getRateOfChangeList = false;
 
 
     public boolean getList(){
-        return getList;
+        return getHistorialList;
     }
 
     public void setList(Boolean getList){
-        this.getList = getList;
+        this.getHistorialList = getList;
     }
 
     public List<ServerCurrency> getServerCurrencyList(){
@@ -81,10 +82,11 @@ public class CurrencyDataObject implements Serializable {
      * @param cur1 It requires the currency data taken from combo box 1.
      * @param localDate It requires the date in the LocalDate format (not a string).
      */
-    public CurrencyDataObject(ServerCurrency cur1, LocalDate localDate, boolean getList) {
+    public CurrencyDataObject(ServerCurrency cur1, LocalDate localDate, boolean getHistoricalList, boolean getRateOfChangeList) {
         this.currency1 = cur1;
         this.currency1.setDate(localDate.toString());
-        this.getList = getList;
+        this.getHistorialList = getHistoricalList;
+        this.getRateOfChangeList = getRateOfChangeList;
     }
 
     public CurrencyDataObject() {
