@@ -192,10 +192,11 @@ public class Server extends Application {
         nf.setMinimumFractionDigits(2);
         if (currencyDataObject.getCurrency1().getExchangeAmount() != null) {
             double number = Double.parseDouble(currencyDataObject.getCurrency1().getExchangeAmount()) *
-                            Double.parseDouble(currencyDataObject.getCurrency2().getAdjustedRate());
+                            Double.parseDouble(currencyDataObject.getCurrency2().getAdjustedRate().replaceAll(",", ""));
             String strNumber = checkLower(number); // This checks that the value returned is not zero.
             currencyDataObject.getCurrency2().setExchangeAmount(strNumber);
         }
+
         return currencyDataObject;
     }
 
@@ -204,6 +205,7 @@ public class Server extends Application {
         nf.setMinimumFractionDigits(20);
         String strNumber = String.valueOf(number);
         strNumber = new DecimalFormat("#,##0.##############").format(Double.parseDouble(strNumber));
+
         // strNumber = new DecimalFormat("#,###.00").format(strNumber);
         /*
         NumberFormat nf = NumberFormat.getInstance();
