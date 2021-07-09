@@ -427,13 +427,13 @@ public class UnitTests {
      * This tests that the Server.CalculateRate() is returning the anticipated results.
      */
     @Test
-    public void testServer_calculateRate_Predicted_2(){
+    public void testServer_calculateRate_Predicted_Four(){
         ServerCurrency serverCurrency1 = new ServerCurrency(null, null, null, "0.5", null, null);
         ServerCurrency serverCurrency2 = new ServerCurrency(null, null, null, "2", null, null);
         CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
         Server server = new Server();
         currencyDataObject = server.calculateRate(currencyDataObject);
-        assertEquals("4.000", currencyDataObject.getCurrency2().getAdjustedRate());
+        assertEquals("4", currencyDataObject.getCurrency2().getAdjustedRate());
     }
 
     /***
@@ -458,20 +458,7 @@ public class UnitTests {
         CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
         Server server = new Server();
         currencyDataObject = server.calculateExchange(currencyDataObject);
-        assertEquals("4.00", currencyDataObject.getCurrency2().getExchangeAmount());
-    }
-
-    /***
-     * This tests that the Server.calculateExchange() method is correctly calculating the amount of exchange.
-     */
-    @Test
-    public void testServer_calculateExchange_checkLower(){
-        ServerCurrency serverCurrency1 = new ServerCurrency(null, null, null, null, "30000", null);
-        ServerCurrency serverCurrency2 = new ServerCurrency(null, null, null, null, null, "0.000000005");
-        CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
-        Server server = new Server();
-        currencyDataObject = server.calculateExchange(currencyDataObject);
-        assertEquals("0.0001500", currencyDataObject.getCurrency2().getExchangeAmount());
+        assertEquals("4", currencyDataObject.getCurrency2().getExchangeAmount());
     }
 
     /***
@@ -486,18 +473,33 @@ public class UnitTests {
             fail();
         }
     }
-    @Test
-    public void testServer_formatDecimals_SevenDecimals(){
-        double testDbl = 0.00000000800000;
-        Server server = new Server();
-        assertEquals("0.000000008", server.checkLower(testDbl));
-    }
 
     @Test
     public void testServer_formatDecimals_FourDecimals(){
         double testDbl = 25.000801;
         Server server = new Server();
         assertEquals("25.000801", server.checkLower(testDbl));
+    }
+
+    /***
+     * This tests that the Server.calculateExchange() method is correctly calculating the amount of exchange.
+     */
+    @Test
+    public void testServer_calculateExchange_checkLower_FiveDecimals(){
+        ServerCurrency serverCurrency1 = new ServerCurrency(null, null, null, null, "30000", null);
+        ServerCurrency serverCurrency2 = new ServerCurrency(null, null, null, null, null, "0.000000005");
+        CurrencyDataObject currencyDataObject = new CurrencyDataObject(serverCurrency1, serverCurrency2, LocalDate.now());
+        Server server = new Server();
+        currencyDataObject = server.calculateExchange(currencyDataObject);
+        assertEquals("0.00015", currencyDataObject.getCurrency2().getExchangeAmount());
+    }
+
+
+    @Test
+    public void testServer_formatDecimals_SevenDecimals(){
+        double testDbl = 0.00000000800000;
+        Server server = new Server();
+        assertEquals("0.000000008", server.checkLower(testDbl));
     }
 
 }

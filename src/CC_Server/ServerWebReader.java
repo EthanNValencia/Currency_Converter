@@ -185,7 +185,7 @@ public class ServerWebReader implements CC_Server.CONSTANTS {
     public void insertAnnualCurrencyData() throws Exception {
         String insertDate;
         HashSet<ServerCurrency> currencyList = null;
-        currencyList = getPage(WEBSITE_URL + DATE_TODAY);
+        // currencyList = getPage(WEBSITE_URL + DATE_TODAY);
         for (int i = 0; i <= RANGE_OF_DAYS_TO_SCAN; i++) {
             insertDate = "" + DATE_TODAY.minusDays(i);
             if (!Connect.checkEntries("" + insertDate)) { // If entries with this date already exist, then cancel the insertion.
@@ -199,4 +199,5 @@ public class ServerWebReader implements CC_Server.CONSTANTS {
         }
         Connect.insertUSD(); // After the db fields are update the USD field will be updated too.
     }
+
 }
