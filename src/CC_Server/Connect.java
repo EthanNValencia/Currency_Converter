@@ -324,10 +324,6 @@ public class Connect implements CC_Server.CONSTANTS {
         }
         return serverCurrencyList;
     }
-    /*
-
-    */
-
 
     /***
      * This is an overridden toString method that is useful for testing purposes.

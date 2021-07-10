@@ -18,7 +18,7 @@
         </yAxis>
       </LineChart>
       <Button fx:id="chartButton" layoutX="962.0" layoutY="551.0" mnemonicParsing="false" onAction="#btnAction" text="Chart Data" />
-      <FlowPane fx:id="flowPane" layoutX="14.0" layoutY="14.0" prefHeight="500.0" prefWidth="175.0" />
+      <FlowPane fx:id="flowPane" layoutX="14.0" layoutY="14.0" prefHeight="500.0" prefWidth="250.0" />
       <Button fx:id="buttonExchangeRate" layoutX="11.0" layoutY="529.0" mnemonicParsing="false" onAction="#changeChartType" text="Exchange Rate" />
       <Button fx:id="buttonRateOfChange" layoutX="10.0" layoutY="564.0" mnemonicParsing="false" onAction="#changeChartType" text="Rate of Change" />
    </children>

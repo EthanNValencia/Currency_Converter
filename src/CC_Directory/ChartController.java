@@ -14,6 +14,8 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
@@ -58,12 +60,6 @@ public class ChartController implements CONSTANTS, Initializable {
         event.getSource();
         lineChart.setCreateSymbols(false);
         lineChart.setAnimated(false);
-
-        /*
-        lineChart.getData().add(new XYChart.Series(FXCollections.observableArrayList(new XYChart.Data("",0))));
-        lineChart.getData().clear();
-        */
-
         for (int i = 0; i < CURRENCY_NAMES.length; i++) {
             XYChart.Series<String, Number> series = new XYChart.Series<>();
             series.setName(CURRENCY_NAMES[i]);
@@ -115,7 +111,7 @@ public class ChartController implements CONSTANTS, Initializable {
             exchangeRate = false;
             buttonRateOfChange.setDisable(true);
             buttonExchangeRate.setDisable(false);
-            yAxis.setLabel("Average Rate of Change (Below 1 represents a currency devaluation)");
+            yAxis.setLabel("Average Rate of Change (Large variations represents instability)");
             lineChart.getData().clear();
             addRadioButtonsInFlowPane();
         }
@@ -126,17 +122,23 @@ public class ChartController implements CONSTANTS, Initializable {
         flowPane.setHgap(10);
         flowPane.setVgap(10);
         flowPane.setAlignment(Pos.TOP_LEFT);
-
         List<RadioButton> list = new ArrayList<>();
+        List<ImageView> ivList = new ArrayList<>();
         for (int i = 0; i < CURRENCY_NAMES.length; i++){
+            Image image = new Image("CC_Images/" + CURRENCY_NAMES[i] + ".png");
+            ImageView imageView = new ImageView();
+            imageView.setFitWidth(15);
+            imageView.setFitHeight(15);
+            imageView.setImage(image);
+            ivList.add(imageView);
             RadioButton rb = new RadioButton();
             rb.setText(String.valueOf(CURRENCY_NAMES[i]));
             rb.setMinSize(50, 2);
-            // rb.setPrefSize(45, 5);
             rb.setOnAction(this::getCurrencyData);
             list.add(rb);
         }
         for (int i = 0; i < list.size(); i++) {
+            flowPane.getChildren().add(ivList.get(i));
             flowPane.getChildren().add(list.get(i));
         }
     }
