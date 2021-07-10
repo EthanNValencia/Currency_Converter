@@ -16,6 +16,7 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 // --module-path "C:\Program Files\JavaFX\javafx-sdk-16\lib" --add-modules javafx.controls,javafx.fxml
@@ -40,6 +41,8 @@ public class Server extends Application {
         TextArea ta = new TextArea();
         // Create a scene and place it in the stage
         Scene scene = new Scene(new ScrollPane(ta), 350, 190);
+        Image icon = new Image("CC_Icons/ServerIcon.png");
+        primaryStage.getIcons().add(icon);
         primaryStage.setTitle("Server"); // Set the stage title
         primaryStage.setScene(scene); // Place the scene in the stage
         primaryStage.setResizable(false);

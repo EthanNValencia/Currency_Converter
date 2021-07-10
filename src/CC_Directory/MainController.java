@@ -27,8 +27,6 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
-
-import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -74,6 +72,8 @@ public class MainController implements Initializable, CONSTANTS {
             FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource("ChartUI.fxml"));
             Parent root = fxmlLoader1.load();
             Stage stage = new Stage();
+            Image icon = new Image("CC_Icons/ChartIcon.png");
+            stage.getIcons().add(icon);
             stage.setResizable(false);
             stage.setTitle("Historical Data");
             stage.setScene(new Scene(root));
@@ -125,18 +125,14 @@ public class MainController implements Initializable, CONSTANTS {
         LinearGradient linGrad = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, stop);
         BackgroundFill bckFill = new BackgroundFill(linGrad, CornerRadii.EMPTY, Insets.EMPTY);
         backgroundPane.setBackground(new Background(bckFill));
-
         comboBox1.setTooltip(toolTip1);
         comboBox2.setTooltip(toolTip2);
-
         outputRate.setText("");
         conversionIndicator.setText("");
-
         for (int i = 0; i < CONSTANTS.CURRENCY_NAMES.length; i++) {
             comboBox1.getItems().add(CONSTANTS.CURRENCY_NAMES[i]);
             comboBox2.getItems().add(CONSTANTS.CURRENCY_NAMES[i]);
         }
-
         inputArea.setVisible(false);
         submitButton.setVisible(true);
         chartButton.setVisible(true);

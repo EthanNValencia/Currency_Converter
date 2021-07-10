@@ -3,10 +3,11 @@ Ethan J. Nephew
 June 11, 2021
 Currency converter and presentation application.
 
-Objectives
+-- Objectives --
 What about adding in the unique currency symbols? $ (USD), £ (GBP), ₽ (RUB), etc
-In the inputText area, make it so that a user can input comas: 3,600 for example
+In the inputText area, make it so that a user can input comas: 3,600
 This will probably mean replacing commas with closed spaces.
+Implement server-side multi-threading when verifying database integrity.
 */
 
 package CC_Directory;
@@ -16,6 +17,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+
+import java.awt.*;
 // --module-path "C:\Program Files\JavaFX\javafx-sdk-16\lib" --add-modules javafx.controls,javafx.fxml
 
 /***
@@ -33,6 +37,8 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("MainUI.fxml"));
         primaryStage.setTitle("Currency Converter");
         primaryStage.setResizable(false);
+        Image icon = new Image("CC_Icons/ConverterIcon.png");
+        primaryStage.getIcons().add(icon);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
