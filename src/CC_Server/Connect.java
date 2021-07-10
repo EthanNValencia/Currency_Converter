@@ -281,7 +281,7 @@ public class Connect implements CC_Server.CONSTANTS {
      * This method uses name of a server currency object to generate a list of historical currency rates. The currency rates will be averaged by the month.
      * @param serverCurrency It requires the specific server currency object.
      * @return This method returns a list of server currency objects. This list is passed up to the GUI chart.
-     * @throws Exception A database related exception will can be thrown.
+     * @throws Exception A database related exception can be thrown.
      */
     public static List<ServerCurrency> generateHistoricalMonthlyDataList(ServerCurrency serverCurrency) throws Exception {
         String sql = "SELECT currency_name, AVG(currency_rate) AS avg_rate, DATE_FORMAT(currency_date, '%Y-%M') AS date  FROM cur_db.cur \n" +

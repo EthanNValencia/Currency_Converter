@@ -2,6 +2,9 @@
 Ethan J. Nephew
 July 9, 2021
 Controller class for the chart GUI.
+
+Negative trends present a devaluation in the currency as compared to the United States dollar.
+Positive trends represent an increase in the valuation of a currency as compared to the United States dollar.
 */
 
 package CC_Directory;
@@ -19,6 +22,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -57,6 +61,9 @@ public class ChartController implements CONSTANTS, Initializable {
 
     @FXML
     private Button buttonExchangeRate, buttonRateOfChange;
+
+    @FXML
+    private ComboBox comboBoxCurrency;
 
     private boolean exchangeRate = true;
     private boolean rateOfChange = false;
@@ -183,5 +190,9 @@ public class ChartController implements CONSTANTS, Initializable {
         lineChart.setLegendSide(Side.TOP);
         lineChart.setCreateSymbols(false);
         addRadioButtonsInFlowPane();
+        for (int i = 0; i < CONSTANTS.CURRENCY_NAMES.length; i++) {
+            comboBoxCurrency.getItems().add(CONSTANTS.CURRENCY_NAMES[i]);
+        }
+        comboBoxCurrency.getSelectionModel().selectFirst();
     }
 }

@@ -24,10 +24,6 @@ public class CurrencyDataObject implements Serializable {
         return getRateOfChangeList;
     }
 
-    public void setRateOfChangeList(Boolean getRateOfChangeList){
-        this.getRateOfChangeList = getRateOfChangeList;
-    }
-
     public boolean getHistoricalList(){
         return getHistoricalList;
     }
