@@ -8,6 +8,7 @@ What about adding in the unique currency symbols? $ (USD), £ (GBP), ₽ (RUB), 
 In the inputText area, make it so that a user can input comas: 3,600
 This will probably mean replacing commas with closed spaces.
 Implement server-side multi-threading when verifying database integrity.
+Add tool tips in the chart currencies.
 */
 
 package CC_Directory;

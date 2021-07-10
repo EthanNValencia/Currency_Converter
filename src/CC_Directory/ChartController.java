@@ -126,7 +126,7 @@ public class ChartController implements CONSTANTS, Initializable {
             exchangeRate = false;
             buttonRateOfChange.setDisable(true);
             buttonExchangeRate.setDisable(false);
-            yAxis.setLabel("Average Rate of Change (Large variations represents instability)");
+            yAxis.setLabel("Average Monthly Rate of Change");
             lineChart.getData().clear();
             addRadioButtonsInFlowPane();
         }

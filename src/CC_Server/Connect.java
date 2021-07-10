@@ -304,7 +304,7 @@ public class Connect implements CC_Server.CONSTANTS {
 
 
     public static List<ServerCurrency> generateHistoricalMonthlyRateOfChangeList(ServerCurrency serverCurrency) throws Exception {
-        String sql = "SELECT dt2.currency_name, AVG((dt2.currency_rate / dt1.currency_rate)) AS avg_rate_of_change, DATE_FORMAT(dt2.currency_date, '%Y-%M') AS date\n" +
+        String sql = "SELECT dt2.currency_name, AVG((dt2.currency_rate / dt1.currency_rate) - 1) AS avg_rate_of_change, DATE_FORMAT(dt2.currency_date, '%Y-%M') AS date\n" +
                      "FROM cur_db.cur dt1, cur_db.cur dt2\n" +
                      "WHERE DATEDIFF(dt1.currency_date, dt2.currency_date) = '1' \n" +
                      "AND dt1.currency_name = dt2.currency_name\n" +
