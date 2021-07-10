@@ -31,7 +31,7 @@ java --module-path "C:\Program Files (x86)\JavaFx\javafx-sdk-15.0.1\lib" --add-m
 public class Server extends Application {
 
     /***
-     * This is the overridden start method that is used to begin the the GUI.
+     * This method contains the server directions. Anything that is passed to the server and modified can be found here.
      * @param primaryStage Requires the primary stage.
      */
     @Override // Override the start method in the Application class
@@ -48,17 +48,14 @@ public class Server extends Application {
             Platform.exit(); // This shuts down all server threads when the window closes.
             System.exit(0);
         });
-
         InetAddress ip;
         String hostname;
         try {
             ip = InetAddress.getLocalHost();
             hostname = ip.getHostName();
-
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-
         new Thread( () -> {
             try {
                 ServerSocket serverSocket = new ServerSocket(8000);
@@ -73,7 +70,6 @@ public class Server extends Application {
                     e.printStackTrace();
                 }
                 Platform.runLater(() -> ta.appendText("Waiting for client connection... \n"));
-
                 while (true) {
                     Socket socket = serverSocket.accept(); // it waits here for a client message
                     // Create data input and output streams
@@ -89,14 +85,16 @@ public class Server extends Application {
                         receivedDataObject = findDescription(receivedDataObject);
                         receivedDataObject = calculateRate(receivedDataObject);
                         receivedDataObject = calculateExchange(receivedDataObject);
-                    } else if (receivedDataObject.getHistoricalList()) { // ADD ANOTHER CHECK FOR SWITCHING
+                    } else if (receivedDataObject.getHistoricalList()) {
                         try {
+                            // Data object modification
                             receivedDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyDataList(receivedDataObject.getCurrency1()));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    } else if (receivedDataObject.getRateOfChangeList()) { // ADD ANOTHER CHECK FOR SWITCHING
+                    } else if (receivedDataObject.getRateOfChangeList()) {
                         try {
+                            // Data object modification
                             receivedDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyRateOfChangeList(receivedDataObject.getCurrency1()));
                         } catch (Exception e) {
                             e.printStackTrace();

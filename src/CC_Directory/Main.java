@@ -3,18 +3,7 @@ Ethan J. Nephew
 June 11, 2021
 Currency converter and presentation application.
 
-Note to future self.
-This project took several days longer than anticipated,
-because Grandpa had several accidents.
-
 Objectives
-I want to add a client-server architecture
-The server side will include a database
-The server side will store rates
-The server side will store rates with the time the rate was collected
-The client side will have the ability to display the historical rates
-in a useful way, historical rates will be received from the server.
-
 What about adding in the unique currency symbols? $ (USD), £ (GBP), ₽ (RUB), etc
 
 In the inputText area, make it so that a user can input comas: 3,600 for example
@@ -58,7 +47,7 @@ public class Main extends Application {
 
         /*
         Thread music_Thread = new Thread(new PlayMusic());
-        music_Thread.start(); // I figured out how to do this, but it isn't a necessary component.
+        music_Thread.start();
         */
 
         launch(args);

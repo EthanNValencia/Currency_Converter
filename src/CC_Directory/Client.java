@@ -2,12 +2,14 @@ package CC_Directory;
 
 import CC_Server.CurrencyDataObject;
 import CC_Server.ServerCurrency;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+/***
+ * The Client class definition that is used to provide an a portal to and from the server.
+ */
 public class Client implements CONSTANTS {
 
     private ObjectOutputStream toServer = null;
@@ -19,72 +21,17 @@ public class Client implements CONSTANTS {
         return dataObject;
     }
 
-    public void setDataObject(CurrencyDataObject dataObject) {
-        this.dataObject = dataObject;
-    }
-
-    public String getComboBox1() {
-        return comboBox1;
-    }
-
-    public void setComboBox1(String comboBox1) {
-        this.comboBox1 = comboBox1;
-    }
-
-    public String getComboBox2() {
-        return comboBox2;
-    }
-
-    public void setComboBox2(String comboBox2) {
-        this.comboBox2 = comboBox2;
-    }
-
-    public String getInputArea() {
-        return inputArea;
-    }
-
-    public void setInputArea(String inputArea) {
-        this.inputArea = inputArea;
-    }
-
     public String getOutputRate() {
         return outputRate;
-    }
-
-    public void setOutputRate(String outputRate) {
-        this.outputRate = outputRate;
     }
 
     public String getConversionIndicator() {
         return conversionIndicator;
     }
 
-    public void setConversionIndicator(String conversionIndicator) {
-        this.conversionIndicator = conversionIndicator;
-    }
 
     public String getTextArea() {
         return textArea;
-    }
-
-    public void setTextArea(String textArea) {
-        this.textArea = textArea;
-    }
-
-    public String getToolTip1() {
-        return toolTip1;
-    }
-
-    public void setToolTip1(String toolTip1) {
-        this.toolTip1 = toolTip1;
-    }
-
-    public String getToolTip2() {
-        return toolTip2;
-    }
-
-    public void setToolTip2(String toolTip2) {
-        this.toolTip2 = toolTip2;
     }
 
     public Client(String comboBox1, String comboBox2, String inputArea){
@@ -95,15 +42,15 @@ public class Client implements CONSTANTS {
         if (!inputArea.equals("")) {
             dataObject.getCurrency1().setExchangeAmount(inputArea);
         }
-        serverRequest(dataObject);
+        serverRequest();
     }
 
     public Client(CurrencyDataObject currencyDataObject){
         this.dataObject = currencyDataObject;
-        serverRequest(this.dataObject);
+        serverRequest();
     }
 
-    public void serverRequest(CurrencyDataObject currencyDataObject){
+    public void serverRequest(){
         try {
             Socket socket = new Socket("localhost", 8000);
             // Socket socket = new Socket("192.168.0.95", 8000); // this is where this program connects to the server
@@ -136,6 +83,7 @@ public class Client implements CONSTANTS {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public String toString() {

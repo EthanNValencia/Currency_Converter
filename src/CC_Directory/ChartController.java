@@ -56,8 +56,10 @@ public class ChartController implements CONSTANTS, Initializable {
     private boolean exchangeRate = true;
     private boolean rateOfChange = false;
 
-    public void btnAction(ActionEvent event){
-        event.getSource();
+    /***
+     * This is a test method that is used to display all the historical exchange rates. The method is triggered by a button that is set to invisible by default.
+     */
+    public void btnAction(){
         lineChart.setCreateSymbols(false);
         lineChart.setAnimated(false);
         for (int i = 0; i < CURRENCY_NAMES.length; i++) {
@@ -74,6 +76,10 @@ public class ChartController implements CONSTANTS, Initializable {
         }
     }
 
+    /***
+     * This is a universal data request method that returns currency related data based on boolean values.
+     * @param event The action event will be triggered by the radio buttons on the GUI.
+     */
     public void getCurrencyData(ActionEvent event){
         String sourceName = ((RadioButton)event.getSource()).getText();
         if (!lineChart.getData().toString().contains(sourceName)) {
@@ -96,6 +102,10 @@ public class ChartController implements CONSTANTS, Initializable {
         }
     }
 
+    /***
+     * This is the GUI control method that changes the chart type.
+     * @param event It determines which chart type to transition to based on the ActionEvent.
+     */
     public void changeChartType(ActionEvent event){
         if (event.getSource().equals(buttonExchangeRate)){
             exchangeRate = true;
@@ -117,6 +127,9 @@ public class ChartController implements CONSTANTS, Initializable {
         }
     }
 
+    /***
+     * Adds the radio buttons and image views to the flow pane.
+     */
     public void addRadioButtonsInFlowPane(){
         flowPane.getChildren().clear();
         flowPane.setHgap(10);
@@ -143,22 +156,24 @@ public class ChartController implements CONSTANTS, Initializable {
         }
     }
 
+    /***
+     * The overridden method that is used to set the chart GUI defaults.
+     * @param url The URL.
+     * @param resourceBundle The resource bundle.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         Stop[] stop = new Stop[]{new Stop(0, Color.GRAY), new Stop(1, Color.WHITE)};
         LinearGradient linGrad = new LinearGradient(0, 1, 0, 0, true, CycleMethod.NO_CYCLE, stop);
         BackgroundFill bckFill = new BackgroundFill(linGrad, CornerRadii.EMPTY, Insets.EMPTY);
         backgroundPane.setBackground(new Background(bckFill));
         buttonExchangeRate.setDisable(true);
         chartButton.setVisible(false);
-
         xAxis.setLabel("Months");
         yAxis.setLabel("USD to X");
         xAxis.setAutoRanging(true);
         yAxis.setAutoRanging(true);
         yAxis.setForceZeroInRange(false);
-
         lineChart.setLegendVisible(true);
         lineChart.setLegendSide(Side.TOP);
         lineChart.setCreateSymbols(false);
