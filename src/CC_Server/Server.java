@@ -194,6 +194,11 @@ public class Server extends Application {
         return currencyDataObject;
     }
 
+    /***
+     * This is used to check the lower bound of a number and to change the decimal format to include strings.
+     * @param number The parameter is the number that is to be examined.
+     * @return It returns the formatted parameter in the form of a string.
+     */
     public String checkLower(double number){
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMinimumFractionDigits(20);

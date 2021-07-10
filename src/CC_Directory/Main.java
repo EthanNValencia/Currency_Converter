@@ -5,7 +5,6 @@ Currency converter and presentation application.
 
 Objectives
 What about adding in the unique currency symbols? $ (USD), £ (GBP), ₽ (RUB), etc
-
 In the inputText area, make it so that a user can input comas: 3,600 for example
 This will probably mean replacing commas with closed spaces.
 */

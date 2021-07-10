@@ -1,3 +1,9 @@
+/*
+Ethan J. Nephew
+July 9, 2021
+Client connection class.
+*/
+
 package CC_Directory;
 
 import CC_Server.CurrencyDataObject;
@@ -17,23 +23,44 @@ public class Client implements CONSTANTS {
     private CurrencyDataObject dataObject = new CurrencyDataObject();
     private String comboBox1, comboBox2, inputArea, outputRate, conversionIndicator, textArea, toolTip1, toolTip2;
 
+    /***
+     * Accessor method for the data object.
+     * @return The data object.
+     */
     public CurrencyDataObject getDataObject() {
         return dataObject;
     }
 
+    /***
+     * Accessor for the output rate.
+     * @return The string that will be displayed as the output rate.
+     */
     public String getOutputRate() {
         return outputRate;
     }
 
+    /***
+     * Accessor method for the conversion indicator.
+     * @return The string of the conversion indicator.
+     */
     public String getConversionIndicator() {
         return conversionIndicator;
     }
 
-
+    /***
+     * Accessor method for the text area string.
+     * @return The string that is to be assigned to the text area.
+     */
     public String getTextArea() {
         return textArea;
     }
 
+    /***
+     * A three parameter constructor.
+     * @param comboBox1 The contents of the first combo box.
+     * @param comboBox2 The contents of the second combo box.
+     * @param inputArea The contents from the input area.
+     */
     public Client(String comboBox1, String comboBox2, String inputArea){
         this.comboBox1 = comboBox1;
         this.comboBox2 = comboBox2;
@@ -45,11 +72,18 @@ public class Client implements CONSTANTS {
         serverRequest();
     }
 
+    /***
+     * A single parameter constructor that requires the currency data object that is to be assigned to the client.
+     * @param currencyDataObject The currency data object that is to be assigned to the client.
+     */
     public Client(CurrencyDataObject currencyDataObject){
         this.dataObject = currencyDataObject;
         serverRequest();
     }
 
+    /***
+     * This is where the client to server request is established. Data is passed from here to the server and from the server back to here.
+     */
     public void serverRequest(){
         try {
             Socket socket = new Socket("localhost", 8000);
@@ -85,6 +119,10 @@ public class Client implements CONSTANTS {
     }
 
 
+    /***
+     * This is the overridden toString.
+     * @return Returns a string with the object contents listed.
+     */
     @Override
     public String toString() {
         return "Client{" +

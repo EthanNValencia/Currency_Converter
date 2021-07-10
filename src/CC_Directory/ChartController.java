@@ -1,3 +1,9 @@
+/*
+Ethan J. Nephew
+July 9, 2021
+Controller class for the chart GUI.
+*/
+
 package CC_Directory;
 
 import CC_Server.CurrencyDataObject;

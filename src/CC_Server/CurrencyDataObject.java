@@ -1,3 +1,8 @@
+/*
+Ethan J. Nephew
+July 9, 2021
+Currency data object that is utilized during transfer requests.
+*/
 package CC_Server;
 
 import java.io.Serializable;

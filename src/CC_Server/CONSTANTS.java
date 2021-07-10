@@ -1,3 +1,9 @@
+/*
+Ethan J. Nephew
+July 9, 2021
+Server constants. Used as a centralized repository for vital server related variables.
+*/
+
 package CC_Server;
 
 import java.time.LocalDate;
