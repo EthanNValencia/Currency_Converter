@@ -82,27 +82,7 @@ public class Server extends Application {
                     CurrencyDataObject receivedDataObject = (CurrencyDataObject) inputFromClient.readObject();
                     Platform.runLater(() -> ta.appendText("Server received client data.\n"));
                     // For some reason the later check is not working
-                    if (!receivedDataObject.getHistoricalList() && !receivedDataObject.getRateOfChangeList()) { // problem here
-                        // Data object modification
-                        receivedDataObject = findRate(receivedDataObject);
-                        receivedDataObject = findDescription(receivedDataObject);
-                        receivedDataObject = calculateRate(receivedDataObject);
-                        receivedDataObject = calculateExchange(receivedDataObject);
-                    } else if (receivedDataObject.getHistoricalList()) {
-                        try {
-                            // Data object modification
-                            receivedDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyDataList(receivedDataObject.getCurrency1()));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else if (receivedDataObject.getRateOfChangeList()) {
-                        try {
-                            // Data object modification
-                            receivedDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyRateOfChangeList(receivedDataObject.getCurrency1()));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    receivedDataObject = getData(receivedDataObject);
                     // End data object modification for chart
                     outputToClient.writeObject(receivedDataObject);
                     Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));
@@ -117,6 +97,34 @@ public class Server extends Application {
             }
         }).start();
     }
+
+    /***
+     * This runs the data object through several checks to determine what data should be gathered for the object.
+     * @param currencyDataObject It requires a data object.
+     * @return It returns the amended data object.
+     */
+    public CurrencyDataObject getData(CurrencyDataObject currencyDataObject){
+        if (!currencyDataObject.getHistoricalList() && !currencyDataObject.getRateOfChangeList()) {
+            currencyDataObject = findRate(currencyDataObject);
+            currencyDataObject = findDescription(currencyDataObject);
+            currencyDataObject = calculateRate(currencyDataObject);
+            currencyDataObject = calculateExchange(currencyDataObject);
+        } else if (currencyDataObject.getHistoricalList()) {
+            try {
+                currencyDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyDataList(currencyDataObject.getCurrency1()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (currencyDataObject.getRateOfChangeList()) {
+            try {
+                currencyDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyRateOfChangeList(currencyDataObject.getCurrency1()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return currencyDataObject;
+    }
+
 
     /***
      * This class uses provided currency object information to build on the data structure. The currency rate is added in this method.
@@ -193,7 +201,6 @@ public class Server extends Application {
             String strNumber = checkLower(number); // This checks that the value returned is not zero.
             currencyDataObject.getCurrency2().setExchangeAmount(strNumber);
         }
-
         return currencyDataObject;
     }
 

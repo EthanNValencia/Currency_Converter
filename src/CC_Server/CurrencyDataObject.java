@@ -17,8 +17,7 @@ public class CurrencyDataObject implements Serializable {
     private ServerCurrency currency1 = new ServerCurrency(); // combobox1
     private ServerCurrency currency2 = new ServerCurrency(); // combobox2
     private List<ServerCurrency> serverCurrencyList;
-    private boolean getHistoricalList = false;
-    private boolean getRateOfChangeList = false;
+    private boolean getHistoricalList = false, getRateOfChangeList = false;
 
     public boolean getRateOfChangeList(){
         return getRateOfChangeList;
