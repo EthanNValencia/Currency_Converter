@@ -89,8 +89,9 @@ public class CurrencyDataObject implements Serializable {
      * @param cur1 It requires the currency data taken from combo box 1.
      * @param localDate It requires the date in the LocalDate format (not a string).
      */
-    public CurrencyDataObject(ServerCurrency cur1, LocalDate localDate, boolean getHistoricalList, boolean getRateOfChangeList) {
+    public CurrencyDataObject(ServerCurrency cur1, ServerCurrency cur2, LocalDate localDate, boolean getHistoricalList, boolean getRateOfChangeList) {
         this.currency1 = cur1;
+        this.currency2 = cur2;
         this.currency1.setDate(localDate.toString());
         this.getHistoricalList = getHistoricalList;
         this.getRateOfChangeList = getRateOfChangeList;

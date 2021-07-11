@@ -279,15 +279,19 @@ public class Connect implements CC_Server.CONSTANTS {
 
     /***
      * This method uses name of a server currency object to generate a list of historical currency rates. The currency rates will be averaged by the month.
-     * @param serverCurrency It requires the specific server currency object.
+     * @param currencyDataObject It requires the specific server currency data object.
      * @return This method returns a list of server currency objects. This list is passed up to the GUI chart.
      * @throws Exception A database related exception can be thrown.
      */
-    public static List<ServerCurrency> generateHistoricalMonthlyDataList(ServerCurrency serverCurrency) throws Exception {
-        String sql = "SELECT currency_name, AVG(currency_rate) AS avg_rate, DATE_FORMAT(currency_date, '%Y-%M') AS date  FROM cur_db.cur \n" +
-                     "WHERE currency_name = '" + serverCurrency.getName() +"'\n" +
-                     "GROUP BY DATE_FORMAT(currency_date,'%Y-%M-&D')\n" +
-                     "ORDER BY currency_date ASC;";
+    public static List<ServerCurrency> generateHistoricalMonthlyDataList(CurrencyDataObject currencyDataObject) throws Exception {
+        String sql =
+                "SELECT cur1.currency_name, AVG(((1 / cur1.currency_rate) * cur2.currency_rate)), DATE_FORMAT(cur1.currency_date, '%Y-%M') AS date FROM \n" +
+                "cur_db.cur cur1, cur_db.cur cur2\n" +
+                "WHERE cur1.currency_name = '" + currencyDataObject.getCurrency1().getName() + "' \n" +
+                "AND cur2.currency_name = '" + currencyDataObject.getCurrency2().getName() + "'\n" +
+                "AND cur1.currency_date = cur2.currency_date\n" +
+                "GROUP BY DATE_FORMAT(cur1.currency_date,'%Y-%M-&D')\n" +
+                "ORDER BY cur1.currency_date ASC;";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
@@ -303,14 +307,24 @@ public class Connect implements CC_Server.CONSTANTS {
     }
 
 
-    public static List<ServerCurrency> generateHistoricalMonthlyRateOfChangeList(ServerCurrency serverCurrency) throws Exception {
-        String sql = "SELECT dt2.currency_name, AVG((dt2.currency_rate / dt1.currency_rate) - 1) AS avg_rate_of_change, DATE_FORMAT(dt2.currency_date, '%Y-%M') AS date\n" +
-                     "FROM cur_db.cur dt1, cur_db.cur dt2\n" +
-                     "WHERE DATEDIFF(dt1.currency_date, dt2.currency_date) = '1' \n" +
-                     "AND dt1.currency_name = dt2.currency_name\n" +
-                     "AND dt1.currency_name = '" + serverCurrency.getName() + "'\n" +
-                     "GROUP BY DATE_FORMAT(dt2.currency_date,'%Y-%M-&D')\n" +
-                     "ORDER BY dt1.currency_date ASC;";
+    public static List<ServerCurrency> generateHistoricalMonthlyRateOfChangeList(CurrencyDataObject currencyDataObject) throws Exception {
+        String sql = "SELECT dt2.currency_name, FORMAT(AVG((dt2.adjusted_exchange_rate / dt1.adjusted_exchange_rate) - 1), 15) AS avg_rate_of_change, DATE_FORMAT(dt2.currency_date, '%Y-%M') AS date\n" +
+                "FROM (SELECT cur2.currency_name, ((1 / cur1.currency_rate) * cur2.currency_rate) AS adjusted_exchange_rate, cur1.currency_date\n" +
+                "FROM cur_db.cur cur1, cur_db.cur cur2\n" +
+                "WHERE cur1.currency_name = '" + currencyDataObject.getCurrency1().getName() + "'\n" +
+                "AND cur2.currency_name = '" + currencyDataObject.getCurrency2().getName() + "'\n" +
+                "AND cur1.currency_date = cur2.currency_date\n" +
+                "ORDER BY cur1.currency_date ASC) AS dt1, \n" +
+                "(SELECT cur2.currency_name, ((1 / cur1.currency_rate) * cur2.currency_rate) AS adjusted_exchange_rate, cur1.currency_date\n" +
+                "FROM cur_db.cur cur1, cur_db.cur cur2\n" +
+                "WHERE cur1.currency_name = '" + currencyDataObject.getCurrency1().getName() + "'\n" +
+                "AND cur2.currency_name = '" + currencyDataObject.getCurrency2().getName() + "'\n" +
+                "AND cur1.currency_date = cur2.currency_date\n" +
+                "ORDER BY cur1.currency_date ASC) AS dt2\n" +
+                "WHERE DATEDIFF(dt1.currency_date, dt2.currency_date) = '1'\n" +
+                "AND dt1.currency_name = dt2.currency_name\n" +
+                "GROUP BY DATE_FORMAT(dt2.currency_date,'%Y-%M-&D')\n" +
+                "ORDER BY dt1.currency_date ASC;";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();

@@ -111,13 +111,13 @@ public class Server extends Application {
             currencyDataObject = calculateExchange(currencyDataObject);
         } else if (currencyDataObject.getHistoricalList()) {
             try {
-                currencyDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyDataList(currencyDataObject.getCurrency1()));
+                currencyDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyDataList(currencyDataObject));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (currencyDataObject.getRateOfChangeList()) {
             try {
-                currencyDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyRateOfChangeList(currencyDataObject.getCurrency1()));
+                currencyDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyRateOfChangeList(currencyDataObject));
             } catch (Exception e) {
                 e.printStackTrace();
             }

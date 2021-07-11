@@ -5,6 +5,7 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 
@@ -23,5 +24,6 @@
       <Button fx:id="buttonExchangeRate" layoutX="11.0" layoutY="529.0" mnemonicParsing="false" onAction="#changeChartType" text="Exchange Rate" />
       <Button fx:id="buttonRateOfChange" layoutX="10.0" layoutY="564.0" mnemonicParsing="false" onAction="#changeChartType" text="Rate of Change" />
       <ComboBox fx:id="comboBoxCurrency" layoutX="212.0" layoutY="565.0" prefHeight="26.0" prefWidth="75.0" />
+      <ImageView fx:id="iconImageView" fitHeight="25.0" fitWidth="25.0" layoutX="181.0" layoutY="566.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

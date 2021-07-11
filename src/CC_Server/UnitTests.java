@@ -468,7 +468,7 @@ public class UnitTests {
     public void testServer_generateList(){
         ServerCurrency serverCurrency1 = new ServerCurrency("COP", null, null, null, null, null);
         try {
-            Connect.generateHistoricalMonthlyDataList(serverCurrency1);
+            // Connect.generateHistoricalMonthlyDataList();
         } catch (Exception e) {
             fail();
         }

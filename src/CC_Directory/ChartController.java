@@ -65,6 +65,9 @@ public class ChartController implements CONSTANTS, Initializable {
     @FXML
     private ComboBox comboBoxCurrency;
 
+    @FXML
+    private ImageView iconImageView;
+
     private boolean exchangeRate = true;
     private boolean rateOfChange = false;
 
@@ -72,6 +75,7 @@ public class ChartController implements CONSTANTS, Initializable {
      * This is a test method that is used to display all the historical exchange rates. The method is triggered by a button that is set to invisible by default.
      */
     public void btnAction(){
+        /*
         lineChart.setCreateSymbols(false);
         lineChart.setAnimated(false);
         for (int i = 0; i < CURRENCY_NAMES.length; i++) {
@@ -86,6 +90,7 @@ public class ChartController implements CONSTANTS, Initializable {
             }
             lineChart.getData().add(series);
         }
+        */
     }
 
     /***
@@ -97,8 +102,9 @@ public class ChartController implements CONSTANTS, Initializable {
         if (!lineChart.getData().toString().contains(sourceName)) {
             XYChart.Series series = new XYChart.Series();
             series.setName(sourceName);
-            ServerCurrency sc1 = new ServerCurrency(sourceName);
-            Client client = new Client(new CurrencyDataObject(sc1, DATE_TODAY, exchangeRate, rateOfChange));
+            ServerCurrency sc1 = new ServerCurrency(comboBoxCurrency.getValue().toString());
+            ServerCurrency sc2 = new ServerCurrency(sourceName);
+            Client client = new Client(new CurrencyDataObject(sc1, sc2, DATE_TODAY, exchangeRate, rateOfChange));
             List<ServerCurrency> currencyList = client.getDataObject().getServerCurrencyList();
             for (int j = 0; j < currencyList.size(); j++) {
                 ServerCurrency serverCurrency = currencyList.get(j);
@@ -133,7 +139,7 @@ public class ChartController implements CONSTANTS, Initializable {
             exchangeRate = false;
             buttonRateOfChange.setDisable(true);
             buttonExchangeRate.setDisable(false);
-            yAxis.setLabel("Average Monthly Rate of Change");
+            yAxis.setLabel("Average Monthly Rate of Change (" + comboBoxCurrency.getValue() + " to X)");
             lineChart.getData().clear();
             addRadioButtonsInFlowPane();
         }
@@ -169,6 +175,21 @@ public class ChartController implements CONSTANTS, Initializable {
     }
 
     /***
+     * This method gives the combo box the ability to change the chart UI.
+     */
+    public void selectComboBox(){
+        lineChart.getData().clear();
+        addRadioButtonsInFlowPane();
+        Image image1 = new Image("CC_Images/" + comboBoxCurrency.getValue() + ".png");
+        iconImageView.setImage(image1);
+        if(buttonExchangeRate.isDisabled()) {
+            yAxis.setLabel(comboBoxCurrency.getValue() + " to X");
+        } else {
+            yAxis.setLabel("Average Monthly Rate of Change (" + comboBoxCurrency.getValue() + " to X)");
+        }
+    }
+
+    /***
      * The overridden method that is used to set the chart GUI defaults.
      * @param url The URL.
      * @param resourceBundle The resource bundle.
@@ -189,10 +210,12 @@ public class ChartController implements CONSTANTS, Initializable {
         lineChart.setLegendVisible(true);
         lineChart.setLegendSide(Side.TOP);
         lineChart.setCreateSymbols(false);
+        comboBoxCurrency.setOnAction(e -> selectComboBox());
         addRadioButtonsInFlowPane();
         for (int i = 0; i < CONSTANTS.CURRENCY_NAMES.length; i++) {
             comboBoxCurrency.getItems().add(CONSTANTS.CURRENCY_NAMES[i]);
         }
         comboBoxCurrency.getSelectionModel().selectFirst();
+        selectComboBox();
     }
 }
