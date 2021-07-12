@@ -7,12 +7,13 @@ Currency converter and presentation application.
 What about adding in the unique currency symbols? $ (USD), £ (GBP), ₽ (RUB), etc
 In the inputText area, make it so that a user can input comas: 3,600
 This will probably mean replacing commas with closed spaces.
-Implement server-side multi-threading when verifying database integrity.
+Implement server-side multi-threading when verifying database integrity. WORKING ON THIS
+Make the server generate all conversion rates based on current data. WORKING ON THIS
+Make combo boxes friendly to typing.
 Add tool tips in the chart currencies.
 */
 
 package CC_Directory;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

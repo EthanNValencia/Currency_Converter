@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static CC_Server.CONSTANTS.DATE_TODAY;
 import static CC_Server.CONSTANTS.WEBSITE_URL;
@@ -85,8 +84,6 @@ public class UnitTests {
             System.out.println("You probably tried to insert duplicate currency fields.");
             fail();
         }
-
-
     }
 
     /***
@@ -475,11 +472,24 @@ public class UnitTests {
         }
     }
 
+    /***
+     * Tests that the Server.checkLower() is properly formatting the input string.
+     */
     @Test
-    public void testServer_formatDecimals_FourDecimals(){
+    public void testServer_checkLower_FourDecimals(){
         double testDbl = 25.000801;
         Server server = new Server();
         assertEquals("25.000801", server.checkLower(testDbl));
+    }
+
+    /***
+     * Tests that the Server.checkLower() is properly formatting the input string.
+     */
+    @Test
+    public void testServer_checkLower_SevenDecimals(){
+        double testDbl = 0.00000000800000;
+        Server server = new Server();
+        assertEquals("0.000000008", server.checkLower(testDbl));
     }
 
     /***
@@ -495,22 +505,33 @@ public class UnitTests {
         assertEquals("0.00015", currencyDataObject.getCurrency2().getExchangeAmount());
     }
 
-
-    @Test
-    public void testServer_formatDecimals_SevenDecimals(){
-        double testDbl = 0.00000000800000;
-        Server server = new Server();
-        assertEquals("0.000000008", server.checkLower(testDbl));
-    }
-
     @Test
     public void testDatabaseChecker_Run(){
-        DatabaseChecker dbc1 = new DatabaseChecker(0, 333);
-        DatabaseChecker dbc2 = new DatabaseChecker(334, 667);
-        DatabaseChecker dbc3 = new DatabaseChecker(667, 1000);
+        DatabaseChecker dbc1 = new DatabaseChecker(0, 249);
+        DatabaseChecker dbc2 = new DatabaseChecker(250, 499);
+        DatabaseChecker dbc3 = new DatabaseChecker(500, 749);
+        DatabaseChecker dbc4 = new DatabaseChecker(750, 1000);
         System.out.println(dbc1.toString());
         System.out.println(dbc2.toString());
         System.out.println(dbc3.toString());
+        System.out.println(dbc4.toString());
+    }
+
+    @Test
+    public void generateCurrencyNameAlgorithm(){
+        String[] CURRENCY_NAMES = {"USD","AED", "ARS", "AUD", "BGN", "BHD", "BND", "BRL", "BWP", "CAD", "CHF", "CLP", "CNY", "COP", "CZK", "DKK", "EUR", "GBP", "HKD", "HRK", "HUF", "IDR", "ILS", "INR", "IRR", "ISK", "JPY", "KRW", "KWD", "KZT", "LKR", "LYD", "MUR", "MXN", "MYR", "NOK", "NPR", "NZD", "OMR", "PHP", "PKR", "PLN", "QAR", "RON", "RUB", "SAR", "SEK", "SGD", "THB", "TRY", "TTD", "TWD", "VEF", "ZAR"};
+        String[] adjustedNames = new String[CURRENCY_NAMES.length * CURRENCY_NAMES.length];
+        int counter = 0;
+        // System.out.println(adjustedNames.length);
+        for (int i = 0; i < CURRENCY_NAMES.length; i++) {
+            for (int j = 0; j < CURRENCY_NAMES.length; j++) {
+                adjustedNames[counter] = CURRENCY_NAMES[i] + " to " + CURRENCY_NAMES[j];
+                counter++;
+            }
+        }
+        for (int i = 0; i < adjustedNames.length; i++){
+            // System.out.print(adjustedNames[i] + ", ");
+        }
     }
 
 }
