@@ -123,20 +123,6 @@ public class ChartController implements CONSTANTS, Initializable {
                             e.printStackTrace();
                         }
                     }
-                    scan.next();
-                    try {
-                        Thread.sleep(2500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println("Nah");
-                    scan.next();
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println("Okey.. fine...");
                     return;
                 }
             }

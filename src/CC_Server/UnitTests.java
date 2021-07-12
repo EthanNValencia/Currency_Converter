@@ -503,5 +503,15 @@ public class UnitTests {
         assertEquals("0.000000008", server.checkLower(testDbl));
     }
 
+    @Test
+    public void testDatabaseChecker_Run(){
+        DatabaseChecker dbc1 = new DatabaseChecker(0, 333);
+        DatabaseChecker dbc2 = new DatabaseChecker(334, 667);
+        DatabaseChecker dbc3 = new DatabaseChecker(667, 1000);
+        System.out.println(dbc1.toString());
+        System.out.println(dbc2.toString());
+        System.out.println(dbc3.toString());
+    }
+
 }
 

@@ -12,7 +12,6 @@ import java.time.LocalDate;
  * This effectively serves as a center for sql statements and important variables.
  */
 public interface CONSTANTS {
-
     String DRIVER = "com.mysql.cj.jdbc.Driver";
     String URL = "jdbc:mysql://localhost:3306/cur_db";
     String USERNAME = "Currency_User";
