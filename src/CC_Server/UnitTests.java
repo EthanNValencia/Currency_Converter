@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static CC_Server.CONSTANTS.DATE_TODAY;
 import static CC_Server.CONSTANTS.WEBSITE_URL;
@@ -502,4 +503,16 @@ public class UnitTests {
         assertEquals("0.000000008", server.checkLower(testDbl));
     }
 
+    @Test
+    public void stupidTEst() throws InterruptedException {
+        String str = "Venezuela will always break your programz!!!!!1111!!! Muahahaha!!!11! Hahahhaha!!!11!!! ha...";
+        char[] charArray = new char[str.length()];
+        charArray = str.toCharArray();
+        for (int i = 0; i < charArray.length; i++){
+            System.out.print(charArray[i]);
+            TimeUnit.SECONDS.sleep(3);
+        }
+    }
+
 }
+

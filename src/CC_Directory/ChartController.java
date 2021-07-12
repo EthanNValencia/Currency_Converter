@@ -35,6 +35,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 /***
  * This method controls the chart window. The chart window is used for displaying historical rates in a way that is visual.
@@ -108,7 +109,36 @@ public class ChartController implements CONSTANTS, Initializable {
             List<ServerCurrency> currencyList = client.getDataObject().getServerCurrencyList();
             for (int j = 0; j < currencyList.size(); j++) {
                 ServerCurrency serverCurrency = currencyList.get(j);
-                series.getData().add(new XYChart.Data<>(serverCurrency.getDate(), Double.parseDouble(serverCurrency.getRawRate())));
+                try {
+                    series.getData().add(new XYChart.Data<>(serverCurrency.getDate(), Double.parseDouble(serverCurrency.getRawRate())));
+                } catch (NumberFormatException nfe){
+                    nfe.printStackTrace();
+                    Scanner scan = new Scanner(System.in);
+                    String[] message = {"Venezuela will always break your programz!!!!!1111!!!", "Muahahaha!!!11!", "Hahahhaha!!!11!!!", "ha..."};
+                    for(int i = 0; i < message.length; i++) {
+                        System.out.println(message[i]);
+                        try {
+                            Thread.sleep(2500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    scan.next();
+                    try {
+                        Thread.sleep(2500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Nah");
+                    scan.next();
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Okey.. fine...");
+                    return;
+                }
             }
             lineChart.getData().add(series);
         } else if (lineChart.getData().toString().contains(sourceName)){
