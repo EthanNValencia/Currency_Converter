@@ -116,5 +116,4 @@ public class CurrencyDataObject implements Serializable {
                 '}';
     }
 
-
 }

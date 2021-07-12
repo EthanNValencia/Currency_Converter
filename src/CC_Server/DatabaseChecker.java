@@ -1,3 +1,8 @@
+/*
+Ethan J. Nephew
+July 12, 2021
+Thread object that will be used to both verify database integrity and to generate and input missing data.
+*/
 package CC_Server;
 
 import java.time.LocalDate;
