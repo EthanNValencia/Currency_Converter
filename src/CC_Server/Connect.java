@@ -6,6 +6,7 @@ Database connection class.
 
 package CC_Server;
 
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -435,6 +436,34 @@ public class Connect implements CC_Server.CONSTANTS {
         }
         ps.executeBatch();
     }
+// "src\\CC_Server\\cur_calc_table.txt"
+
+    public static void createFiles(String[] currencyNames) throws IOException {
+        for(int i = 0; i < currencyNames.length; i++) {
+            File newFile = new File("src\\CC_DatabaseTextFiles\\cur_calc_table_" + currencyNames[i] + ".txt");
+            if(!newFile.exists()) {
+                PrintWriter out = new PrintWriter(new FileWriter(newFile, true));
+                String beginFile = "first_currency_name, second_currency_name, currency_rate, currency_date\n";
+                out.write(beginFile);  //Replace with the string
+                out.close();
+            }
+        }
+    }
+
+
+    public static void writeToFile(String firstCurrency, String secondCurrency, String[] rateArray, String[] dateArray) throws IOException {
+        PrintWriter out = new PrintWriter(new FileWriter("src\\CC_DatabaseTextFiles\\cur_calc_table_" + firstCurrency + ".txt", true));
+        StringBuilder writeThis = new StringBuilder();
+        if(rateArray.length == dateArray.length) {
+            for(int i = 0; i < rateArray.length; i++){
+                writeThis.append("\"").append(firstCurrency).append("\",\"").append(secondCurrency).append("\",\"").append(rateArray[i]).append("\",\"").append(dateArray[i]).append("\"\n");
+            }
+        }
+        out.write(String.valueOf(writeThis));  //Replace with the string
+        out.close();
+
+    }
+
     /***
      * This is an overridden toString method that is useful for testing purposes.
      * @return Returns a string of the object name.

@@ -10,6 +10,8 @@ import com.sun.security.jgss.GSSUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -518,39 +520,26 @@ public class UnitTests {
         System.out.println(dbc4);
     }
 
+    //first_currency_name, second_currency_name, currency_rate, currency_date
+
     @Test
     public void generateCurrencyNameAndDescriptions() throws Exception {
         String[] currencyNames = Connect.getCurrencyNameArray();
+        Connect.createFiles(currencyNames);
         String[] currencyDescr = Connect.getCurrencyDescriptionArray();
-        // String[] adjustedNames = new String[currencyNames.length * currencyNames.length];
-        // String[] adjustedDescr = new String[currencyDescr.length * currencyDescr.length];
         String[] dateArray = Connect.getDates();
-        // System.out.println(currencyNames[12] + " " + currencyNames[51]);
         String[] rateArray = Connect.getRates(currencyNames[12], currencyNames[51]); // COP and USD
-        // Connect.insertCalculatedAnnualRates(currencyNames[12], currencyNames[51], rateArray, dateArray); // This takes too long. 
-        int counter = 0;
-        int tickCounter = 0;
+        // Connect.writeToFile(currencyNames[12], currencyNames[51], rateArray, dateArray); // This takes too long.
 
-        /*
+
         for (int i = 0; i < currencyNames.length; i++) {
             for (int j = 0; j < currencyNames.length; j++) {
                 // adjustedNames[counter] = currencyNames[i] + " to " + currencyNames[j];
                 // adjustedDescr[counter] = currencyDescr[i] + " to " + currencyDescr[j];
                 rateArray = Connect.getRates(currencyNames[i], currencyNames[j]); // gets annual rate of every combination
-                counter++;
-                tickCounter += rateArray.length;
+                // Connect.writeToFile(currencyNames[i], currencyNames[j], rateArray, dateArray);
             }
         }
-        System.out.println(tickCounter + " + " + counter + " = " + (tickCounter + counter));
-         */
-
-        // System.out.println("rateArray: " + rateArray.length + " d");
-        /*
-        for (int i = 0; i < rateArray.length; i++){
-            System.out.println(currencyNames[12] + " to " + currencyNames[51] + " is " + rateArray[i] + " on " + dateArray[i]);
-        }
-        */
-        // assertEquals("ZAR to ZAR : South African Rand to South African Rand", adjustedNames[2915] + " : " + adjustedDescr[2915]);
     }
 }
 
