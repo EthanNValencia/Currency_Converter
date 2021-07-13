@@ -339,6 +339,102 @@ public class Connect implements CC_Server.CONSTANTS {
         return serverCurrencyList;
     }
 
+    public static String[] getCurrencyNameArray() throws Exception {
+        String sql = "SELECT COUNT(*) FROM cur_db.cur_description;";
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        String[] nameArray = new String[rs.getInt(1)]; // should be 54
+        sql = "SELECT currency_name FROM cur_db.cur_description ORDER BY currency_name;";
+        con = getConnection();
+        ps = con.prepareStatement(sql);
+        rs = ps.executeQuery();
+        int counter = 0;
+        while (rs.next()){
+            nameArray[counter] = rs.getString(1);
+            counter++;
+        }
+        return nameArray;
+    }
+
+    public static String[] getCurrencyDescriptionArray() throws Exception {
+        // SELECT currency_description FROM cur_db.cur_description ORDER BY currency_name;
+        String sql = "SELECT COUNT(*) FROM cur_db.cur_description;";
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        String[] nameArray = new String[rs.getInt(1)]; // should be 54
+        sql = "SELECT currency_description FROM cur_db.cur_description ORDER BY currency_name;";
+        con = getConnection();
+        ps = con.prepareStatement(sql);
+        rs = ps.executeQuery();
+        int counter = 0;
+        while (rs.next()){
+            nameArray[counter] = rs.getString(1);
+            counter++;
+        }
+        return nameArray;
+    }
+
+    public static String[] getDates() throws Exception {
+        String sql = "SELECT COUNT(*) FROM cur_db.cur_date;"; // count db
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        String[] dateArray = new String[rs.getInt(1)]; // should be 54
+        sql = "SELECT currency_date FROM cur_db.cur_date ORDER BY currency_date ASC;";
+        con = getConnection();
+        ps = con.prepareStatement(sql);
+        rs = ps.executeQuery();
+        int counter = 0;
+        while (rs.next()){
+            dateArray[counter] = rs.getString(1);
+            counter++;
+        }
+        return dateArray;
+    }
+
+    public static String[] getRates(String currency1, String currency2) throws Exception { // Currency1 is the basis for comparison, normally this is the dollar
+        String sql = "SELECT COUNT(*) FROM cur_db.cur_date;"; // count db
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        String[] rateArray = new String[rs.getInt(1)]; // should be 1000+
+        sql = "SELECT FORMAT(((1 / cur1.currency_rate) * cur2.currency_rate), 10) AS currency_rate, \n" +
+                "cur1.currency_date\n" +
+                "FROM cur_db.cur cur1, cur_db.cur cur2\n" +
+                "WHERE cur1.currency_name = '" + currency1 + "' \n" +
+                "AND cur2.currency_name = '" + currency2 + "'\n" +
+                "AND cur1.currency_date = cur2.currency_date\n" +
+                "ORDER BY cur1.currency_date ASC;";
+        con = getConnection();
+        ps = con.prepareStatement(sql);
+        rs = ps.executeQuery();
+        int counter = 0;
+        while (rs.next()){
+            rateArray[counter] = rs.getString(1);
+            counter++;
+        }
+        return rateArray;
+    }
+
+    public static void insertCalculatedAnnualRates(String firstCurrency, String secondCurrency, String[] rateArray, String[] dateArray) throws Exception {
+        Connection con = getConnection();
+        String sql = "INSERT IGNORE INTO cur_db.cur_calc (first_currency_name, second_currency_name, currency_rate, currency_date) VALUES(?, ?, ? ,?)";
+        PreparedStatement ps = con.prepareStatement(sql);
+        for(int i = 0; i < rateArray.length; i++) {
+            ps.setString(1, firstCurrency);
+            ps.setString(2, secondCurrency);
+            ps.setString(3, rateArray[i]);
+            ps.setString(4, dateArray[i]);
+            ps.addBatch();
+        }
+        ps.executeBatch();
+    }
     /***
      * This is an overridden toString method that is useful for testing purposes.
      * @return Returns a string of the object name.

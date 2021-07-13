@@ -6,6 +6,7 @@ Unit tests for the server package. Running these tests should be the first thing
 
 package CC_Server;
 
+import com.sun.security.jgss.GSSUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -511,28 +512,45 @@ public class UnitTests {
         DatabaseChecker dbc2 = new DatabaseChecker(250, 499);
         DatabaseChecker dbc3 = new DatabaseChecker(500, 749);
         DatabaseChecker dbc4 = new DatabaseChecker(750, 1000);
-        System.out.println(dbc1.toString());
-        System.out.println(dbc2.toString());
-        System.out.println(dbc3.toString());
-        System.out.println(dbc4.toString());
+        System.out.println(dbc1);
+        System.out.println(dbc2);
+        System.out.println(dbc3);
+        System.out.println(dbc4);
     }
 
     @Test
-    public void generateCurrencyNameAlgorithm(){
-        String[] CURRENCY_NAMES = {"USD","AED", "ARS", "AUD", "BGN", "BHD", "BND", "BRL", "BWP", "CAD", "CHF", "CLP", "CNY", "COP", "CZK", "DKK", "EUR", "GBP", "HKD", "HRK", "HUF", "IDR", "ILS", "INR", "IRR", "ISK", "JPY", "KRW", "KWD", "KZT", "LKR", "LYD", "MUR", "MXN", "MYR", "NOK", "NPR", "NZD", "OMR", "PHP", "PKR", "PLN", "QAR", "RON", "RUB", "SAR", "SEK", "SGD", "THB", "TRY", "TTD", "TWD", "VEF", "ZAR"};
-        String[] adjustedNames = new String[CURRENCY_NAMES.length * CURRENCY_NAMES.length];
+    public void generateCurrencyNameAndDescriptions() throws Exception {
+        String[] currencyNames = Connect.getCurrencyNameArray();
+        String[] currencyDescr = Connect.getCurrencyDescriptionArray();
+        // String[] adjustedNames = new String[currencyNames.length * currencyNames.length];
+        // String[] adjustedDescr = new String[currencyDescr.length * currencyDescr.length];
+        String[] dateArray = Connect.getDates();
+        // System.out.println(currencyNames[12] + " " + currencyNames[51]);
+        String[] rateArray = Connect.getRates(currencyNames[12], currencyNames[51]); // COP and USD
+        // Connect.insertCalculatedAnnualRates(currencyNames[12], currencyNames[51], rateArray, dateArray); // This takes too long. 
         int counter = 0;
-        // System.out.println(adjustedNames.length);
-        for (int i = 0; i < CURRENCY_NAMES.length; i++) {
-            for (int j = 0; j < CURRENCY_NAMES.length; j++) {
-                adjustedNames[counter] = CURRENCY_NAMES[i] + " to " + CURRENCY_NAMES[j];
+        int tickCounter = 0;
+
+        /*
+        for (int i = 0; i < currencyNames.length; i++) {
+            for (int j = 0; j < currencyNames.length; j++) {
+                // adjustedNames[counter] = currencyNames[i] + " to " + currencyNames[j];
+                // adjustedDescr[counter] = currencyDescr[i] + " to " + currencyDescr[j];
+                rateArray = Connect.getRates(currencyNames[i], currencyNames[j]); // gets annual rate of every combination
                 counter++;
+                tickCounter += rateArray.length;
             }
         }
-        for (int i = 0; i < adjustedNames.length; i++){
-            // System.out.print(adjustedNames[i] + ", ");
-        }
-    }
+        System.out.println(tickCounter + " + " + counter + " = " + (tickCounter + counter));
+         */
 
+        // System.out.println("rateArray: " + rateArray.length + " d");
+        /*
+        for (int i = 0; i < rateArray.length; i++){
+            System.out.println(currencyNames[12] + " to " + currencyNames[51] + " is " + rateArray[i] + " on " + dateArray[i]);
+        }
+        */
+        // assertEquals("ZAR to ZAR : South African Rand to South African Rand", adjustedNames[2915] + " : " + adjustedDescr[2915]);
+    }
 }
 
