@@ -110,8 +110,7 @@ public class Connect implements CC_Server.CONSTANTS {
      * @throws Exception A database related exception will can be thrown.
      */
     public static void insertCurrencyDate(String date) throws Exception {
-        String sql = "INSERT IGNORE INTO cur_db.cur_date (currency_date) " +
-                "VALUES('" + date + "');";
+        String sql = "INSERT IGNORE INTO cur_db.cur_date (currency_date) VALUES('" + date + "');";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ps.executeUpdate();
@@ -438,9 +437,29 @@ public class Connect implements CC_Server.CONSTANTS {
     }
 // "src\\CC_Server\\cur_calc_table.txt"
 
+
+    public static void createPopulateDatabaseTextFiles() throws Exception {
+        String[] currencyNames = Connect.getCurrencyNameArray();
+        Connect.createFiles(currencyNames);
+        String[] currencyDescr = Connect.getCurrencyDescriptionArray();
+        String[] dateArray = Connect.getDates();
+        String[] rateArray = Connect.getRates(currencyNames[12], currencyNames[51]); // COP and USD
+        // Connect.writeToFile(currencyNames[12], currencyNames[51], rateArray, dateArray); // This takes too long.
+
+        for (int i = 0; i < currencyNames.length; i++) {
+            for (int j = 0; j < currencyNames.length; j++) {
+                // adjustedNames[counter] = currencyNames[i] + " to " + currencyNames[j];
+                // adjustedDescr[counter] = currencyDescr[i] + " to " + currencyDescr[j];
+                rateArray = Connect.getRates(currencyNames[i], currencyNames[j]); // gets annual rate of every combination
+                Connect.writeToFile(currencyNames[i], currencyNames[j], rateArray, dateArray);
+            }
+        }
+        readOnlyFiles(currencyNames);
+    }
+
     public static void createFiles(String[] currencyNames) throws IOException {
         for(int i = 0; i < currencyNames.length; i++) {
-            File newFile = new File("src\\CC_DatabaseTextFiles\\cur_calc_table_" + currencyNames[i] + ".txt");
+            File newFile = new File("C:\\CC_DatabaseTextFiles\\cur_calc_table_" + currencyNames[i] + ".txt");
             if(!newFile.exists()) {
                 PrintWriter out = new PrintWriter(new FileWriter(newFile, true));
                 String beginFile = "first_currency_name, second_currency_name, currency_rate, currency_date\n";
@@ -450,9 +469,18 @@ public class Connect implements CC_Server.CONSTANTS {
         }
     }
 
+    public static void readOnlyFiles(String[] currencyNames) throws IOException {
+        for(int i = 0; i < currencyNames.length; i++) {
+            File newFile = new File("C:\\CC_DatabaseTextFiles\\cur_calc_table_" + currencyNames[i] + ".txt");
+            if(newFile.exists()) {
+                newFile.setReadOnly();
+            }
+        }
+    }
+
 
     public static void writeToFile(String firstCurrency, String secondCurrency, String[] rateArray, String[] dateArray) throws IOException {
-        PrintWriter out = new PrintWriter(new FileWriter("src\\CC_DatabaseTextFiles\\cur_calc_table_" + firstCurrency + ".txt", true));
+        PrintWriter out = new PrintWriter(new FileWriter("C:\\CC_DatabaseTextFiles\\cur_calc_table_" + firstCurrency + ".txt", true));
         StringBuilder writeThis = new StringBuilder();
         if(rateArray.length == dateArray.length) {
             for(int i = 0; i < rateArray.length; i++){
@@ -461,7 +489,6 @@ public class Connect implements CC_Server.CONSTANTS {
         }
         out.write(String.valueOf(writeThis));  //Replace with the string
         out.close();
-
     }
 
     /***

@@ -510,36 +510,38 @@ public class UnitTests {
 
     @Test
     public void testDatabaseChecker_Run(){
-        DatabaseChecker dbc1 = new DatabaseChecker(0, 249);
-        DatabaseChecker dbc2 = new DatabaseChecker(250, 499);
-        DatabaseChecker dbc3 = new DatabaseChecker(500, 749);
-        DatabaseChecker dbc4 = new DatabaseChecker(750, 1000);
+        DatabaseChecker dbc1 = new DatabaseChecker(0, 0.25);
+        DatabaseChecker dbc2 = new DatabaseChecker(0.25, 0.50);
+        DatabaseChecker dbc3 = new DatabaseChecker(0.50, 0.75);
+        DatabaseChecker dbc4 = new DatabaseChecker(0.75, 1);
         System.out.println(dbc1);
         System.out.println(dbc2);
         System.out.println(dbc3);
         System.out.println(dbc4);
+
+        dbc1.setDaemon(true);
+        dbc2.setDaemon(true);
+        dbc3.setDaemon(true);
+        dbc4.setDaemon(true);
+
+        dbc1.start();
+        dbc2.start();
+        dbc3.start();
+        dbc4.start();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     //first_currency_name, second_currency_name, currency_rate, currency_date
 
     @Test
     public void generateCurrencyNameAndDescriptions() throws Exception {
-        String[] currencyNames = Connect.getCurrencyNameArray();
-        Connect.createFiles(currencyNames);
-        String[] currencyDescr = Connect.getCurrencyDescriptionArray();
-        String[] dateArray = Connect.getDates();
-        String[] rateArray = Connect.getRates(currencyNames[12], currencyNames[51]); // COP and USD
-        // Connect.writeToFile(currencyNames[12], currencyNames[51], rateArray, dateArray); // This takes too long.
-
-
-        for (int i = 0; i < currencyNames.length; i++) {
-            for (int j = 0; j < currencyNames.length; j++) {
-                // adjustedNames[counter] = currencyNames[i] + " to " + currencyNames[j];
-                // adjustedDescr[counter] = currencyDescr[i] + " to " + currencyDescr[j];
-                rateArray = Connect.getRates(currencyNames[i], currencyNames[j]); // gets annual rate of every combination
-                // Connect.writeToFile(currencyNames[i], currencyNames[j], rateArray, dateArray);
-            }
-        }
+        // Connect.createPopulateDatabaseTextFiles();
     }
+
 }
 

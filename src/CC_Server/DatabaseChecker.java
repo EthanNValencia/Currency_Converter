@@ -6,42 +6,34 @@ Thread object that will be used to both verify database integrity and to generat
 package CC_Server;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 
 public class DatabaseChecker extends Thread implements CONSTANTS {
     int lowerRange, upperRange, totalRange;
     LocalDate beginDate, endDate;
+    boolean missing = false;
+    LocalDate[] localDatesList;
 
-    public DatabaseChecker(int lower, int upper) {
-        this.lowerRange = lower;
-        this.upperRange = upper;
+    public DatabaseChecker(double lower, double upper) {
+        this.lowerRange = (int) (CONSTANTS.RANGE_OF_DAYS_TO_SCAN * lower);
+        this.upperRange = (int) (CONSTANTS.RANGE_OF_DAYS_TO_SCAN * upper);
         this.totalRange = upperRange - lowerRange;
-        this.beginDate = DATE_TODAY.minusDays(lowerRange);
-        this.endDate = DATE_TODAY.minusDays(upperRange);
+        this.beginDate = DATE_TODAY.minusDays(upperRange);
+        this.endDate = DATE_TODAY.minusDays(lowerRange);
+        this.localDatesList = new LocalDate[totalRange];
     }
 
     public void run() {
-        String insertDate;
-        ServerWebReader serverWebReader = new ServerWebReader();
-        HashSet<ServerCurrency> currencyList = null;
-        for (int i = 0; i <= totalRange; i++) {
-            insertDate = "" + beginDate.minusDays(i);
-            try {
-                if (!Connect.checkEntries(insertDate)) { // If entries with this date already exist, then cancel the insertion.
-                    currencyList = serverWebReader.getPage(WEBSITE_URL + insertDate);
-                    if (currencyList != null) {
-                        try {
-                            Connect.insertCurrencyDate(insertDate);
-                            Connect.insertCurrencyNames(currencyList);
-                            Connect.insertList(currencyList);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        int counter = 0;
+        generateLocalDatesList();
+        for (int i = 0; i < totalRange; i++) {
+
+        }
+        System.out.println(localDatesList[0] + " - " + localDatesList[374]);
+    }
+
+    public void generateLocalDatesList(){
+        for(int i = 0; i < totalRange; i++){
+            localDatesList[i] = beginDate.plusDays(i);
         }
     }
 
