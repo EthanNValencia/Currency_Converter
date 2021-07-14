@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -506,6 +507,15 @@ public class UnitTests {
         Server server = new Server();
         currencyDataObject = server.calculateExchange(currencyDataObject);
         assertEquals("0.00015", currencyDataObject.getCurrency2().getExchangeAmount());
+    }
+
+    /***
+     * This tests that the DatabaseChecker.generateLocalDatesList() method is correctly generating an array of local date.
+     */
+    @Test
+    public void testDatabaseChecker_generateLocalDatesList(){
+        DatabaseChecker dbc = new DatabaseChecker(0.99999, 1, 100000);
+        assertEquals("[1747-09-29]", Arrays.toString(dbc.getLocalDatesList())); // The array list should be the day that was 100
     }
 
     @Test

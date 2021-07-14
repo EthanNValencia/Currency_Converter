@@ -10,8 +10,12 @@ import java.time.LocalDate;
 public class DatabaseChecker extends Thread implements CONSTANTS {
     int lowerRange, upperRange, totalRange;
     LocalDate beginDate, endDate;
-    boolean missing = false;
+    boolean missing = false, test = false;
     LocalDate[] localDatesList;
+
+    public LocalDate[] getLocalDatesList() {
+        return localDatesList;
+    }
 
     public DatabaseChecker(double lower, double upper) {
         this.lowerRange = (int) (CONSTANTS.RANGE_OF_DAYS_TO_SCAN * lower);
@@ -20,21 +24,32 @@ public class DatabaseChecker extends Thread implements CONSTANTS {
         this.beginDate = DATE_TODAY.minusDays(upperRange);
         this.endDate = DATE_TODAY.minusDays(lowerRange);
         this.localDatesList = new LocalDate[totalRange];
+        generateLocalDatesList();
+    }
+
+    /***
+     * This constructor is for testing purposes.
+     * @param lower
+     * @param upper
+     * @param range This is specifying the range. This is useful for testing purposes.
+     */
+    public DatabaseChecker(double lower, double upper, double range) {
+        this.lowerRange = (int) (range * lower);
+        this.upperRange = (int) (range * upper);
+        LocalDate testDate = LocalDate.of(2021, 7, 14);
+        this.totalRange = upperRange - lowerRange;
+        this.beginDate = testDate.minusDays(upperRange);
+        this.endDate = testDate.minusDays(lowerRange);
+        this.localDatesList = new LocalDate[totalRange];
+        generateLocalDatesList();
     }
 
     public void run() {
-        int counter = 0;
-        generateLocalDatesList();
-        int checkEntries = 0;
 
-        try {
-            checkEntries = Connect.countCalculationTableEntries(beginDate, endDate);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        int checkEntries = checkEntries();
+
         if(checkEntries < totalRange){
-            // System.out.println("Lower: " + lowerRange + " Upper: " + upperRange + " TotalRange: "+ totalRange + " Entries: "+ checkEntries);
-            System.out.println("There are missing entries between " + localDatesList[0] + " - " + localDatesList[localDatesList.length - 1]);
+            // find those entries.
         }
 
         System.out.println(localDatesList[0] + " - " + localDatesList[localDatesList.length - 1]);
@@ -44,6 +59,19 @@ public class DatabaseChecker extends Thread implements CONSTANTS {
         for(int i = 0; i < totalRange; i++){
             localDatesList[i] = beginDate.plusDays(i);
         }
+    }
+
+    /***
+     * This method checks the amount of entries are contained in the database within the specified date range.
+     * @return It returns the number of entries in the database.
+     */
+    public int checkEntries(){
+        try {
+            return Connect.countCalculationTableEntries(beginDate, endDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     @Override
