@@ -25,10 +25,19 @@ public class DatabaseChecker extends Thread implements CONSTANTS {
     public void run() {
         int counter = 0;
         generateLocalDatesList();
-        for (int i = 0; i < totalRange; i++) {
+        int checkEntries = 0;
 
+        try {
+            checkEntries = Connect.countCalculationTableEntries(beginDate, endDate);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        System.out.println(localDatesList[0] + " - " + localDatesList[374]);
+        if(checkEntries < totalRange){
+            // System.out.println("Lower: " + lowerRange + " Upper: " + upperRange + " TotalRange: "+ totalRange + " Entries: "+ checkEntries);
+            System.out.println("There are missing entries between " + localDatesList[0] + " - " + localDatesList[localDatesList.length - 1]);
+        }
+
+        System.out.println(localDatesList[0] + " - " + localDatesList[localDatesList.length - 1]);
     }
 
     public void generateLocalDatesList(){

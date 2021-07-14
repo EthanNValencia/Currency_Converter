@@ -422,6 +422,20 @@ public class Connect implements CC_Server.CONSTANTS {
         return rateArray;
     }
 
+    public static int countCalculationTableEntries(LocalDate lowerLocalDate, LocalDate upperLocalDate) throws Exception {
+        Connection con = getConnection();
+        String sql = "SELECT COUNT(cal.first_currency_name)\n" +
+                     "FROM cur_db.cur_description des, cur_db.cur_calc cal, cur_db.cur_date dt\n" +
+                     "WHERE cal.first_currency_name = des.currency_name\n" +
+                     "AND cal.currency_date = dt.currency_date\n" +
+                     "AND cal.currency_date BETWEEN '" + lowerLocalDate + "' AND '" + upperLocalDate + "';";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        return rs.getInt(1);
+
+    }
+
     public static void insertCalculatedAnnualRates(String firstCurrency, String secondCurrency, String[] rateArray, String[] dateArray) throws Exception {
         Connection con = getConnection();
         String sql = "INSERT IGNORE INTO cur_db.cur_calc (first_currency_name, second_currency_name, currency_rate, currency_date) VALUES(?, ?, ? ,?)";

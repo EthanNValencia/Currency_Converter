@@ -509,34 +509,22 @@ public class UnitTests {
     }
 
     @Test
-    public void testDatabaseChecker_Run(){
+    public void testDatabaseChecker_Run() throws InterruptedException {
         DatabaseChecker dbc1 = new DatabaseChecker(0, 0.25);
         DatabaseChecker dbc2 = new DatabaseChecker(0.25, 0.50);
         DatabaseChecker dbc3 = new DatabaseChecker(0.50, 0.75);
         DatabaseChecker dbc4 = new DatabaseChecker(0.75, 1);
-        System.out.println(dbc1);
-        System.out.println(dbc2);
-        System.out.println(dbc3);
-        System.out.println(dbc4);
-
+        // System.out.println(dbc1);
+        // System.out.println(dbc2);
+        // System.out.println(dbc3);
+        // System.out.println(dbc4);
         dbc1.setDaemon(true);
         dbc2.setDaemon(true);
         dbc3.setDaemon(true);
         dbc4.setDaemon(true);
-
-        dbc1.start();
-        dbc2.start();
-        dbc3.start();
-        dbc4.start();
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        dbc1.start(); dbc2.start(); dbc3.start(); dbc4.start();
+        dbc1.join(); dbc2.join(); dbc3.join(); dbc4.join();
     }
-
-    //first_currency_name, second_currency_name, currency_rate, currency_date
 
     @Test
     public void generateCurrencyNameAndDescriptions() throws Exception {
