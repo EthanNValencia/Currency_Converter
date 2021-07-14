@@ -6,12 +6,9 @@ Unit tests for the server package. Running these tests should be the first thing
 
 package CC_Server;
 
-import com.sun.security.jgss.GSSUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -94,7 +91,7 @@ public class UnitTests {
      * This test passes as long as an exception is not thrown. This verifies that if existing data is in the db that the insertion will not be executed.
      */
     @Test
-    public void testWebReader_getDBPage_AND_Connect_insertList() {
+    public void testWebReader_getPage_AND_Connect_insertList() {
         ServerWebReader serverWebReader = new ServerWebReader();
         HashSet<ServerCurrency> currencyHashSet = serverWebReader.getPage(WEBSITE_URL + DATE_TODAY);
         try {
@@ -518,6 +515,71 @@ public class UnitTests {
         assertEquals("[1747-09-29]", Arrays.toString(dbc.getLocalDatesList())); // The array list should be the day that was 100
     }
 
+    /***
+     * Verifies that the Connect.getDescription is returning an expected entry. It should be 54 with my database.
+     */
+    @Test
+    public void testConnect_getDescriptionCount(){
+        try {
+            assertEquals(54, Connect.getDescriptionCount());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    /***
+     * Verifies that the Connect.getDateCount() is returning an expected entry. It should be greater than 1000 with my database.
+     */
+    @Test
+    public void testConnect_getDateCount(){
+        try {
+            assertTrue(Connect.getDateCount() > 1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    /***
+     * Verifies that the Connect.getCurrencyNameArray() is returning a populated array (at a minimum).
+     */
+    @Test
+    public void testConnect_getCurrencyNameArray(){
+        try {
+            assertNotNull(Connect.getCurrencyNameArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    /***
+     * Verifies that the Connect.getCurrencyNameArray() is returning a populated array (at a minimum).
+     */
+    @Test
+    public void testConnect_getDates(){
+        try {
+            assertNotNull(Connect.getDates());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    /***
+     * Verifies that the Connect.getCurrencyNameArray() is returning a populated array (at a minimum).
+     */
+    @Test
+    public void testConnect_getCurrencyDescriptionArray(){
+        try {
+            assertNotNull(Connect.getCurrencyDescriptionArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
     @Test
     public void testDatabaseChecker_Run() throws InterruptedException {
         DatabaseChecker dbc1 = new DatabaseChecker(0, 0.25);
@@ -537,7 +599,7 @@ public class UnitTests {
     }
 
     @Test
-    public void generateCurrencyNameAndDescriptions() throws Exception {
+    public void testConnect_createPopulateDatabaseTextFiles() throws Exception {
         // Connect.createPopulateDatabaseTextFiles();
     }
 

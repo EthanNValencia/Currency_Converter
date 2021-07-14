@@ -49,7 +49,7 @@ public class DatabaseChecker extends Thread implements CONSTANTS {
         int checkEntries = checkEntries();
 
         if(checkEntries < totalRange){
-            // find those entries.
+            // find those entries and put them in the database.
         }
 
         System.out.println(localDatesList[0] + " - " + localDatesList[localDatesList.length - 1]);

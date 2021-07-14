@@ -306,7 +306,12 @@ public class Connect implements CC_Server.CONSTANTS {
         return serverCurrencyList;
     }
 
-
+    /***
+     * This is used to generate the monthly average rate of change over the database historical data set.
+     * @param currencyDataObject It takes a CurrencyDataObject.
+     * @return It returns the populated list of monthly average rate of change.
+     * @throws Exception A database related exception can be thrown.
+     */
     public static List<ServerCurrency> generateHistoricalMonthlyRateOfChangeList(CurrencyDataObject currencyDataObject) throws Exception {
         String sql = "SELECT dt2.currency_name, FORMAT(AVG((dt2.adjusted_exchange_rate / dt1.adjusted_exchange_rate) - 1), 15) AS avg_rate_of_change, DATE_FORMAT(dt2.currency_date, '%Y-%M') AS date\n" +
                 "FROM (SELECT cur2.currency_name, ((1 / cur1.currency_rate) * cur2.currency_rate) AS adjusted_exchange_rate, cur1.currency_date\n" +
@@ -339,17 +344,45 @@ public class Connect implements CC_Server.CONSTANTS {
         return serverCurrencyList;
     }
 
+    /***
+     * This returns the number of currency entries as an int.
+     * @return The number of currency entries.
+     * @throws Exception A database related exception can be thrown.
+     */
+    public static int getDescriptionCount() throws Exception {
+        String sql = "SELECT COUNT(*) FROM cur_db.cur_description;";
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        return rs.getInt(1);
+    }
+
+    /***
+     * This returns the number of currency date entries as an int.
+     * @return The number of currency date entries.
+     * @throws Exception A database related exception can be thrown.
+     */
+    public static int getDateCount() throws Exception {
+        String sql = "SELECT COUNT(*) FROM cur_db.cur_date;"; // count dates
+        Connection con = getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        return rs.getInt(1);
+    }
+
+    /***
+     * Extracts a unique list of currency names from the database and returns the list in an array.
+     * @return The string array of currency names.
+     * @throws Exception A database related exception can be thrown.
+     */
     public static String[] getCurrencyNameArray() throws Exception {
-        String sql = "SELECT COUNT(*) FROM cur_db.cur_description;";
+        String[] nameArray = new String[getDescriptionCount()]; // should be 54
+        String sql = "SELECT currency_name FROM cur_db.cur_description ORDER BY currency_name;";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
-        rs.next();
-        String[] nameArray = new String[rs.getInt(1)]; // should be 54
-        sql = "SELECT currency_name FROM cur_db.cur_description ORDER BY currency_name;";
-        con = getConnection();
-        ps = con.prepareStatement(sql);
-        rs = ps.executeQuery();
         int counter = 0;
         while (rs.next()){
             nameArray[counter] = rs.getString(1);
@@ -358,18 +391,17 @@ public class Connect implements CC_Server.CONSTANTS {
         return nameArray;
     }
 
+    /***
+     * Extracts a unique list of currency descriptions from the database and returns the list in an array.
+     * @return The string array of currency descriptions.
+     * @throws Exception A database related exception can be thrown.
+     */
     public static String[] getCurrencyDescriptionArray() throws Exception {
-        // SELECT currency_description FROM cur_db.cur_description ORDER BY currency_name;
-        String sql = "SELECT COUNT(*) FROM cur_db.cur_description;";
+        String[] nameArray = new String[getDescriptionCount()]; // should be 54
+        String sql = "SELECT currency_description FROM cur_db.cur_description ORDER BY currency_name;";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
-        rs.next();
-        String[] nameArray = new String[rs.getInt(1)]; // should be 54
-        sql = "SELECT currency_description FROM cur_db.cur_description ORDER BY currency_name;";
-        con = getConnection();
-        ps = con.prepareStatement(sql);
-        rs = ps.executeQuery();
         int counter = 0;
         while (rs.next()){
             nameArray[counter] = rs.getString(1);
@@ -378,17 +410,17 @@ public class Connect implements CC_Server.CONSTANTS {
         return nameArray;
     }
 
+    /***
+     * Extracts a unique list of currency dates from the database and returns the list in an array.
+     * @return The string array of currency dates.
+     * @throws Exception A database related exception can be thrown.
+     */
     public static String[] getDates() throws Exception {
-        String sql = "SELECT COUNT(*) FROM cur_db.cur_date;"; // count db
+        String[] dateArray = new String[getDateCount()]; // should be 54
+        String sql = "SELECT currency_date FROM cur_db.cur_date ORDER BY currency_date ASC;";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
-        rs.next();
-        String[] dateArray = new String[rs.getInt(1)]; // should be 54
-        sql = "SELECT currency_date FROM cur_db.cur_date ORDER BY currency_date ASC;";
-        con = getConnection();
-        ps = con.prepareStatement(sql);
-        rs = ps.executeQuery();
         int counter = 0;
         while (rs.next()){
             dateArray[counter] = rs.getString(1);
@@ -398,22 +430,17 @@ public class Connect implements CC_Server.CONSTANTS {
     }
 
     public static String[] getRates(String currency1, String currency2) throws Exception { // Currency1 is the basis for comparison, normally this is the dollar
-        String sql = "SELECT COUNT(*) FROM cur_db.cur_date;"; // count db
+        String[] rateArray = new String[getDateCount()]; // should be 1000+
+        String sql = "SELECT FORMAT(((1 / cur1.currency_rate) * cur2.currency_rate), 10) AS currency_rate, \n" +
+                     "cur1.currency_date\n" +
+                     "FROM cur_db.cur cur1, cur_db.cur cur2\n" +
+                     "WHERE cur1.currency_name = '" + currency1 + "' \n" +
+                     "AND cur2.currency_name = '" + currency2 + "'\n" +
+                     "AND cur1.currency_date = cur2.currency_date\n" +
+                     "ORDER BY cur1.currency_date ASC;";
         Connection con = getConnection();
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
-        rs.next();
-        String[] rateArray = new String[rs.getInt(1)]; // should be 1000+
-        sql = "SELECT FORMAT(((1 / cur1.currency_rate) * cur2.currency_rate), 10) AS currency_rate, \n" +
-                "cur1.currency_date\n" +
-                "FROM cur_db.cur cur1, cur_db.cur cur2\n" +
-                "WHERE cur1.currency_name = '" + currency1 + "' \n" +
-                "AND cur2.currency_name = '" + currency2 + "'\n" +
-                "AND cur1.currency_date = cur2.currency_date\n" +
-                "ORDER BY cur1.currency_date ASC;";
-        con = getConnection();
-        ps = con.prepareStatement(sql);
-        rs = ps.executeQuery();
         int counter = 0;
         while (rs.next()){
             rateArray[counter] = rs.getString(1);
@@ -433,7 +460,6 @@ public class Connect implements CC_Server.CONSTANTS {
         ResultSet rs = ps.executeQuery();
         rs.next();
         return rs.getInt(1);
-
     }
 
     public static void insertCalculatedAnnualRates(String firstCurrency, String secondCurrency, String[] rateArray, String[] dateArray) throws Exception {
