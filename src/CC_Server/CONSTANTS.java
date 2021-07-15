@@ -12,6 +12,8 @@ import java.time.LocalDate;
  * This effectively serves as a center for sql statements and important variables.
  */
 public interface CONSTANTS {
+    String LOAD_FILE_PART_ONE = "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\cur_calc_table_";
+    String LOAD_FILE_PART_TWO = ".txt";
     String DRIVER = "com.mysql.cj.jdbc.Driver";
     String URL = "jdbc:mysql://localhost:3306/cur_db";
     String USERNAME = "Currency_User";

@@ -7,6 +7,9 @@ Database connection class.
 package CC_Server;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -431,7 +434,7 @@ public class Connect implements CC_Server.CONSTANTS {
 
     public static String[] getRates(String currency1, String currency2) throws Exception { // Currency1 is the basis for comparison, normally this is the dollar
         String[] rateArray = new String[getDateCount()]; // should be 1000+
-        String sql = "SELECT FORMAT(((1 / cur1.currency_rate) * cur2.currency_rate), 10) AS currency_rate, \n" +
+        String sql = "SELECT  REPLACE(FORMAT(((1 / cur1.currency_rate) * cur2.currency_rate), 10), ',', '') AS currency_rate, \n" +
                      "cur1.currency_date\n" +
                      "FROM cur_db.cur cur1, cur_db.cur cur2\n" +
                      "WHERE cur1.currency_name = '" + currency1 + "' \n" +
@@ -476,15 +479,18 @@ public class Connect implements CC_Server.CONSTANTS {
         ps.executeBatch();
     }
 
-    public static void loadInFIle(String fileLocation) throws Exception {
-        Connection con = getConnection();
-        String sql = "LOAD DATA INFILE '" + fileLocation + "' \n" +
-                "INTO TABLE survey \n" +
-                "FIELDS TERMINATED BY ',' \n" +
-                "ENCLOSED BY '\"'\n" +
-                "LINES TERMINATED BY '\\r\\n'\n" +
-                "IGNORE 1 LINES;";
-        PreparedStatement ps = con.prepareStatement(sql);
+    public static void loadInFile(String[] currencyNames) throws Exception {
+        for (int i = 0; i < currencyNames.length; i++) {
+            Connection con = getConnection();
+            String sql = "LOAD DATA INFILE 'C:\\\\ProgramData\\\\MySQL\\\\MySQL Server 8.0\\\\Uploads\\\\cur_calc_table_" + currencyNames[i] + ".txt' \n" +
+                         "IGNORE INTO TABLE cur_db.cur_calc \n" +
+                         "FIELDS TERMINATED BY ','\n" +
+                         "ENCLOSED BY '\"'\n" +
+                         "LINES TERMINATED BY '\\n'\n" +
+                         "IGNORE 1 LINES;";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.executeQuery();
+        }
     }
 
     public static void createPopulateDatabaseTextFiles() throws Exception {
@@ -502,10 +508,14 @@ public class Connect implements CC_Server.CONSTANTS {
         readOnlyFiles(currencyNames);
     }
 
+    public static String getFilePathName(String currencyName){
+        return LOAD_FILE_PART_ONE + currencyName + LOAD_FILE_PART_TWO;
+    }
+
     public static void createFiles(String[] currencyNames) throws IOException {
         for(int i = 0; i < currencyNames.length; i++) {
-            File newFile = new File("C:\\CC_DatabaseTextFiles\\cur_calc_table_" + currencyNames[i] + ".txt");
-            if(!newFile.exists()) {
+            File newFile = new File(getFilePathName(currencyNames[i]));
+            if (!newFile.exists()) {
                 PrintWriter out = new PrintWriter(new FileWriter(newFile, true));
                 String beginFile = "first_currency_name, second_currency_name, currency_rate, currency_date\n";
                 out.write(beginFile);  //Replace with the string
@@ -514,9 +524,34 @@ public class Connect implements CC_Server.CONSTANTS {
         }
     }
 
+    public static void deleteFiles(String[] currencyNames) throws IOException {
+        for(int i = 0; i < currencyNames.length; i++) {
+            File newFile = new File(getFilePathName(currencyNames[i]));
+            if (!newFile.exists()) {
+                newFile.delete();
+            }
+        }
+    }
+
+    public static boolean doesTodayEntryExist(String[] currencyNames) throws IOException {
+        for (int i = 0; i < currencyNames.length; i++) {
+            File newFile = new File(getFilePathName(currencyNames[i]));
+            Path file = newFile.toPath();
+            if(newFile.exists()) {
+                BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
+                if (attr.creationTime().toString().contains(DATE_TODAY.toString())) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
     public static void readOnlyFiles(String[] currencyNames) {
         for(int i = 0; i < currencyNames.length; i++) {
-            File newFile = new File("C:\\CC_DatabaseTextFiles\\cur_calc_table_" + currencyNames[i] + ".txt");
+            File newFile = new File(getFilePathName(currencyNames[i]));
             if(newFile.exists()) {
                 newFile.setReadOnly();
             }
@@ -525,7 +560,7 @@ public class Connect implements CC_Server.CONSTANTS {
 
 
     public static void writeToFile(String firstCurrency, String secondCurrency, String[] rateArray, String[] dateArray) throws IOException {
-        PrintWriter out = new PrintWriter(new FileWriter("C:\\CC_DatabaseTextFiles\\cur_calc_table_" + firstCurrency + ".txt", true));
+        PrintWriter out = new PrintWriter(new FileWriter(getFilePathName(firstCurrency), true));
         StringBuilder writeThis = new StringBuilder();
         if(rateArray.length == dateArray.length) {
             for(int i = 0; i < rateArray.length; i++){

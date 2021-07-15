@@ -35,22 +35,26 @@ public class DatabaseFileCreateLoad extends Thread{
 
     public void run(){
         try {
-            Connect.createFiles(loadFileNameArray);
-            // String[] currencyDescr = Connect.getCurrencyDescriptionArray();
-            String[] dateArray = Connect.getDates();
-            String[] rateArray; // COP and USD
-            for (int i = 0; i < loadFileNameArray.length; i++) {
-                for (int j = 0; j < fullNameArray.length; j++) {
-                    rateArray = Connect.getRates(loadFileNameArray[i], fullNameArray[j]); // gets annual rate of every combination
-                    Connect.writeToFile(loadFileNameArray[i], fullNameArray[j], rateArray, dateArray);
+            if (!Connect.doesTodayEntryExist(loadFileNameArray)) {
+                Connect.deleteFiles(loadFileNameArray); // delete, if exist
+                Connect.createFiles(loadFileNameArray); // create
+                // String[] currencyDescr = Connect.getCurrencyDescriptionArray();
+                String[] dateArray = Connect.getDates();
+                String[] rateArray; // COP and USD
+                for (int i = 0; i < loadFileNameArray.length; i++) {
+                    for (int j = 0; j < fullNameArray.length; j++) {
+                        rateArray = Connect.getRates(loadFileNameArray[i], fullNameArray[j]); // gets annual rate of every combination
+                        Connect.writeToFile(loadFileNameArray[i], fullNameArray[j], rateArray, dateArray);
+                    }
                 }
+                Connect.readOnlyFiles(loadFileNameArray);
             }
-            Connect.readOnlyFiles(loadFileNameArray);
-        } catch (IOException ioe){
-            ioe.printStackTrace();
+            Connect.loadInFile(loadFileNameArray);
+        }catch (IOException ioe){
+        ioe.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
 }
