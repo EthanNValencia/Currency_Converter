@@ -475,21 +475,26 @@ public class Connect implements CC_Server.CONSTANTS {
         }
         ps.executeBatch();
     }
-// "src\\CC_Server\\cur_calc_table.txt"
 
+    public static void loadInFIle(String fileLocation) throws Exception {
+        Connection con = getConnection();
+        String sql = "LOAD DATA INFILE '" + fileLocation + "' \n" +
+                "INTO TABLE survey \n" +
+                "FIELDS TERMINATED BY ',' \n" +
+                "ENCLOSED BY '\"'\n" +
+                "LINES TERMINATED BY '\\r\\n'\n" +
+                "IGNORE 1 LINES;";
+        PreparedStatement ps = con.prepareStatement(sql);
+    }
 
     public static void createPopulateDatabaseTextFiles() throws Exception {
         String[] currencyNames = Connect.getCurrencyNameArray();
         Connect.createFiles(currencyNames);
         String[] currencyDescr = Connect.getCurrencyDescriptionArray();
         String[] dateArray = Connect.getDates();
-        String[] rateArray = Connect.getRates(currencyNames[12], currencyNames[51]); // COP and USD
-        // Connect.writeToFile(currencyNames[12], currencyNames[51], rateArray, dateArray); // This takes too long.
-
+        String[] rateArray; // COP and USD
         for (int i = 0; i < currencyNames.length; i++) {
             for (int j = 0; j < currencyNames.length; j++) {
-                // adjustedNames[counter] = currencyNames[i] + " to " + currencyNames[j];
-                // adjustedDescr[counter] = currencyDescr[i] + " to " + currencyDescr[j];
                 rateArray = Connect.getRates(currencyNames[i], currencyNames[j]); // gets annual rate of every combination
                 Connect.writeToFile(currencyNames[i], currencyNames[j], rateArray, dateArray);
             }
@@ -509,7 +514,7 @@ public class Connect implements CC_Server.CONSTANTS {
         }
     }
 
-    public static void readOnlyFiles(String[] currencyNames) throws IOException {
+    public static void readOnlyFiles(String[] currencyNames) {
         for(int i = 0; i < currencyNames.length; i++) {
             File newFile = new File("C:\\CC_DatabaseTextFiles\\cur_calc_table_" + currencyNames[i] + ".txt");
             if(newFile.exists()) {

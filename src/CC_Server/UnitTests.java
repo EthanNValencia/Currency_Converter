@@ -581,6 +581,22 @@ public class UnitTests {
     }
 
     @Test
+    public void testDatabaseFileCreateLoad_CONSTRUCTOR() throws Exception {
+        String[] fullList = Connect.getCurrencyNameArray();
+        try {
+            DatabaseFileCreateLoad dfcl1 = new DatabaseFileCreateLoad(fullList, 0, 13);
+            DatabaseFileCreateLoad dfcl2 = new DatabaseFileCreateLoad(fullList, 13, 26);
+            DatabaseFileCreateLoad dfcl3 = new DatabaseFileCreateLoad(fullList, 26, 39);
+            DatabaseFileCreateLoad dfcl4 = new DatabaseFileCreateLoad(fullList, 39, 54);
+            dfcl1.start(); dfcl2.start(); dfcl3.start(); dfcl4.start();
+            dfcl1.join(); dfcl2.join(); dfcl3.join(); dfcl4.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
     public void testDatabaseChecker_Run() throws InterruptedException {
         DatabaseChecker dbc1 = new DatabaseChecker(0, 0.25);
         DatabaseChecker dbc2 = new DatabaseChecker(0.25, 0.50);

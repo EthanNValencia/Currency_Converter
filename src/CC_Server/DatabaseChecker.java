@@ -1,7 +1,7 @@
 /*
 Ethan J. Nephew
 July 12, 2021
-Thread object that will be used to both verify database integrity and to generate and input missing data.
+Thread object that will be used to both verify database integrity and generate and input missing data.
 */
 package CC_Server;
 
@@ -52,7 +52,7 @@ public class DatabaseChecker extends Thread implements CONSTANTS {
             // find those entries and put them in the database.
         }
 
-        System.out.println(localDatesList[0] + " - " + localDatesList[localDatesList.length - 1]);
+       // System.out.println(localDatesList[0] + " - " + localDatesList[localDatesList.length - 1]);
     }
 
     public void generateLocalDatesList(){
