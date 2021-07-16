@@ -79,16 +79,40 @@ public class Server extends Application {
                     Platform.runLater(() -> ta.appendText("Messaged received!\n"));
                     ObjectOutputStream outputToClient = new ObjectOutputStream(socket.getOutputStream());
                     ObjectInputStream inputFromClient = new ObjectInputStream(socket.getInputStream());
-                    CurrencyDataObject receivedDataObject = (CurrencyDataObject) inputFromClient.readObject();
-                    Platform.runLater(() -> ta.appendText("Server received client data.\n"));
-                    // For some reason the later check is not working
-                    receivedDataObject = getData(receivedDataObject);
-                    // End data object modification for chart
-                    outputToClient.writeObject(receivedDataObject);
-                    Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));
-                    outputToClient.flush();
-                    outputToClient.close();
-                    receivedDataObject.setHistoricalList(false);
+                    Object receivedObject = inputFromClient.readObject();
+
+                    if(receivedObject.getClass() == CurrencyDataObj.class) {
+                        CurrencyDataObj receivedDataObject = (CurrencyDataObj) receivedObject;
+                        Platform.runLater(() -> ta.appendText("Server received client data.\n"));
+                        // For some reason the later check is not working
+                        receivedDataObject = getData(receivedDataObject);
+                        // End data object modification for chart
+                        outputToClient.writeObject(receivedDataObject);
+                        Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));
+                        outputToClient.flush();
+                        outputToClient.close();
+                        receivedDataObject.setHistoricalList(false);
+                    } else if (receivedObject.getClass() == CurrencyChartObj.class) {
+                        CurrencyChartObj receivedChartObject = (CurrencyChartObj) receivedObject;
+                        System.out.println("received: " + receivedChartObject);
+                        if (receivedChartObject.isHistoricalList()) {
+                            try {
+                                receivedChartObject.setServerCurrencyList(Connect.generateHistoricalMonthlyDataList(receivedChartObject));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else if (receivedChartObject.isRateOfChangeList()) {
+                            try {
+                                receivedChartObject.setServerCurrencyList(Connect.generateHistoricalMonthlyRateOfChangeList(receivedChartObject));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        System.out.println("sent: " + receivedChartObject);
+                        outputToClient.writeObject(receivedChartObject);
+                        outputToClient.flush();
+                        outputToClient.close();
+                    }
                     Platform.runLater(() -> ta.appendText("Connection has been closed. \n"));
                     Platform.runLater(() -> ta.appendText("Waiting for client connection... \n"));
                 }
@@ -100,108 +124,111 @@ public class Server extends Application {
 
     /***
      * This runs the data object through several checks to determine what data should be gathered for the object.
-     * @param currencyDataObject It requires a data object.
+     * @param currencyDataObj It requires a data object.
      * @return It returns the amended data object.
      */
-    public CurrencyDataObject getData(CurrencyDataObject currencyDataObject){
-        if (!currencyDataObject.getHistoricalList() && !currencyDataObject.getRateOfChangeList()) {
-            currencyDataObject = findRate(currencyDataObject);
-            currencyDataObject = findDescription(currencyDataObject);
-            currencyDataObject = calculateRate(currencyDataObject);
-            currencyDataObject = calculateExchange(currencyDataObject);
-        } else if (currencyDataObject.getHistoricalList()) {
+    public CurrencyDataObj getData(CurrencyDataObj currencyDataObj){
+        if (!currencyDataObj.getHistoricalList() && !currencyDataObj.getRateOfChangeList()) {
+            currencyDataObj = findRate(currencyDataObj);
+            currencyDataObj = findDescription(currencyDataObj);
+            currencyDataObj = calculateRate(currencyDataObj);
+            currencyDataObj = calculateExchange(currencyDataObj);
+        }
+        /*
+        else if (currencyDataObj.getHistoricalList()) {
             try {
-                currencyDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyDataList(currencyDataObject));
+                currencyDataObj.setServerCurrencyList(Connect.generateHistoricalMonthlyDataList(currencyDataObj));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (currencyDataObject.getRateOfChangeList()) {
+        } else if (currencyDataObj.getRateOfChangeList()) {
             try {
-                currencyDataObject.setServerCurrencyList(Connect.generateHistoricalMonthlyRateOfChangeList(currencyDataObject));
+                currencyDataObj.setServerCurrencyList(Connect.generateHistoricalMonthlyRateOfChangeList(currencyDataObj));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return currencyDataObject;
+        */
+        return currencyDataObj;
     }
 
 
     /***
      * This class uses provided currency object information to build on the data structure. The currency rate is added in this method.
-     * @param currencyDataObject Requires the data object.
+     * @param currencyDataObj Requires the data object.
      * @return It returns an appended data object.
      */
-    public CurrencyDataObject findRate(CurrencyDataObject currencyDataObject){ // This is only needed for the second currency object.
-        if (currencyDataObject.getCurrency1().getRawRate() == null){
+    public CurrencyDataObj findRate(CurrencyDataObj currencyDataObj){ // This is only needed for the second currency object.
+        if (currencyDataObj.getCurrency1().getRawRate() == null){
             try {
-                currencyDataObject.setCurrency1(Connect.getRate(currencyDataObject.getCurrency1()));
+                currencyDataObj.setCurrency1(Connect.getRate(currencyDataObj.getCurrency1()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if (currencyDataObject.getCurrency2().getRawRate() == null){
+        if (currencyDataObj.getCurrency2().getRawRate() == null){
             try {
-                currencyDataObject.setCurrency2(Connect.getRate(currencyDataObject.getCurrency2()));
+                currencyDataObj.setCurrency2(Connect.getRate(currencyDataObj.getCurrency2()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return currencyDataObject;
+        return currencyDataObj;
     }
 
     /***
      * This class uses provided currency object information to build on the data structure. The currency description is added in this method.
-     * @param currencyDataObject Requires the data object.
+     * @param currencyDataObj Requires the data object.
      * @return It returns an appended data object.
      */
-    public CurrencyDataObject findDescription(CurrencyDataObject currencyDataObject){
-        if(currencyDataObject.getCurrency1().getName() != null && currencyDataObject.getCurrency1().getDescription() == null){
+    public CurrencyDataObj findDescription(CurrencyDataObj currencyDataObj){
+        if(currencyDataObj.getCurrency1().getName() != null && currencyDataObj.getCurrency1().getDescription() == null){
             try {
-                currencyDataObject.setCurrency1(Connect.getDescription(currencyDataObject.getCurrency1()));
+                currencyDataObj.setCurrency1(Connect.getDescription(currencyDataObj.getCurrency1()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if(currencyDataObject.getCurrency2().getName() != null && currencyDataObject.getCurrency2().getDescription() == null){
+        if(currencyDataObj.getCurrency2().getName() != null && currencyDataObj.getCurrency2().getDescription() == null){
             try {
-                currencyDataObject.setCurrency2(Connect.getDescription(currencyDataObject.getCurrency2()));
+                currencyDataObj.setCurrency2(Connect.getDescription(currencyDataObj.getCurrency2()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return currencyDataObject;
+        return currencyDataObj;
     }
 
     /***
      * This class calculates the conversion rates between two currencies and assigns the adjusted conversion rates.
-     * @param currencyDataObject Requires the data object.
+     * @param currencyDataObj Requires the data object.
      * @return It returns an appended data object.
      */
-    public CurrencyDataObject calculateRate(CurrencyDataObject currencyDataObject) {
+    public CurrencyDataObj calculateRate(CurrencyDataObj currencyDataObj) {
         String formatRate;
-        double rate = (double) 1 / Double.parseDouble(currencyDataObject.getCurrency1().getRawRate());
-        rate = rate * Double.parseDouble(currencyDataObject.getCurrency2().getRawRate());
+        double rate = (double) 1 / Double.parseDouble(currencyDataObj.getCurrency1().getRawRate());
+        rate = rate * Double.parseDouble(currencyDataObj.getCurrency2().getRawRate());
         formatRate = checkLower(rate);
-        currencyDataObject.getCurrency1().setAdjustedRate("1");
-        currencyDataObject.getCurrency2().setAdjustedRate(formatRate);
-        return currencyDataObject;
+        currencyDataObj.getCurrency1().setAdjustedRate("1");
+        currencyDataObj.getCurrency2().setAdjustedRate(formatRate);
+        return currencyDataObj;
     }
 
     /***
      * This method looks complicated, but it simply converts two strings to doubles, performs an arithmetic operation, and then converts the double result back to a string and stores it in the data object.
-     * @param currencyDataObject It requires the data object.
+     * @param currencyDataObj It requires the data object.
      * @return It returns the modified data object.
      */
-    public CurrencyDataObject calculateExchange(CurrencyDataObject currencyDataObject){
+    public CurrencyDataObj calculateExchange(CurrencyDataObj currencyDataObj){
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMinimumFractionDigits(2);
-        if (currencyDataObject.getCurrency1().getExchangeAmount() != null) {
-            double number = Double.parseDouble(currencyDataObject.getCurrency1().getExchangeAmount()) *
-                            Double.parseDouble(currencyDataObject.getCurrency2().getAdjustedRate().replaceAll(",", ""));
+        if (currencyDataObj.getCurrency1().getExchangeAmount() != null) {
+            double number = Double.parseDouble(currencyDataObj.getCurrency1().getExchangeAmount()) *
+                            Double.parseDouble(currencyDataObj.getCurrency2().getAdjustedRate().replaceAll(",", ""));
             String strNumber = checkLower(number); // This checks that the value returned is not zero.
-            currencyDataObject.getCurrency2().setExchangeAmount(strNumber);
+            currencyDataObj.getCurrency2().setExchangeAmount(strNumber);
         }
-        return currencyDataObject;
+        return currencyDataObj;
     }
 
     /***

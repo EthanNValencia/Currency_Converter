@@ -6,7 +6,8 @@ Client connection class.
 
 package CC_Directory;
 
-import CC_Server.CurrencyDataObject;
+import CC_Server.CurrencyChartObj;
+import CC_Server.CurrencyDataObj;
 import CC_Server.ServerCurrency;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,15 +21,25 @@ public class Client implements CONSTANTS {
 
     private ObjectOutputStream toServer = null;
     private ObjectInputStream fromServer = null;
-    private CurrencyDataObject dataObject = new CurrencyDataObject();
+    private Object dataObj;
+    private CurrencyChartObj currencyChartObj;
+    private CurrencyDataObj currencyDataObj;
     private String comboBox1, comboBox2, inputArea, outputRate, conversionIndicator, textArea, toolTip1, toolTip2;
 
     /***
      * Accessor method for the data object.
      * @return The data object.
      */
-    public CurrencyDataObject getDataObject() {
-        return dataObject;
+    public Object getDataObj() {
+        return dataObj;
+    }
+
+    public CurrencyChartObj getCurrencyChartObj() {
+        return currencyChartObj;
+    }
+
+    public CurrencyDataObj getCurrencyDataObj() {
+        return currencyDataObj;
     }
 
     /***
@@ -65,19 +76,20 @@ public class Client implements CONSTANTS {
         this.comboBox1 = comboBox1;
         this.comboBox2 = comboBox2;
         this.inputArea = inputArea;
-        this.dataObject = new CurrencyDataObject(new ServerCurrency(comboBox1), new ServerCurrency(comboBox2), DATE_TODAY);
+        CurrencyDataObj currencyDataObj = new CurrencyDataObj(new ServerCurrency(comboBox1), new ServerCurrency(comboBox2), DATE_TODAY);
         if (!inputArea.equals("")) {
-            dataObject.getCurrency1().setExchangeAmount(inputArea);
+            currencyDataObj.getCurrency1().setExchangeAmount(inputArea);
         }
+        this.dataObj = currencyDataObj;
         serverRequest();
     }
 
     /***
      * A single parameter constructor that requires the currency data object that is to be assigned to the client.
-     * @param currencyDataObject The currency data object that is to be assigned to the client.
+     * @param currencyChartObj The currency data object that is to be assigned to the client.
      */
-    public Client(CurrencyDataObject currencyDataObject){
-        this.dataObject = currencyDataObject;
+    public Client(CurrencyChartObj currencyChartObj){
+        this.dataObj = currencyChartObj;
         serverRequest();
     }
 
@@ -95,18 +107,23 @@ public class Client implements CONSTANTS {
             System.out.println("An IO exception occurred on the client side.");
         }
         try {
-            toServer.writeObject(dataObject); // send object to server
+            toServer.writeObject(dataObj); // send object to server
             toServer.flush(); // flush request
-            CurrencyDataObject returnedInfo = (CurrencyDataObject) fromServer.readObject();
-            outputRate = returnedInfo.getCurrency1().getAdjustedRate() + " " + returnedInfo.getCurrency1().getName() + " = " + returnedInfo.getCurrency2().getAdjustedRate() + " " + returnedInfo.getCurrency2().getName();
-            conversionIndicator = "Converting the " + returnedInfo.getCurrency1().getDescription() + " to the " + returnedInfo.getCurrency2().getDescription();
-            if (returnedInfo.getCurrency1().getExchangeAmount() != null) {
-                textArea = returnedInfo.getCurrency1().getExchangeAmount() + " " + returnedInfo.getCurrency1().getName() + " = " + returnedInfo.getCurrency2().getExchangeAmount() + " " + returnedInfo.getCurrency2().getName() + "\n";
+            Object dataObj = fromServer.readObject(); // read
+            if(dataObj.getClass() == CurrencyDataObj.class) {
+                CurrencyDataObj returnedInfo = (CurrencyDataObj) dataObj;
+                outputRate = returnedInfo.getCurrency1().getAdjustedRate() + " " + returnedInfo.getCurrency1().getName() + " = " + returnedInfo.getCurrency2().getAdjustedRate() + " " + returnedInfo.getCurrency2().getName();
+                conversionIndicator = "Converting the " + returnedInfo.getCurrency1().getDescription() + " to the " + returnedInfo.getCurrency2().getDescription();
+                if (returnedInfo.getCurrency1().getExchangeAmount() != null) {
+                    textArea = returnedInfo.getCurrency1().getExchangeAmount() + " " + returnedInfo.getCurrency1().getName() + " = " + returnedInfo.getCurrency2().getExchangeAmount() + " " + returnedInfo.getCurrency2().getName() + "\n";
+                }
+                toolTip1 = returnedInfo.getCurrency1().getDescription();
+                toolTip2 = returnedInfo.getCurrency2().getDescription();
+                dataObj = returnedInfo;
+            } else if (dataObj.getClass() == CurrencyChartObj.class){
+                currencyChartObj = (CurrencyChartObj) dataObj;
+                // dataObj = currencyChartObj;
             }
-            toolTip1 = returnedInfo.getCurrency1().getDescription();
-            toolTip2 = returnedInfo.getCurrency2().getDescription();
-            dataObject = returnedInfo;
-
         } catch (IOException ex) {
             System.out.println("The client threw an io exception.");
             System.out.println("The server may not be running.");
@@ -128,7 +145,7 @@ public class Client implements CONSTANTS {
         return "Client{" +
                 "\ntoServer=" + toServer +
                 "\n, fromServer=" + fromServer +
-                "\n, dataObject=" + dataObject +
+                "\n, dataObject=" + dataObj +
                 "\n, comboBox1='" + comboBox1 + '\'' +
                 "\n, comboBox2='" + comboBox2 + '\'' +
                 "\n, inputArea='" + inputArea + '\'' +

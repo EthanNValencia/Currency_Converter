@@ -282,16 +282,16 @@ public class Connect implements CC_Server.CONSTANTS {
 
     /***
      * This method uses name of a server currency object to generate a list of historical currency rates. The currency rates will be averaged by the month.
-     * @param currencyDataObject It requires the specific server currency data object.
+     * @param chartObj It requires the specific server currency data object.
      * @return This method returns a list of server currency objects. This list is passed up to the GUI chart.
      * @throws Exception A database related exception can be thrown.
      */
-    public static List<ServerCurrency> generateHistoricalMonthlyDataList(CurrencyDataObject currencyDataObject) throws Exception {
+    public static List<ServerCurrency> generateHistoricalMonthlyDataList(CurrencyChartObj chartObj) throws Exception {
         String sql =
                 "SELECT cur1.currency_name, AVG(((1 / cur1.currency_rate) * cur2.currency_rate)), DATE_FORMAT(cur1.currency_date, '%Y-%M') AS date FROM \n" +
                 "cur_db.cur cur1, cur_db.cur cur2\n" +
-                "WHERE cur1.currency_name = '" + currencyDataObject.getCurrency1().getName() + "' \n" +
-                "AND cur2.currency_name = '" + currencyDataObject.getCurrency2().getName() + "'\n" +
+                "WHERE cur1.currency_name = '" + chartObj.getFirstCurrencyName() + "' \n" +
+                "AND cur2.currency_name = '" + chartObj.getSecondCurrencyName() + "'\n" +
                 "AND cur1.currency_date = cur2.currency_date\n" +
                 "GROUP BY DATE_FORMAT(cur1.currency_date,'%Y-%M-&D')\n" +
                 "ORDER BY cur1.currency_date ASC;";
@@ -306,27 +306,28 @@ public class Connect implements CC_Server.CONSTANTS {
             sc.setDate(rs.getString(3));
             serverCurrencyList.add(sc);
         }
+        System.out.println(serverCurrencyList);
         return serverCurrencyList;
     }
 
     /***
      * This is used to generate the monthly average rate of change over the database historical data set.
-     * @param currencyDataObject It takes a CurrencyDataObject.
+     * @param chartObj It takes a CurrencyDataObject.
      * @return It returns the populated list of monthly average rate of change.
      * @throws Exception A database related exception can be thrown.
      */
-    public static List<ServerCurrency> generateHistoricalMonthlyRateOfChangeList(CurrencyDataObject currencyDataObject) throws Exception {
+    public static List<ServerCurrency> generateHistoricalMonthlyRateOfChangeList(CurrencyChartObj chartObj) throws Exception {
         String sql = "SELECT dt2.currency_name, FORMAT(AVG((dt2.adjusted_exchange_rate / dt1.adjusted_exchange_rate) - 1), 15) AS avg_rate_of_change, DATE_FORMAT(dt2.currency_date, '%Y-%M') AS date\n" +
                 "FROM (SELECT cur2.currency_name, ((1 / cur1.currency_rate) * cur2.currency_rate) AS adjusted_exchange_rate, cur1.currency_date\n" +
                 "FROM cur_db.cur cur1, cur_db.cur cur2\n" +
-                "WHERE cur1.currency_name = '" + currencyDataObject.getCurrency1().getName() + "'\n" +
-                "AND cur2.currency_name = '" + currencyDataObject.getCurrency2().getName() + "'\n" +
+                "WHERE cur1.currency_name = '" + chartObj.getFirstCurrencyName() + "'\n" +
+                "AND cur2.currency_name = '" + chartObj.getSecondCurrencyName()+ "'\n" +
                 "AND cur1.currency_date = cur2.currency_date\n" +
                 "ORDER BY cur1.currency_date ASC) AS dt1, \n" +
                 "(SELECT cur2.currency_name, ((1 / cur1.currency_rate) * cur2.currency_rate) AS adjusted_exchange_rate, cur1.currency_date\n" +
                 "FROM cur_db.cur cur1, cur_db.cur cur2\n" +
-                "WHERE cur1.currency_name = '" + currencyDataObject.getCurrency1().getName() + "'\n" +
-                "AND cur2.currency_name = '" + currencyDataObject.getCurrency2().getName() + "'\n" +
+                "WHERE cur1.currency_name = '" + chartObj.getFirstCurrencyName() + "'\n" +
+                "AND cur2.currency_name = '" + chartObj.getSecondCurrencyName() + "'\n" +
                 "AND cur1.currency_date = cur2.currency_date\n" +
                 "ORDER BY cur1.currency_date ASC) AS dt2\n" +
                 "WHERE DATEDIFF(dt1.currency_date, dt2.currency_date) = '1'\n" +
@@ -344,6 +345,7 @@ public class Connect implements CC_Server.CONSTANTS {
             sc.setDate(rs.getString(3));
             serverCurrencyList.add(sc);
         }
+        System.out.println("Connect: " + serverCurrencyList);
         return serverCurrencyList;
     }
 

@@ -6,6 +6,7 @@ Currency converter and presentation application.
 
 package CC_Directory;
 
+import CC_Server.CurrencyDataObj;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -91,11 +92,12 @@ public class MainController implements Initializable, CONSTANTS {
         client = new Client(comboBox1.getValue(), comboBox2.getValue(), inputArea.getText());
         outputRate.setText(client.getOutputRate());
         conversionIndicator.setText(client.getConversionIndicator());
-        if (client.getDataObject().getCurrency1().getExchangeAmount() != null) {
+        CurrencyDataObj currencyDataObj = (CurrencyDataObj) client.getDataObj();
+        if (currencyDataObj.getCurrency1().getExchangeAmount() != null) {
             textArea.appendText(client.getTextArea());
         }
-        toolTip1.setText(client.getDataObject().getCurrency1().getDescription());
-        toolTip2.setText(client.getDataObject().getCurrency2().getDescription());
+        toolTip1.setText(currencyDataObj.getCurrency1().getDescription());
+        toolTip2.setText(currencyDataObj.getCurrency2().getDescription());
     }
 
     /***

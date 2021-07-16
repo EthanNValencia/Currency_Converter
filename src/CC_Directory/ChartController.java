@@ -9,7 +9,7 @@ Positive trends represent an increase in the valuation of a currency as compared
 
 package CC_Directory;
 
-import CC_Server.CurrencyDataObject;
+import CC_Server.CurrencyChartObj;
 import CC_Server.ServerCurrency;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,7 +35,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 
 /***
  * This method controls the chart window. The chart window is used for displaying historical rates in a way that is visual.
@@ -103,26 +102,17 @@ public class ChartController implements CONSTANTS, Initializable {
         if (!lineChart.getData().toString().contains(sourceName)) {
             XYChart.Series series = new XYChart.Series();
             series.setName(sourceName);
-            ServerCurrency sc1 = new ServerCurrency(comboBoxCurrency.getValue().toString());
-            ServerCurrency sc2 = new ServerCurrency(sourceName);
-            Client client = new Client(new CurrencyDataObject(sc1, sc2, DATE_TODAY, exchangeRate, rateOfChange));
-            List<ServerCurrency> currencyList = client.getDataObject().getServerCurrencyList();
+            Client client = new Client(new CurrencyChartObj(comboBoxCurrency.getValue().toString(), sourceName, exchangeRate, rateOfChange));
+            // CurrencyChartObj receivedCurrencyChartObj = (CurrencyChartObj) client.getDataObj();
+            // System.out.println(receivedCurrencyChartObj);
+            List<ServerCurrency> currencyList = client.getCurrencyChartObj().getServerCurrencyList();
             for (int j = 0; j < currencyList.size(); j++) {
                 ServerCurrency serverCurrency = currencyList.get(j);
                 try {
                     series.getData().add(new XYChart.Data<>(serverCurrency.getDate(), Double.parseDouble(serverCurrency.getRawRate())));
                 } catch (NumberFormatException nfe){
                     nfe.printStackTrace();
-                    Scanner scan = new Scanner(System.in);
-                    String[] message = {"Venezuela will always break your programz!!!!!1111!!!", "Muahahaha!!!11!", "Hahahhaha!!!11!!!", "ha..."};
-                    for(int i = 0; i < message.length; i++) {
-                        System.out.println(message[i]);
-                        try {
-                            Thread.sleep(2500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    System.out.println("Venezuela will always break your program!");
                     return;
                 }
             }

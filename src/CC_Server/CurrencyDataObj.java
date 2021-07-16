@@ -12,7 +12,7 @@ import java.util.List;
 /***
  * The idea behind this class is for it to be a data packet that is sent between the client and server.
  */
-public class CurrencyDataObject implements Serializable {
+public class CurrencyDataObj implements Serializable {
 
     private ServerCurrency currency1 = new ServerCurrency(); // combobox1
     private ServerCurrency currency2 = new ServerCurrency(); // combobox2
@@ -77,7 +77,7 @@ public class CurrencyDataObject implements Serializable {
      * @param cur2 It requires the currency data taken from combo box 2.
      * @param localDate It requires the date in the LocalDate format (not a string).
      */
-    public CurrencyDataObject(ServerCurrency cur1, ServerCurrency cur2, LocalDate localDate) {
+    public CurrencyDataObj(ServerCurrency cur1, ServerCurrency cur2, LocalDate localDate) {
         this.currency1 = cur1;
         this.currency2 = cur2;
         this.currency1.setDate(localDate.toString());
@@ -89,7 +89,7 @@ public class CurrencyDataObject implements Serializable {
      * @param cur1 It requires the currency data taken from combo box 1.
      * @param localDate It requires the date in the LocalDate format (not a string).
      */
-    public CurrencyDataObject(ServerCurrency cur1, ServerCurrency cur2, LocalDate localDate, boolean getHistoricalList, boolean getRateOfChangeList) {
+    public CurrencyDataObj(ServerCurrency cur1, ServerCurrency cur2, LocalDate localDate, boolean getHistoricalList, boolean getRateOfChangeList) {
         this.currency1 = cur1;
         this.currency2 = cur2;
         this.currency1.setDate(localDate.toString());
@@ -97,7 +97,7 @@ public class CurrencyDataObject implements Serializable {
         this.getRateOfChangeList = getRateOfChangeList;
     }
 
-    public CurrencyDataObject() {
+    public CurrencyDataObj() {
 
     }
 
