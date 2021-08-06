@@ -19,7 +19,7 @@ public class ServerController extends CONSTANTS implements Initializable {
 
     private Thread serverThread;
 
-    private ServerSocket serverSocket = new ServerSocket(8000);
+    private ServerSocket serverSocket;
 
     @FXML
     private TextArea txtAreaServer;
@@ -36,47 +36,11 @@ public class ServerController extends CONSTANTS implements Initializable {
     @FXML
     private ComboBox<Integer> comboBoxRange;
 
-
-    public ServerController() throws IOException {
-    }
-
-    public void loginControlsVisible(){
-        btnAttemptConnection.setVisible(true);
-        loginLabel1.setVisible(true);
-        logicLabel2.setVisible(true);
-        txtBoxPassword.setVisible(true);
-        txtBoxUsername.setVisible(true);
-    }
-
-    public void loginControlsInvisible(){
-        btnAttemptConnection.setVisible(false);
-        loginLabel1.setVisible(false);
-        logicLabel2.setVisible(false);
-        txtBoxPassword.setVisible(false);
-        txtBoxUsername.setVisible(false);
-    }
-
-    public void rangeControlsVisible(){
-        comboBoxRange.setVisible(true);
-        btnRange.setVisible(true);
-    }
-
-    public void rangeControlsInvisible(){
-        comboBoxRange.setVisible(false);
-        btnRange.setVisible(false);
-    }
-
-    public void btnRange(){
-        rangeControlsInvisible();
-        DAYS_TO_SCAN = comboBoxRange.getValue();
-        /*
-        String print = "Days from today that will be added to the database is: " + DAYS_TO_SCAN.toString() + ".";
-        txtAreaServer.appendText(print + "\n");
-         */
-        System.out.println(DAYS_TO_SCAN);
-        runServer();
-    }
-
+    /***
+     *
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(java.net.URL url, ResourceBundle resourceBundle) {
         loginControlsInvisible();
@@ -89,7 +53,11 @@ public class ServerController extends CONSTANTS implements Initializable {
         comboBoxRange.getSelectionModel().selectFirst();
     }
 
-
+    /***
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void runServerLoop() throws IOException, ClassNotFoundException {
         while (true) {
             Socket socket = serverSocket.accept(); // it waits here for a client message
@@ -136,10 +104,13 @@ public class ServerController extends CONSTANTS implements Initializable {
         }
     }
 
+    /***
+     *
+     */
     public void runServer(){
         serverThread = new Thread(() -> {
             try {
-                // ServerSocket serverSocket = new ServerSocket(8000);
+                serverSocket = new ServerSocket(8000);
                 txtAreaServer.appendText("Server started at " + new Date() + '\n');
                 try {
                     txtAreaServer.appendText("Server is attempting to connect to the Database.\n");
@@ -167,6 +138,57 @@ public class ServerController extends CONSTANTS implements Initializable {
         serverThread.start();
     }
 
+    /***
+     * Sets the login controls to visible.
+     */
+    public void loginControlsVisible(){
+        btnAttemptConnection.setVisible(true);
+        loginLabel1.setVisible(true);
+        logicLabel2.setVisible(true);
+        txtBoxPassword.setVisible(true);
+        txtBoxUsername.setVisible(true);
+    }
+
+    /***
+     * Sets the login controls to invisible.
+     */
+    public void loginControlsInvisible(){
+        btnAttemptConnection.setVisible(false);
+        loginLabel1.setVisible(false);
+        logicLabel2.setVisible(false);
+        txtBoxPassword.setVisible(false);
+        txtBoxUsername.setVisible(false);
+    }
+
+    /***
+     * Sets the day range to scan controls to visible.
+     */
+    public void rangeControlsVisible(){
+        comboBoxRange.setVisible(true);
+        btnRange.setVisible(true);
+    }
+
+    /***
+     * Sets the day range to scan controls to invisible.
+     */
+    public void rangeControlsInvisible(){
+        comboBoxRange.setVisible(false);
+        btnRange.setVisible(false);
+    }
+
+    /***
+     * This is connected to the Button btnRange. It sets the number of days that the server will scan.
+     */
+    public void btnRange(){
+        rangeControlsInvisible();
+        DAYS_TO_SCAN = comboBoxRange.getValue();
+        System.out.println(DAYS_TO_SCAN);
+        runServer();
+    }
+
+    /***
+     * In the case that the preset database login credentials fail, this will open up a GUI-based option to allow user input of the credentials.
+     */
     public void getDatabaseCredentials(){
         Stage stage = (Stage) txtAreaServer.getScene().getWindow();
         stage.setWidth(600);
@@ -174,17 +196,9 @@ public class ServerController extends CONSTANTS implements Initializable {
         txtAreaServer.appendText("Please enter your login credentials.\n");
     }
 
-    public void checkDatabaseConnection(){
-        try {
-            txtAreaServer.appendText("Server is attempting to connect to the Database.\n");
-            Connect.getConnection();
-        } catch (Exception e) {
-            txtAreaServer.appendText("Server failed to connect to Database.\n");
-            getDatabaseCredentials();
-            return;
-        }
-    }
-
+    /***
+     * This is connected to the Button btnAttemptConnection. When the user clicks the button it will take the text from the input fields and see if a connection can be made successfully.
+     */
     public void btnConnection(){
         USERNAME = txtBoxUsername.getText();
         PASSWORD = txtBoxPassword.getText();
@@ -192,11 +206,10 @@ public class ServerController extends CONSTANTS implements Initializable {
             Connect.getConnection();
             txtAreaServer.appendText("Connection was successful.\n");
             Stage stage = (Stage) txtAreaServer.getScene().getWindow();
-            stage.setWidth(310);
-            stage.setHeight(240);
+            // stage.setWidth(310);
+            // stage.setHeight(240);
         } catch (Exception e) {
             txtAreaServer.appendText("The login credentials were incorrect. \nPlease try again.\n");
-            // e.printStackTrace();
         }
     }
 
