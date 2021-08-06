@@ -17,7 +17,7 @@ public abstract class CONSTANTS {
     static String DRIVER = "com.mysql.cj.jdbc.Driver";
     static String URL = "jdbc:mysql://localhost:3306/cur_db";
     // String USERNAME = "Currency_User";
-    static String USERNAME = "Currency_User";
+    static String USERNAME = "urrency_User";
     static String PASSWORD = "EFtkgT%gt44De";
     static LocalDate DATE_TODAY = LocalDate.now();
     static String WEBSITE_URL = "https://www.x-rates.com/historical/?from=USD&amount=1&date=";

@@ -1,3 +1,8 @@
+/*
+Ethan J. Nephew
+August 6, 2021
+
+*/
 package CC_Server;
 
 import javafx.application.Application;
