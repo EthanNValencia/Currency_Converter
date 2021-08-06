@@ -23,7 +23,7 @@ import java.util.List;
 /***
  * Connect class for connecting the server application to a database. The methods of this class are mostly defined by their SQL queries.
  */
-public class Connect implements CC_Server.CONSTANTS {
+public class Connect extends CC_Server.CONSTANTS {
 
     /***
      * This is the connection method. It is used to connect to the server.

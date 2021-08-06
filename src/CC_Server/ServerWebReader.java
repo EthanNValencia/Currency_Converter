@@ -13,7 +13,7 @@ import java.util.*;
 /***
  * The ServerWebReader class is similar to the client-side WebReader class, however, it is not similar enough to make inheritance useful.
  */
-public class ServerWebReader implements CC_Server.CONSTANTS {
+public class ServerWebReader extends CC_Server.CONSTANTS {
 
     private String date;
 
@@ -186,7 +186,7 @@ public class ServerWebReader implements CC_Server.CONSTANTS {
         String insertDate;
         HashSet<ServerCurrency> currencyList = null;
         // currencyList = getPage(WEBSITE_URL + DATE_TODAY);
-        for (int i = 0; i <= RANGE_OF_DAYS_TO_SCAN; i++) {
+        for (int i = 0; i <= DAYS_TO_SCAN; i++) {
             insertDate = "" + DATE_TODAY.minusDays(i);
             if (!Connect.checkEntries("" + insertDate)) { // If entries with this date already exist, then cancel the insertion.
                 currencyList = getPage(WEBSITE_URL + insertDate);

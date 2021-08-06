@@ -25,6 +25,8 @@ public class ServerMain extends Application {
             primaryStage.setResizable(false);
             primaryStage.setTitle("Server Interface");
             primaryStage.setScene(new Scene(root));
+            primaryStage.setWidth(600);
+            primaryStage.setHeight(240);
             primaryStage.show();
             primaryStage.setOnCloseRequest(e -> {
                 Platform.exit(); // This shuts down all server threads when the window closes.

@@ -1,14 +1,10 @@
 package CC_Server;
 
-import javafx.application.Platform;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -19,15 +15,17 @@ import java.text.NumberFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
 
-public class ServerController implements CONSTANTS, Initializable {
+public class ServerController extends CONSTANTS implements Initializable {
 
     private Thread serverThread;
+
+    private ServerSocket serverSocket = new ServerSocket(8000);
 
     @FXML
     private TextArea txtAreaServer;
 
     @FXML
-    private Button btnAttemptConnection;
+    private Button btnAttemptConnection, btnRange;
 
     @FXML
     private Label loginLabel1, logicLabel2;
@@ -35,7 +33,14 @@ public class ServerController implements CONSTANTS, Initializable {
     @FXML
     private TextField txtBoxUsername, txtBoxPassword;
 
-    public void loginCredentialsVisible(){
+    @FXML
+    private ComboBox<Integer> comboBoxRange;
+
+
+    public ServerController() throws IOException {
+    }
+
+    public void loginControlsVisible(){
         btnAttemptConnection.setVisible(true);
         loginLabel1.setVisible(true);
         logicLabel2.setVisible(true);
@@ -43,7 +48,7 @@ public class ServerController implements CONSTANTS, Initializable {
         txtBoxUsername.setVisible(true);
     }
 
-    public void loginCredentialsInvisible(){
+    public void loginControlsInvisible(){
         btnAttemptConnection.setVisible(false);
         loginLabel1.setVisible(false);
         logicLabel2.setVisible(false);
@@ -51,75 +56,110 @@ public class ServerController implements CONSTANTS, Initializable {
         txtBoxUsername.setVisible(false);
     }
 
+    public void rangeControlsVisible(){
+        comboBoxRange.setVisible(true);
+        btnRange.setVisible(true);
+    }
+
+    public void rangeControlsInvisible(){
+        comboBoxRange.setVisible(false);
+        btnRange.setVisible(false);
+    }
+
+    public void btnRange(){
+        rangeControlsInvisible();
+        DAYS_TO_SCAN = comboBoxRange.getValue();
+        /*
+        String print = "Days from today that will be added to the database is: " + DAYS_TO_SCAN.toString() + ".";
+        txtAreaServer.appendText(print + "\n");
+         */
+        System.out.println(DAYS_TO_SCAN);
+        runServer();
+    }
+
     @Override
     public void initialize(java.net.URL url, ResourceBundle resourceBundle) {
-        loginCredentialsInvisible();
-        txtAreaServer.appendText("App is on.");
+        loginControlsInvisible();
+        rangeControlsVisible();
+        txtAreaServer.wrapTextProperty().set(true);
+        txtAreaServer.appendText("Select the range of days you would like the database to have.\n");
+        for(int i = 0; i < CONSTANTS.DAYS_RANGE.length; i++){
+            comboBoxRange.getItems().add(DAYS_RANGE[i]);
+        }
+        comboBoxRange.getSelectionModel().selectFirst();
+    }
+
+
+    public void runServerLoop() throws IOException, ClassNotFoundException {
+        while (true) {
+            Socket socket = serverSocket.accept(); // it waits here for a client message
+            // Create data input and output streams
+            txtAreaServer.appendText("Messaged received!\n");
+            ObjectOutputStream outputToClient = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream inputFromClient = new ObjectInputStream(socket.getInputStream());
+            Object receivedObject = inputFromClient.readObject();
+
+            if (receivedObject.getClass() == CurrencyDataObj.class) {
+                CurrencyDataObj receivedDataObject = (CurrencyDataObj) receivedObject;
+                txtAreaServer.appendText("Server received client data.\n");
+                // For some reason the later check is not working
+                receivedDataObject = getData(receivedDataObject);
+                // End data object modification for chart
+                outputToClient.writeObject(receivedDataObject);
+                txtAreaServer.appendText("A client connection has been established from:\n" + socket + "\n");
+                outputToClient.flush();
+                outputToClient.close();
+                receivedDataObject.setHistoricalList(false);
+            } else if (receivedObject.getClass() == CurrencyChartObj.class) {
+                CurrencyChartObj receivedChartObject = (CurrencyChartObj) receivedObject;
+                System.out.println("received: " + receivedChartObject);
+                if (receivedChartObject.isHistoricalList()) {
+                    try {
+                        receivedChartObject.setServerCurrencyList(Connect.generateHistoricalMonthlyDataList(receivedChartObject));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else if (receivedChartObject.isRateOfChangeList()) {
+                    try {
+                        receivedChartObject.setServerCurrencyList(Connect.generateHistoricalMonthlyRateOfChangeList(receivedChartObject));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                System.out.println("sent: " + receivedChartObject);
+                outputToClient.writeObject(receivedChartObject);
+                outputToClient.flush();
+                outputToClient.close();
+            }
+            txtAreaServer.appendText("Connection has been closed. \n");
+            txtAreaServer.appendText("Waiting for client connection... \n");
+        }
+    }
+
+    public void runServer(){
         serverThread = new Thread(() -> {
             try {
-                ServerSocket serverSocket = new ServerSocket(8000);
-                Platform.runLater(() -> txtAreaServer.appendText("Server started at " + new Date() + '\n'));
+                // ServerSocket serverSocket = new ServerSocket(8000);
+                txtAreaServer.appendText("Server started at " + new Date() + '\n');
                 try {
-                    Platform.runLater(() -> txtAreaServer.appendText("Server is attempting to connect to the Database.\n"));
+                    txtAreaServer.appendText("Server is attempting to connect to the Database.\n");
                     Connect.getConnection();
                 } catch (Exception e) {
-                    Platform.runLater(() -> txtAreaServer.appendText("Server failed to connect to Database.\n"));
+                    txtAreaServer.appendText("Server failed to connect to Database.\n");
                     getDatabaseCredentials();
                     return;
                 }
-                Platform.runLater(() -> txtAreaServer.appendText("Server is gathering currency related data.\n"));
-                Platform.runLater(() -> txtAreaServer.appendText("This may take some time...\n"));
+                txtAreaServer.appendText("Server is gathering currency related data.\n");
+                txtAreaServer.appendText("This may take some time...\n");
                 ServerWebReader serverWebReader = new ServerWebReader();
                 try {
                     serverWebReader.insertAnnualCurrencyData();
-                    Platform.runLater(() -> txtAreaServer.appendText("Currency related data has been successfully gathered.\n"));
+                    txtAreaServer.appendText("Currency related data has been successfully gathered.\n");
                 } catch (Exception e) {
-                    Platform.runLater(() -> txtAreaServer.appendText("An exception occurred while trying to gather currency information.\n"));
+                    txtAreaServer.appendText("An exception occurred while trying to gather currency information.\n");
                 }
-                Platform.runLater(() -> txtAreaServer.appendText("Waiting for client connection... \n"));
-                while (true) {
-                    Socket socket = serverSocket.accept(); // it waits here for a client message
-                    // Create data input and output streams
-                    Platform.runLater(() -> txtAreaServer.appendText("Messaged received!\n"));
-                    ObjectOutputStream outputToClient = new ObjectOutputStream(socket.getOutputStream());
-                    ObjectInputStream inputFromClient = new ObjectInputStream(socket.getInputStream());
-                    Object receivedObject = inputFromClient.readObject();
-
-                    if (receivedObject.getClass() == CurrencyDataObj.class) {
-                        CurrencyDataObj receivedDataObject = (CurrencyDataObj) receivedObject;
-                        Platform.runLater(() -> txtAreaServer.appendText("Server received client data.\n"));
-                        // For some reason the later check is not working
-                        receivedDataObject = getData(receivedDataObject);
-                        // End data object modification for chart
-                        outputToClient.writeObject(receivedDataObject);
-                        Platform.runLater(() -> txtAreaServer.appendText("A client connection has been established from:\n" + socket + "\n"));
-                        outputToClient.flush();
-                        outputToClient.close();
-                        receivedDataObject.setHistoricalList(false);
-                    } else if (receivedObject.getClass() == CurrencyChartObj.class) {
-                        CurrencyChartObj receivedChartObject = (CurrencyChartObj) receivedObject;
-                        System.out.println("received: " + receivedChartObject);
-                        if (receivedChartObject.isHistoricalList()) {
-                            try {
-                                receivedChartObject.setServerCurrencyList(Connect.generateHistoricalMonthlyDataList(receivedChartObject));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        } else if (receivedChartObject.isRateOfChangeList()) {
-                            try {
-                                receivedChartObject.setServerCurrencyList(Connect.generateHistoricalMonthlyRateOfChangeList(receivedChartObject));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        System.out.println("sent: " + receivedChartObject);
-                        outputToClient.writeObject(receivedChartObject);
-                        outputToClient.flush();
-                        outputToClient.close();
-                    }
-                    Platform.runLater(() -> txtAreaServer.appendText("Connection has been closed. \n"));
-                    Platform.runLater(() -> txtAreaServer.appendText("Waiting for client connection... \n"));
-                }
+                txtAreaServer.appendText("Waiting for client connection... \n");
+                runServerLoop();
             } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
@@ -130,13 +170,34 @@ public class ServerController implements CONSTANTS, Initializable {
     public void getDatabaseCredentials(){
         Stage stage = (Stage) txtAreaServer.getScene().getWindow();
         stage.setWidth(600);
-        loginCredentialsVisible();
-        txtAreaServer.appendText("Please enter your login credentials.");
-        // stage.setHeight(200);
+        loginControlsVisible();
+        txtAreaServer.appendText("Please enter your login credentials.\n");
     }
 
-    public void attemptConnection(){
+    public void checkDatabaseConnection(){
+        try {
+            txtAreaServer.appendText("Server is attempting to connect to the Database.\n");
+            Connect.getConnection();
+        } catch (Exception e) {
+            txtAreaServer.appendText("Server failed to connect to Database.\n");
+            getDatabaseCredentials();
+            return;
+        }
+    }
 
+    public void btnConnection(){
+        USERNAME = txtBoxUsername.getText();
+        PASSWORD = txtBoxPassword.getText();
+        try {
+            Connect.getConnection();
+            txtAreaServer.appendText("Connection was successful.\n");
+            Stage stage = (Stage) txtAreaServer.getScene().getWindow();
+            stage.setWidth(310);
+            stage.setHeight(240);
+        } catch (Exception e) {
+            txtAreaServer.appendText("The login credentials were incorrect. \nPlease try again.\n");
+            // e.printStackTrace();
+        }
     }
 
     /***

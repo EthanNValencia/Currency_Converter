@@ -7,7 +7,7 @@ package CC_Server;
 
 import java.time.LocalDate;
 
-public class DatabaseChecker extends Thread implements CONSTANTS {
+public class DatabaseChecker extends Thread {
     int lowerRange, upperRange, totalRange;
     LocalDate beginDate, endDate;
     boolean missing = false, test = false;
@@ -18,11 +18,11 @@ public class DatabaseChecker extends Thread implements CONSTANTS {
     }
 
     public DatabaseChecker(double lower, double upper) {
-        this.lowerRange = (int) (CONSTANTS.RANGE_OF_DAYS_TO_SCAN * lower);
-        this.upperRange = (int) (CONSTANTS.RANGE_OF_DAYS_TO_SCAN * upper);
+        this.lowerRange = (int) (CONSTANTS.DAYS_TO_SCAN * lower);
+        this.upperRange = (int) (CONSTANTS.DAYS_TO_SCAN * upper);
         this.totalRange = upperRange - lowerRange;
-        this.beginDate = DATE_TODAY.minusDays(upperRange);
-        this.endDate = DATE_TODAY.minusDays(lowerRange);
+        this.beginDate = LocalDate.now().minusDays(upperRange);
+        this.endDate = LocalDate.now().minusDays(lowerRange);
         this.localDatesList = new LocalDate[totalRange];
         generateLocalDatesList();
     }
@@ -45,14 +45,11 @@ public class DatabaseChecker extends Thread implements CONSTANTS {
     }
 
     public void run() {
-
         int checkEntries = checkEntries();
-
         if(checkEntries < totalRange){
             // find those entries and put them in the database.
         }
-
-       // System.out.println(localDatesList[0] + " - " + localDatesList[localDatesList.length - 1]);
+       System.out.println(localDatesList[0] + " - " + localDatesList[localDatesList.length - 1]);
     }
 
     public void generateLocalDatesList(){
