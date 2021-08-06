@@ -16,11 +16,12 @@ public interface CONSTANTS {
     String LOAD_FILE_PART_TWO = ".txt";
     String DRIVER = "com.mysql.cj.jdbc.Driver";
     String URL = "jdbc:mysql://localhost:3306/cur_db";
-    String USERNAME = "Currency_User";
+    // String USERNAME = "Currency_User";
+    String USERNAME = "urrency_User";
     String PASSWORD = "EFtkgT%gt44De";
     LocalDate DATE_TODAY = LocalDate.now();
     String WEBSITE_URL = "https://www.x-rates.com/historical/?from=USD&amount=1&date=";
-    Integer RANGE_OF_DAYS_TO_SCAN = 40; // For development purposes, I will limit this to the present day.
+    Integer RANGE_OF_DAYS_TO_SCAN = 10; // For development purposes, I will limit this to the present day.
                                          // I do not want to cause egregious network traffic for x-rates.
     String[] CREATE_TABLES = {"CREATE TABLE IF NOT EXISTS cur_db.cur_description (currency_name VARCHAR(25), currency_description VARCHAR(250), PRIMARY KEY(currency_name));",
                               "CREATE TABLE IF NOT EXISTS cur_db.cur_date (currency_date DATE, PRIMARY KEY(currency_date));",

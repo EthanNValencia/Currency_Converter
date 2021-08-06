@@ -1,110 +1,98 @@
-/*
-Ethan J. Nephew
-July 1, 2021
-Server GUI class.
-*/
-
 package CC_Server;
 
-import java.io.*;
-import java.net.*;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Date;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
+import java.util.ResourceBundle;
 
-// --module-path "C:\Program Files\JavaFX\javafx-sdk-16\lib" --add-modules javafx.controls,javafx.fxml
+public class ServerController implements CONSTANTS, Initializable {
 
-/*
-To run jar in cmd use: (outdated)
-java --module-path "C:\Program Files (x86)\JavaFx\javafx-sdk-15.0.1\lib" --add-modules javafx.controls,javafx.fxml -jar C:\Users\16165\Desktop\SeverTest\out\artifacts\SeverTest_jar\SeverTest.jar
-*/
+    private Thread serverThread;
 
-/***
- * This is the server class definition. This class brings together all the CC_Server classes. It also has some local algorithms and logics.
- */
-public class Server extends Application {
+    @FXML
+    private TextArea txtAreaServer;
 
-    /***
-     * This method contains the server directions. Anything that is passed to the server and modified can be found here.
-     * @param primaryStage Requires the primary stage.
-     */
-    @Override // Override the start method in the Application class
-    public void start(Stage primaryStage) {
-        // Text area for displaying contents
-        TextArea ta = new TextArea();
-        // Create a scene and place it in the stage
-        Scene scene = new Scene(new ScrollPane(ta), 350, 190);
-        Image icon = new Image("CC_Icons/ServerIcon.png");
-        primaryStage.getIcons().add(icon);
-        primaryStage.setTitle("Server"); // Set the stage title
-        primaryStage.setScene(scene); // Place the scene in the stage
-        primaryStage.setResizable(false);
-        primaryStage.setWidth(300);
-        primaryStage.setHeight(200);
-        primaryStage.show(); // Display the stage
-        primaryStage.setOnCloseRequest(e -> {
-            Platform.exit(); // This shuts down all server threads when the window closes.
-            System.exit(0);
-        });
-        InetAddress ip;
-        String hostname;
-        try {
-            ip = InetAddress.getLocalHost();
-            hostname = ip.getHostName();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        new Thread( () -> {
+    @FXML
+    private Button btnAttemptConnection;
+
+    @FXML
+    private Label loginLabel1, logicLabel2;
+
+    @FXML
+    private TextField txtBoxUsername, txtBoxPassword;
+
+    public void loginCredentialsVisible(){
+        btnAttemptConnection.setVisible(true);
+        loginLabel1.setVisible(true);
+        logicLabel2.setVisible(true);
+        txtBoxPassword.setVisible(true);
+        txtBoxUsername.setVisible(true);
+    }
+
+    public void loginCredentialsInvisible(){
+        btnAttemptConnection.setVisible(false);
+        loginLabel1.setVisible(false);
+        logicLabel2.setVisible(false);
+        txtBoxPassword.setVisible(false);
+        txtBoxUsername.setVisible(false);
+    }
+
+    @Override
+    public void initialize(java.net.URL url, ResourceBundle resourceBundle) {
+        loginCredentialsInvisible();
+        txtAreaServer.appendText("App is on.");
+        serverThread = new Thread(() -> {
             try {
                 ServerSocket serverSocket = new ServerSocket(8000);
-                Platform.runLater(() -> ta.appendText("Server started at " + new Date() + '\n'));
+                Platform.runLater(() -> txtAreaServer.appendText("Server started at " + new Date() + '\n'));
                 try {
-                    Platform.runLater(() -> ta.appendText("Server is attempting to connect to the Database.\n"));
+                    Platform.runLater(() -> txtAreaServer.appendText("Server is attempting to connect to the Database.\n"));
                     Connect.getConnection();
-                } catch (Exception e){
-                    Platform.runLater(() -> ta.appendText("Server failed to connect to Database.\n"));
-                    Platform.runLater(this::loadLogin);
-                    try {
-                        wait();
-                    } catch (InterruptedException interruptedException) {
-                        interruptedException.printStackTrace();
-                    }
+                } catch (Exception e) {
+                    Platform.runLater(() -> txtAreaServer.appendText("Server failed to connect to Database.\n"));
+                    getDatabaseCredentials();
+                    return;
                 }
-                Platform.runLater(() -> ta.appendText("Server is gathering currency related data.\n"));
-                Platform.runLater(() -> ta.appendText("This may take some time...\n"));
+                Platform.runLater(() -> txtAreaServer.appendText("Server is gathering currency related data.\n"));
+                Platform.runLater(() -> txtAreaServer.appendText("This may take some time...\n"));
                 ServerWebReader serverWebReader = new ServerWebReader();
                 try {
                     serverWebReader.insertAnnualCurrencyData();
-                    Platform.runLater(() -> ta.appendText("Currency related data has been successfully gathered.\n"));
+                    Platform.runLater(() -> txtAreaServer.appendText("Currency related data has been successfully gathered.\n"));
                 } catch (Exception e) {
-                    Platform.runLater(() -> ta.appendText("An exception occurred while trying to gather currency information.\n"));
+                    Platform.runLater(() -> txtAreaServer.appendText("An exception occurred while trying to gather currency information.\n"));
                 }
-                Platform.runLater(() -> ta.appendText("Waiting for client connection... \n"));
+                Platform.runLater(() -> txtAreaServer.appendText("Waiting for client connection... \n"));
                 while (true) {
                     Socket socket = serverSocket.accept(); // it waits here for a client message
                     // Create data input and output streams
-                    Platform.runLater(() -> ta.appendText("Messaged received!\n"));
+                    Platform.runLater(() -> txtAreaServer.appendText("Messaged received!\n"));
                     ObjectOutputStream outputToClient = new ObjectOutputStream(socket.getOutputStream());
                     ObjectInputStream inputFromClient = new ObjectInputStream(socket.getInputStream());
                     Object receivedObject = inputFromClient.readObject();
 
-                    if(receivedObject.getClass() == CurrencyDataObj.class) {
+                    if (receivedObject.getClass() == CurrencyDataObj.class) {
                         CurrencyDataObj receivedDataObject = (CurrencyDataObj) receivedObject;
-                        Platform.runLater(() -> ta.appendText("Server received client data.\n"));
+                        Platform.runLater(() -> txtAreaServer.appendText("Server received client data.\n"));
                         // For some reason the later check is not working
                         receivedDataObject = getData(receivedDataObject);
                         // End data object modification for chart
                         outputToClient.writeObject(receivedDataObject);
-                        Platform.runLater(() -> ta.appendText("A client connection has been established from:\n" + socket + "\n"));
+                        Platform.runLater(() -> txtAreaServer.appendText("A client connection has been established from:\n" + socket + "\n"));
                         outputToClient.flush();
                         outputToClient.close();
                         receivedDataObject.setHistoricalList(false);
@@ -129,28 +117,26 @@ public class Server extends Application {
                         outputToClient.flush();
                         outputToClient.close();
                     }
-                    Platform.runLater(() -> ta.appendText("Connection has been closed. \n"));
-                    Platform.runLater(() -> ta.appendText("Waiting for client connection... \n"));
+                    Platform.runLater(() -> txtAreaServer.appendText("Connection has been closed. \n"));
+                    Platform.runLater(() -> txtAreaServer.appendText("Waiting for client connection... \n"));
                 }
-            } catch(IOException | ClassNotFoundException ex) {
+            } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
-        }).start();
+        });
+        serverThread.start();
     }
 
-    public void loadLogin(){
-        try {
-            FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource("DBCredentials.fxml"));
-            Parent root = fxmlLoader1.load();
-            Stage stage = new Stage();
-            stage.setResizable(false);
-            stage.setTitle("Database Login Credentials");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception ex) {
-            System.out.println("An exception occurred.");
-            System.out.println(ex);
-        }
+    public void getDatabaseCredentials(){
+        Stage stage = (Stage) txtAreaServer.getScene().getWindow();
+        stage.setWidth(600);
+        loginCredentialsVisible();
+        txtAreaServer.appendText("Please enter your login credentials.");
+        // stage.setHeight(200);
+    }
+
+    public void attemptConnection(){
+
     }
 
     /***
@@ -167,7 +153,6 @@ public class Server extends Application {
         }
         return currencyDataObj;
     }
-
 
     /***
      * This class uses provided currency object information to build on the data structure. The currency rate is added in this method.
@@ -240,7 +225,7 @@ public class Server extends Application {
         nf.setMinimumFractionDigits(2);
         if (currencyDataObj.getCurrency1().getExchangeAmount() != null) {
             double number = Double.parseDouble(currencyDataObj.getCurrency1().getExchangeAmount()) *
-                            Double.parseDouble(currencyDataObj.getCurrency2().getAdjustedRate().replaceAll(",", ""));
+                    Double.parseDouble(currencyDataObj.getCurrency2().getAdjustedRate().replaceAll(",", ""));
             String strNumber = checkLower(number); // This checks that the value returned is not zero.
             currencyDataObj.getCurrency2().setExchangeAmount(strNumber);
         }
@@ -259,12 +244,4 @@ public class Server extends Application {
         strNumber = new DecimalFormat("#,##0.##############").format(Double.parseDouble(strNumber));
         return strNumber;
     }
-
-    /**
-     * The main method is only needed for the IDE with limited JavaFX support. Not needed for running from the command line.
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-
 }

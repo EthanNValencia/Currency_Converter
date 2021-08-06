@@ -345,7 +345,7 @@ public class Connect implements CC_Server.CONSTANTS {
             sc.setDate(rs.getString(3));
             serverCurrencyList.add(sc);
         }
-        System.out.println("Connect: " + serverCurrencyList);
+        // System.out.println("Connect: " + serverCurrencyList);
         return serverCurrencyList;
     }
 
