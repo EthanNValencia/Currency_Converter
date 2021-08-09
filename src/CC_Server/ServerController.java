@@ -63,6 +63,8 @@ public class ServerController extends CONSTANTS implements Initializable {
      * This is the loop that runs when the program is waiting for a client connection.
      */
     public void runServerLoop() {
+        btnVerifyDBIntegrity.setVisible(false);
+        btnStartServer.setVisible(false);
         try {
             serverSocket = new ServerSocket(8000);
         } catch (IOException e) {
@@ -123,7 +125,7 @@ public class ServerController extends CONSTANTS implements Initializable {
     /***
      *
      */
-    public void runPrestart(){
+    public void runPrestate(){
         txtAreaServer.appendText("Server started at " + new Date() + '\n');
         try {
             txtAreaServer.appendText("Server is attempting to connect to the Database.\n");
@@ -143,6 +145,7 @@ public class ServerController extends CONSTANTS implements Initializable {
             txtAreaServer.appendText("An exception occurred while trying to gather currency information.\n");
         }
         loginControlsInvisible();
+        btnVerifyDBIntegrity.setVisible(true);
         btnStartServer.setVisible(true);
     }
 
@@ -191,7 +194,7 @@ public class ServerController extends CONSTANTS implements Initializable {
         rangeControlsInvisible();
         DAYS_TO_SCAN = comboBoxRange.getValue();
         System.out.println(DAYS_TO_SCAN);
-        runPrestart();
+        runPrestate();
     }
 
     /***
@@ -212,7 +215,7 @@ public class ServerController extends CONSTANTS implements Initializable {
         PASSWORD = txtBoxPassword.getText();
         try {
             Connect.getConnection();
-            runPrestart();
+            runPrestate();
         } catch (Exception e) {
             txtAreaServer.appendText("The login credentials were incorrect. \nPlease try again.\n");
         }

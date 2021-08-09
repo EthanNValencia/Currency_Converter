@@ -138,7 +138,7 @@ public class ServerWebReader extends CC_Server.CONSTANTS {
     }
 
     /***
-     * This is a simple method that checks whether or not pre-processed lines contain content of interest. This is for searching for date as specified on the source page.
+     * Checks whether or not pre-processed lines contain content of interest. This is for searching for date as specified on the source page.
      * @param reader Requires a string of content.
      * @return If the string contains content of specified interest then it will return true.
      */
@@ -149,6 +149,11 @@ public class ServerWebReader extends CC_Server.CONSTANTS {
             return false;
     }
 
+    /***
+     * Checks whether or not pre-processed lines contain content of interest.
+     * @param reader The string that will be checked.
+     * @return Returns boolean true or false.
+     */
     public boolean containsDescription(String reader){
         if (reader.contains("<td>") && reader.contains("</td>")) // specifies textual markers
             return true;
@@ -162,7 +167,7 @@ public class ServerWebReader extends CC_Server.CONSTANTS {
      * @return It returns the HashSet of generated ServerCurrency objects.
      */
     public HashSet<ServerCurrency> getPage(String websiteURL) {
-        HashSet<ServerCurrency> currencyList = null;
+        HashSet<ServerCurrency> currencyList;
         try {
             URL url = new URL(websiteURL);
             Scanner scan = new Scanner(url.openStream());
@@ -175,7 +180,7 @@ public class ServerWebReader extends CC_Server.CONSTANTS {
         catch(IOException ex) {
             ex.printStackTrace();
         }
-        return currencyList;
+        return null;
     }
 
     /***
@@ -184,8 +189,7 @@ public class ServerWebReader extends CC_Server.CONSTANTS {
      */
     public void insertAnnualCurrencyData() throws Exception {
         String insertDate;
-        HashSet<ServerCurrency> currencyList = null;
-        // currencyList = getPage(WEBSITE_URL + DATE_TODAY);
+        HashSet<ServerCurrency> currencyList;
         for (int i = 0; i <= DAYS_TO_SCAN; i++) {
             insertDate = "" + DATE_TODAY.minusDays(i);
             if (!Connect.checkEntries("" + insertDate)) { // If entries with this date already exist, then cancel the insertion.

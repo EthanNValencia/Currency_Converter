@@ -327,7 +327,7 @@ public class UnitTests {
         ServerCurrency serverCurrency1 = new ServerCurrency("EUR");
         ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null);
         CurrencyDataObj currencyDataObj = new CurrencyDataObj(serverCurrency1, serverCurrency2, LocalDate.now());
-        Server server = new Server();
+        ServerController server = new ServerController();
         try {
             server.findRate(currencyDataObj);
         } catch (Exception e) {
@@ -345,7 +345,7 @@ public class UnitTests {
         ServerCurrency serverCurrency1 = new ServerCurrency("AED", null, null, null);
         ServerCurrency serverCurrency2 = new ServerCurrency(null, null, null, null);
         CurrencyDataObj currencyDataObj = new CurrencyDataObj(serverCurrency1, serverCurrency2, LocalDate.now());
-        Server server = new Server();
+        ServerController server = new ServerController();
         currencyDataObj = server.findDescription(currencyDataObj);
         assertNotEquals(null, currencyDataObj.getCurrency1().getDescription());
     }
@@ -358,7 +358,7 @@ public class UnitTests {
         ServerCurrency serverCurrency1 = new ServerCurrency(null, null, null, null);
         ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null);
         CurrencyDataObj currencyDataObj = new CurrencyDataObj(serverCurrency1, serverCurrency2, LocalDate.now());
-        Server server = new Server();
+        ServerController server = new ServerController();
         currencyDataObj = server.findDescription(currencyDataObj);
         assertNotEquals(null, currencyDataObj.getCurrency2().getDescription());
     }
@@ -371,7 +371,7 @@ public class UnitTests {
         ServerCurrency serverCurrency1 = new ServerCurrency("AED", null, null, null);
         ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null);
         CurrencyDataObj currencyDataObj = new CurrencyDataObj(serverCurrency1, serverCurrency2, LocalDate.now());
-        Server server = new Server();
+        ServerController server = new ServerController();
         currencyDataObj = server.findDescription(currencyDataObj);
         currencyDataObj = server.findRate(currencyDataObj);
         assertNotEquals(null, currencyDataObj.getCurrency1().getRawRate());
@@ -388,7 +388,7 @@ public class UnitTests {
         ServerCurrency serverCurrency1 = new ServerCurrency("AED", null, null, null, null, null);
         ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null, null, null);
         CurrencyDataObj currencyDataObj = new CurrencyDataObj(serverCurrency1, serverCurrency2, LocalDate.now());
-        Server server = new Server();
+        ServerController server = new ServerController();
         currencyDataObj = server.findDescription(currencyDataObj);
         currencyDataObj = server.findRate(currencyDataObj);
         currencyDataObj = server.calculateRate(currencyDataObj);
@@ -403,7 +403,7 @@ public class UnitTests {
         ServerCurrency serverCurrency1 = new ServerCurrency("AED", null, null, null, null, null);
         ServerCurrency serverCurrency2 = new ServerCurrency("COP", null, null, null, null, null);
         CurrencyDataObj currencyDataObj = new CurrencyDataObj(serverCurrency1, serverCurrency2, LocalDate.now());
-        Server server = new Server();
+        ServerController server = new ServerController();
         currencyDataObj = server.findDescription(currencyDataObj);
         currencyDataObj = server.findRate(currencyDataObj);
         currencyDataObj = server.calculateRate(currencyDataObj);
@@ -418,7 +418,7 @@ public class UnitTests {
         ServerCurrency serverCurrency1 = new ServerCurrency(null, null, null, "0.5", null, null);
         ServerCurrency serverCurrency2 = new ServerCurrency(null, null, null, "2", null, null);
         CurrencyDataObj currencyDataObj = new CurrencyDataObj(serverCurrency1, serverCurrency2, LocalDate.now());
-        Server server = new Server();
+        ServerController server = new ServerController();
         currencyDataObj = server.calculateRate(currencyDataObj);
         assertEquals("1", currencyDataObj.getCurrency1().getAdjustedRate());
     }
@@ -431,7 +431,7 @@ public class UnitTests {
         ServerCurrency serverCurrency1 = new ServerCurrency(null, null, null, "0.5", null, null);
         ServerCurrency serverCurrency2 = new ServerCurrency(null, null, null, "2", null, null);
         CurrencyDataObj currencyDataObj = new CurrencyDataObj(serverCurrency1, serverCurrency2, LocalDate.now());
-        Server server = new Server();
+        ServerController server = new ServerController();
         currencyDataObj = server.calculateRate(currencyDataObj);
         assertEquals("4", currencyDataObj.getCurrency2().getAdjustedRate());
     }
@@ -456,7 +456,7 @@ public class UnitTests {
         ServerCurrency serverCurrency1 = new ServerCurrency(null, null, null, null, "2", null);
         ServerCurrency serverCurrency2 = new ServerCurrency(null, null, null, null, null, "2");
         CurrencyDataObj currencyDataObj = new CurrencyDataObj(serverCurrency1, serverCurrency2, LocalDate.now());
-        Server server = new Server();
+        ServerController server = new ServerController();
         currencyDataObj = server.calculateExchange(currencyDataObj);
         assertEquals("4", currencyDataObj.getCurrency2().getExchangeAmount());
     }
@@ -480,7 +480,7 @@ public class UnitTests {
     @Test
     public void testServer_checkLower_FourDecimals(){
         double testDbl = 25.000801;
-        Server server = new Server();
+        ServerController server = new ServerController();
         assertEquals("25.000801", server.checkLower(testDbl));
     }
 
@@ -490,7 +490,7 @@ public class UnitTests {
     @Test
     public void testServer_checkLower_SevenDecimals(){
         double testDbl = 0.00000000800000;
-        Server server = new Server();
+        ServerController server = new ServerController();
         assertEquals("0.000000008", server.checkLower(testDbl));
     }
 
@@ -502,7 +502,7 @@ public class UnitTests {
         ServerCurrency serverCurrency1 = new ServerCurrency(null, null, null, null, "30000", null);
         ServerCurrency serverCurrency2 = new ServerCurrency(null, null, null, null, null, "0.000000005");
         CurrencyDataObj currencyDataObj = new CurrencyDataObj(serverCurrency1, serverCurrency2, LocalDate.now());
-        Server server = new Server();
+        ServerController server = new ServerController();
         currencyDataObj = server.calculateExchange(currencyDataObj);
         assertEquals("0.00015", currencyDataObj.getCurrency2().getExchangeAmount());
     }

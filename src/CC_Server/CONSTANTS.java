@@ -17,12 +17,12 @@ public abstract class CONSTANTS {
     static String DRIVER = "com.mysql.cj.jdbc.Driver";
     static String URL = "jdbc:mysql://localhost:3306/cur_db";
     // String USERNAME = "Currency_User";
-    static String USERNAME = "urrency_User";
+    static String USERNAME = "Currency_User";
     static String PASSWORD = "EFtkgT%gt44De";
     static LocalDate DATE_TODAY = LocalDate.now();
     static String WEBSITE_URL = "https://www.x-rates.com/historical/?from=USD&amount=1&date=";
     static Integer[] DAYS_RANGE = {1, 10, 30, 50, 100, 1000};
-    static Integer DAYS_TO_SCAN = 1000; // For development purposes, I will limit this to the present day.
+    static Integer DAYS_TO_SCAN = 1; // For development purposes, I will limit this to the present day.
                                          // I do not want to cause egregious network traffic for x-rates.
     static String[] CREATE_TABLES = {"CREATE TABLE IF NOT EXISTS cur_db.cur_description (currency_name VARCHAR(25), currency_description VARCHAR(250), PRIMARY KEY(currency_name));",
                               "CREATE TABLE IF NOT EXISTS cur_db.cur_date (currency_date DATE, PRIMARY KEY(currency_date));",

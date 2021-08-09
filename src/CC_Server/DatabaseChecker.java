@@ -7,16 +7,28 @@ package CC_Server;
 
 import java.time.LocalDate;
 
+/***
+ * This is a Thread that is meant to be used to verify that the database contains the data that it should contain.
+ */
 public class DatabaseChecker extends Thread {
     int lowerRange, upperRange, totalRange;
     LocalDate beginDate, endDate;
     boolean missing = false, test = false;
     LocalDate[] localDatesList;
 
+    /***
+     * Accessor method for the array of LocalDates.
+     * @return It returns the array of LocalDates.
+     */
     public LocalDate[] getLocalDatesList() {
         return localDatesList;
     }
 
+    /***
+     * This is the constructor for the DatabaseChecker.
+     * @param lower The lower bound of the date range.
+     * @param upper The upper bound of the date range.
+     */
     public DatabaseChecker(double lower, double upper) {
         this.lowerRange = (int) (CONSTANTS.DAYS_TO_SCAN * lower);
         this.upperRange = (int) (CONSTANTS.DAYS_TO_SCAN * upper);
@@ -29,9 +41,9 @@ public class DatabaseChecker extends Thread {
 
     /***
      * This constructor is for testing purposes.
-     * @param lower
-     * @param upper
-     * @param range This is specifying the range. This is useful for testing purposes.
+     * @param lower The lower bound of the date range.
+     * @param upper The upper bound of the date range.
+     * @param range The specified range. This is useful for testing purposes.
      */
     public DatabaseChecker(double lower, double upper, double range) {
         this.lowerRange = (int) (range * lower);
@@ -44,14 +56,23 @@ public class DatabaseChecker extends Thread {
         generateLocalDatesList();
     }
 
+    /***
+     * This method is used as the center point for the operation of the class.
+     */
     public void run() {
         int checkEntries = checkEntries();
-        if(checkEntries < totalRange){
+        int predictedRange = 2916*251;
+        if(checkEntries != predictedRange){
+            System.out.println("{checkEntries:" + checkEntries + "} {totalRange:" + totalRange + "} {dates:" + beginDate + " - " + endDate + "}");
             // find those entries and put them in the database.
         }
-       System.out.println(localDatesList[0] + " - " + localDatesList[localDatesList.length - 1]);
+
+       // System.out.println(localDatesList[0] + " - " + localDatesList[localDatesList.length - 1]);
     }
 
+    /***
+     * This generates an array of LocalDates. It uses the begin date as a start point and the total range as the end point.
+     */
     public void generateLocalDatesList(){
         for(int i = 0; i < totalRange; i++){
             localDatesList[i] = beginDate.plusDays(i);
@@ -71,6 +92,10 @@ public class DatabaseChecker extends Thread {
         return 0;
     }
 
+    /***
+     * Method that converts the contents of the DatabaseChecker object into a string for output purposes.
+     * @return The string that contains the variable data contents.
+     */
     @Override
     public String toString() {
         return "DatabaseChecker{" +
